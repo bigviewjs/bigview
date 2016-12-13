@@ -1,3 +1,7 @@
+'use strict'
+
+const debug = require('debug')('bigview')
+
 module.exports = class BigView {
   constructor (req, res, layout, data) {
     this.req = req
@@ -17,9 +21,9 @@ module.exports = class BigView {
   compile (tpl, data) {
     let self = this
     return new Promise(function (resolve, reject) {
-      console.log('renderLayout')
+      debug('renderLayout')
       self.res.render(tpl, data, function (err, str) {
-        console.log(str)
+        debug(str)
         self.write(str)
         resolve(str)
       })
@@ -71,17 +75,17 @@ module.exports = class BigView {
   }
   
   processError (err) {
-    console.log(err)
+    debug(err)
   }
 
   before() {
     return new Promise(function(resolve, reject) {
-      console.log('before')
+      debug('before')
       resolve(true)
     })
   }
 
   after() {
-    console.log('after')
+    debug('after')
   }
 }

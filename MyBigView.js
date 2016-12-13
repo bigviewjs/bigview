@@ -9,10 +9,6 @@ module.exports = class MyBigView extends BigView {
     })
   }
 
-  processError (err) {
-    console.log(err)
-  }
-    //
   // after () {
   //
   // }

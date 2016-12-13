@@ -1,3 +1,7 @@
+'use strict'
+
+const debug = require('debug')('bigview')
+
 module.exports = class Pagelet {
   constructor () {
     if (arguments.length >= 3) {
@@ -10,7 +14,7 @@ module.exports = class Pagelet {
        this.name   = arguments[0];
        this.data      = arguments[1]
      } else {
-       console.log('Pagelet constructor(name, tpl, data) or constructor(name, data)')
+       debug('Pagelet constructor(name, tpl, data) or constructor(name, data)')
      }
   }
   
