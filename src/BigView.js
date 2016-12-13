@@ -6,6 +6,10 @@ module.exports = class BigView {
     this.data = data
     
     this.pagelets = []
+
+    this.start ()
+    
+    return this
   }
 
   write (data) {

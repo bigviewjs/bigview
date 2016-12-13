@@ -21,8 +21,6 @@ app.get('/index.html', function (req, res) {
   var pagelet2 = new MyPagelet('pagelet2', { t: "测试" })
   pagelet2.setTpl('p')
 
-  bigpipe.start()
-
   setTimeout(function(){
     bigpipe.render(pagelet1)  
   },3000);
