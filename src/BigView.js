@@ -7,6 +7,7 @@ module.exports = class BigView {
     
     this.pagelets = []
   }
+
   write (data) {
     this.res.write(data)
   }
@@ -38,25 +39,29 @@ module.exports = class BigView {
   }
   
   start () {
+    let self = this
     // write layout
-    return this.renderLayout()
-    // prepare data
-      .then(this.data)
+    return this.before().then(this.renderLayout.bind(this))
+      // prepare data
+      // .then(this.data.bind(this))
 
-    // catch Error
-      .then(this.processError)
+      .then(this.processError.bind(this))
   }
   
-  end () {
+  end (time = 0) {
     let self = this
+    
+    // lifecycle after
+    self.after()
+
     setTimeout(function(){
       self.res.end()
-    }, 0)
+    }, time)
   }
   
   renderLayout () {
     let self = this
-    return this.compile(self.layout, self.data)
+    return self.compile(self.layout, self.data)
   }
   
   loadData () {
@@ -64,6 +69,17 @@ module.exports = class BigView {
   }
   
   processError (err) {
-    // throw new Error('need impl')
+    console.log(err)
+  }
+
+  before() {
+    return new Promise(function(resolve, reject) {
+      console.log('before')
+      resolve(true)
+    })
+  }
+
+  after() {
+    console.log('after')
   }
 }

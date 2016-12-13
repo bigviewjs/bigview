@@ -1,31 +1,22 @@
 <!doctype html>
 <html class="no-js">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="">
-    <meta name="keywords" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title><%= title %></title>
-    <!-- Set render engine for 360 browser -->
-    <meta name="renderer" content="webkit">
-    <!-- No Baidu Siteapp-->
-    <meta http-equiv="Cache-Control" content="no-siteapp"/>
-    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div id="test1">loading......</div>
-<div id="test2">loading......</div>
-<script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
-<script src="/js/bigpipe.js"></script>
-<script>
-    var bigpipe=new Bigpipe();
-    bigpipe.ready('pagelet1',function(data){
-        $("#test1").html(data.is);
-    })
-    bigpipe.ready('pagelet2',function(data){
-        $("#test2").html("test2 ready" + (data) );
-    })
-</script>
+    <div id="test1">loading......</div>
+    <div id="test2">loading......</div>
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bigpipe.js"></script>
+    <script>
+        var bigpipe=new Bigpipe();
+        bigpipe.ready('pagelet1',function(data){
+            $("#test1").html(data.is);
+        })
+        bigpipe.ready('pagelet2',function(data){
+            $("#test2").html("test2 ready" + (data) );
+        })
+    </script>
 </body>
 </html>

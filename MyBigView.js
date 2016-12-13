@@ -14,12 +14,18 @@ module.exports = class MyBigView extends BigView {
     })
   }
   
+  // before () {
+  //    return new Promise(function(resolve, reject) {
+  //       setTimeout(function(){
+  //         resolve(true)
+  //       }, 1000)
+  //   })
+  // }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
   processError (err) {
-    // let self = this
-    // // throw new Error('need impl')
-    // return new Promise(function (resolve, reject) {
-    //   if(err) reject(err)
-    //   self.end()
-    // })
+    console.log(err)
   }
 }
