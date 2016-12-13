@@ -1,5 +1,10 @@
 # BigView
 
+## 安装
+
+```
+$ npm i -S bigview
+```
 
 ## 扩展BigView
 
