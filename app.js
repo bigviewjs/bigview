@@ -18,16 +18,16 @@ app.get('/index.html', function (req, res) {
   var pagelet1 = new MyPagelet('pagelet1', { is: "pagelet1测试" })
   var pagelet2 = new MyPagelet('pagelet2', 'p', { t: "测试" })
 
-  setTimeout(function(){
-    bigpipe.render(pagelet1)  
-  },3000);
- 
-  setTimeout(function(){
-    bigpipe.render(pagelet2)
-    // setTimeout(function(){
-       bigpipe.end()  
-    // },0);
-  },4000);
+  bigpipe.ready(function(){
+    setTimeout(function(){
+      bigpipe.render(pagelet1)  
+    },3000);
+  
+    setTimeout(function(){
+      bigpipe.render(pagelet2)
+      bigpipe.end()
+    },4000);
+  })
 });
 
 app.listen(5000);

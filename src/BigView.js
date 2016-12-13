@@ -7,8 +7,6 @@ module.exports = class BigView {
     
     this.pagelets = []
 
-    this.start ()
-    
     return this
   }
 
@@ -42,14 +40,14 @@ module.exports = class BigView {
     this.write(pagelet.renderText(data))
   }
   
-  start () {
+  ready (cb = new Promise((resolve)=> resolve(true))) {
     let self = this
     // write layout
-    return this.before().then(this.renderLayout.bind(this))
-      // prepare data
-      // .then(this.data.bind(this))
-
+    return this.renderLayout()
+      .then(this.before.bind(this))
       .then(this.processError.bind(this))
+      .then(cb)
+      .catch(this.processError.bind(this))
   }
   
   end (time = 0) {
