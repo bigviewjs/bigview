@@ -9,10 +9,6 @@ MyBigView.js
 const BigView = require('.').BigView
 
 module.exports = class MyBigView extends BigView {  
-  constructor (req, res, layout, data) {
-    super (req, res, layout, data)
-  }
-  
   // before () {
   //    return new Promise(function(resolve, reject) {
   //       setTimeout(function(){
@@ -21,10 +17,6 @@ module.exports = class MyBigView extends BigView {
   //   })
   // }
 
-  processError (err) {
-    console.log(err)
-  }
-    //
   // after () {
   //
   // }
@@ -48,15 +40,10 @@ const Pagelet = require('.').Pagelet
 
 module.exports = class MyPagelet extends Pagelet {
   renderText (data) {
-    console.log(JSON.stringify(data))
-    console.log('<script>bigpipe.set("' + this.name + '",' + JSON.stringify(data) + ');</script>')
     return '<script>bigpipe.set("' + this.name + '",' + JSON.stringify(data) + ');</script>'
   }
 
   renderTpl (data, text) {
-    console.log(JSON.stringify(data))
-    console.log('text=' + text)
-    console.log('<script>bigpipe.set("' + this.name + '",' + JSON.stringify(data) + ');</script>')
     return '<script>bigpipe.set("' + this.name + '",' + JSON.stringify(data) + ');</script>'
   }
 }
@@ -101,14 +88,9 @@ app.get('/index.html', function (req, res) {
   var pagelet2 = new MyPagelet('pagelet2', 'p', { t: "测试" })
 
   bigpipe.ready(function(){
-    setTimeout(function(){
-      bigpipe.render(pagelet1)  
-    },3000);
-  
-    setTimeout(function(){
-      bigpipe.render(pagelet2)
-      bigpipe.end()
-    },4000);
+    bigpipe.render(pagelet1)  
+    bigpipe.render(pagelet2)
+    bigpipe.end()
   })
 });
 ```
