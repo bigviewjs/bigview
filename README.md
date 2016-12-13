@@ -11,7 +11,7 @@ $ npm i -S bigview
 MyBigView.js
 
 ```
-const BigView = require('.').BigView
+const BigView = require('bigview').BigView
 
 module.exports = class MyBigView extends BigView {  
   // before () {
@@ -41,7 +41,7 @@ module.exports = class MyBigView extends BigView {
 MyPagelet.js
 
 ```
-const Pagelet = require('.').Pagelet
+const Pagelet = require('bigview').Pagelet
 
 module.exports = class MyPagelet extends Pagelet {
   renderText (data) {
