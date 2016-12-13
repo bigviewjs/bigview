@@ -1,13 +1,19 @@
 module.exports = class Pagelet {
-  constructor (name, data) {
-    this.name = name
-    this.data = data
+  constructor () {
+    if (arguments.length >= 3) {
+        //(name, tpl, data) 
+       this.name   = arguments[0];
+       this.tpl      = arguments[1];
+       this.data      = arguments[2];
+     } else if (arguments.length == 2) {
+       // (name, data) 
+       this.name   = arguments[0];
+       this.data      = arguments[1]
+     } else {
+       console.log('Pagelet constructor(name, tpl, data) or constructor(name, data)')
+     }
   }
-
-  setTpl(name) {
-      this.tpl = name;
-  }
-
+  
   renderText (data) {
     throw new Error('need impl')
   }
