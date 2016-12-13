@@ -5,7 +5,7 @@ module.exports = class MyBigView extends BigView {
      return new Promise(function(resolve, reject) {
         setTimeout(function(){
           resolve(true)
-        }, 5000)
+        }, 0)
     })
   }
 
