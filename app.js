@@ -34,5 +34,5 @@ app.get('/index.html', function (req, res) {
 
 });
 
-http.createServer(app).listen(5000);
+app.listen(5000);
 
