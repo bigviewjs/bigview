@@ -8,6 +8,8 @@ $ npm i -S bigview
 
 ## 扩展BigView
 
+传入模块数组，根据模块动态生成layout
+
 MyBigView.js
 
 ```
@@ -37,6 +39,8 @@ module.exports = class MyBigView extends BigView {
 
 
 ## 扩展Pagelet
+
+加入请求，允许pagelet发送请求
 
 MyPagelet.js
 
