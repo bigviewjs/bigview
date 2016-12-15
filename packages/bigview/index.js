@@ -54,11 +54,13 @@ module.exports = class BigView {
   fetchAllData (){
     debug("BigView  fetchAllData start")
     let self = this
+    
     let q = []
     for(var i in self.pagelets){
       let _pagelet = self.pagelets[i]
       q.push(_pagelet._exec())
     }
+    
     return Promise.all(q)
       // .then(function(){
       //   console.log('BigView fetchAllData end')
