@@ -10,7 +10,6 @@ app.engine('.html', ejs.__express);
 app.set('view engine', 'html');
 
 const MyBigView = require('./MyBigView')
-const MyPagelet = require('./MyPagelet')
 
 app.get('/', function (req, res) {
   var bigpipe = new MyBigView(req, res, 'basic/index', { title: "测试" })
