@@ -8,8 +8,8 @@ module.exports = class Pagelet {
      this.data = {}
      this.tpl = 'index.html'
      this.root = '.'
-     this.selector = 'selector'  // css
-     this.location = 'location'  //location
+     this.selector = 'selector' // css
+     this.location = 'location' //location
 
      this.options = {} // for compiler
      this.done = false
