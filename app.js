@@ -12,28 +12,28 @@ app.set('view engine', 'html');
 const MyBigView = require('./MyBigView')
 const MyPagelet = require('./MyPagelet')
 
-app.get('/index.html', function (req, res) {
+app.get('/', function (req, res) {
   var bigpipe = new MyBigView(req, res, 'index', { title: "测试" })
 
   var pagelet1 = new MyPagelet('pagelet1', { is: "pagelet1测试" })
+
+  pagelet1.location = 'pagelet1'
+  pagelet1.root = 'views'
+  pagelet1.tpl = 'p1.html'
+  pagelet1.selector = 'pagelet1'
+  pagelet1.delay = 2000
+
   var pagelet2 = new MyPagelet('pagelet2', 'p', { t: "测试" })
+  pagelet2.selector = 'pagelet2'
+  pagelet2.location = 'pagelet2'
+  pagelet2.root = 'views'
+  pagelet2.tpl = 'p2.html'
+  pagelet2.delay = 4000
 
-  // bigpipe.ready(function(){
-  //   setTimeout(function(){
-  //     bigpipe.render(pagelet1)  
-  //   },3000);
-  
-  //   setTimeout(function(){
-  //     bigpipe.render(pagelet2)
-  //     bigpipe.end()
-  //   },4000);
-  // })
+  bigpipe.add(pagelet1)
+  bigpipe.add(pagelet2)
 
-  bigpipe.ready(function(){
-    bigpipe.render(pagelet1)  
-    bigpipe.render(pagelet2)
-    bigpipe.end()
-  })
+  bigpipe.start()
 });
 
 app.listen(5000);

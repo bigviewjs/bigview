@@ -10,12 +10,22 @@ module.exports = class BigView {
     this.data = data
     
     this.pagelets = []
-
+    this.pageletActions = []
     return this
   }
 
-  write (data) {
-    this.res.write(data)
+ /**
+  * Write data to Browser.
+  *
+  * @api public
+  */
+  write (text) {
+    let self = this
+    return new Promise(function (resolve, reject) {
+      console.log('BigView final data = ' + text)
+      console.dir(text)
+      if (text.length > 0 )self.res.write(text)
+    })
   }
   
   compile (tpl, data) {
@@ -30,44 +40,77 @@ module.exports = class BigView {
     })
   }
   
-  render (pagelet) {
+  add (pagelet) {
+    pagelet.owner = this
+
     let self = this
     this.pagelets.push(pagelet)
-
-    let data = pagelet.data
-    if (pagelet.tpl) {
-      self.compile(pagelet.tpl, pagelet.data).then(function(text){
-          self.write(pagelet.renderTpl(data, text))
-      })
-    }
-
-    this.write(pagelet.renderText(data))
   }
-  
-  ready (cb = new Promise((resolve)=> resolve(true))) {
+
+  fetchAllData (){
+    console.log("BigView  fetchAllData start")
     let self = this
-    // write layout
-    return this.renderLayout()
-      .then(this.before.bind(this))
-      .then(this.processError.bind(this))
-      .then(cb)
+    let q = []
+    for(var i in self.pagelets){
+      let _pagelet = self.pagelets[i]
+      q.push(_pagelet._exec())
+    }
+    return Promise.all(q)
+      // .then(function(){
+      //   console.log('BigView fetchAllData end')
+      // })
+  }
+
+  start () {
+    console.log('BigView start')
+    let self = this
+
+    // 1) this.before
+    // 2）渲染布局
+    // 3）Promise.all() 并行处理pagelets（策略是随机，fetch快的优先）
+    // 4）this.end 通知浏览器，写入完成
+  
+    return this.before()
+      .then(this.renderLayout.bind(this))
+      .then(this.fetchAllData.bind(this))
+      .then(this.end.bind(this))
       .catch(this.processError.bind(this))
   }
   
   end (time = 0) {
+    console.log("BigView renderLayout")
     let self = this
     
     // lifecycle after
     self.after()
 
-    setTimeout(function(){
-      self.res.end()
-    }, time)
+    return new Promise(function (resolve, reject) {
+      setTimeout(function(){
+        self.res.end()
+        resolve(true)
+      }, time)
+    })
   }
   
   renderLayout () {
+    console.log("BigView renderLayout")
     let self = this
+    self.data = self.getData(self.data, self.pagelets)
     return self.compile(self.layout, self.data)
+  }
+
+  /**
+  * 子类重写此方法，可以自定义
+  *
+  * @api public
+  */
+
+  getData (data, pagelets) {
+    let self = this
+
+    self.data.pagelets = pagelets ? pagelets : self.pagelets;
+    
+    return self.data
   }
   
   loadData () {
@@ -75,17 +118,20 @@ module.exports = class BigView {
   }
   
   processError (err) {
-    debug(err)
-  }
-
-  before() {
     return new Promise(function(resolve, reject) {
-      debug('before')
+      console.log(err)
       resolve(true)
     })
   }
 
-  after() {
-    debug('after')
+  before () {
+    return new Promise(function(resolve, reject) {
+      debug('default before')
+      resolve(true)
+    })
+  }
+
+  after () {
+    debug('default after')
   }
 }

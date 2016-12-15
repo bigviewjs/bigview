@@ -113,3 +113,10 @@ app.get('/index.html', function (req, res) {
   - bigpipe.render(pagelet1)  
   - bigpipe.render(pagelet2)  
   - bigpipe.end()  
+
+
+## 流程可选方式mode
+
+- 顺序渲染
+- 随机：先完成fetch的先渲染
+- 全部完成渲染

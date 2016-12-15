@@ -2,21 +2,32 @@
 <html class="no-js">
 <head>
     <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
-    <div id="test1">loading......</div>
-    <div id="test2">loading......</div>
+    
+    <ul>
+    <% pagelets.forEach(function(p){ %>
+        <li><%= p.name %> | <%= p.selector %>
+    <% }) %>
+    </ul>
+
+    <% pagelets.forEach(function(p){ %>
+       <div id="<%= p.location %>" class="<%= p.selector %>">loading...<%= p.name %>...</div>
+    <% }) %>
 
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bigpipe.js"></script>
     <script>
         var bigpipe=new Bigpipe();
-        bigpipe.ready('pagelet1',function(data){
-            $("#test1").html(data.is);
+
+        <% pagelets.forEach(function(p){ %>
+        
+        bigpipe.ready('<%= p.name %>',function(data){
+            $("#<%= p.location %>").html(data);
         })
-        bigpipe.ready('pagelet2',function(data){
-            $("#test2").html("test2 ready" + (data) );
-        })
+        <% }) %>
+
     </script>
 </body>
 </html>
