@@ -1,9 +1,42 @@
 # BigView
 
+特性
+
+- 模块化
+- 具有测试性
+- 支持mock数据
+
+功能点
+
 - mode 1：支持一个布局n个模块
 - mode 2：支持子布局
   - a)，静态布局
   - b)，延时输出布局
+
+## 支持mock数据
+
+```
+var Pagelet1 = require('./bpmodules/basic/p1')
+var pagelet1 = new Pagelet1()
+
+pagelet1.mock = true
+
+pagelet1.data = {
+  xxx: yyy
+} 
+
+pagelet1.test()
+```
+
+or 
+
+```
+$ pt bpmoduless/p1 url
+$ pt bpmoduless/p1 aaaa.json
+```
+
+自动跑测试，并给出测试结果
+
 
 ## 安装
 
@@ -167,3 +200,5 @@ views/nest2/index.html是bp的布局文件
     })
 </script>
 ```
+
+
