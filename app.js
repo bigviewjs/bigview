@@ -15,15 +15,18 @@ const MyPagelet = require('./MyPagelet')
 app.get('/', function (req, res) {
   var bigpipe = new MyBigView(req, res, 'basic/index', { title: "测试" })
 
-  var pagelet1 = new MyPagelet('pagelet1', { is: "pagelet1测试" })
-
+  var pagelet1 = new MyPagelet()
+  pagelet1.name = 'pagelet1'
+  pagelet1.data = { is: "pagelet1测试" }
   pagelet1.location = 'pagelet1'
   pagelet1.root = 'views'
   pagelet1.tpl = 'basic/p1.html'
   pagelet1.selector = 'pagelet1'
   pagelet1.delay = 2000
 
-  var pagelet2 = new MyPagelet('pagelet2', 'basic/p', { t: "测试" })
+  var pagelet2 = new MyPagelet()
+  pagelet2.name = 'pagelet2'
+  pagelet2.data =  {t: "测试" }
   pagelet2.selector = 'pagelet2'
   pagelet2.location = 'pagelet2'
   pagelet2.root = 'views'
@@ -39,15 +42,18 @@ app.get('/', function (req, res) {
 app.get('/nest', function (req, res) {
   var bigpipe = new MyBigView(req, res, 'nest/index', { title: "测试" })
 
-  var pagelet1 = new MyPagelet('pagelet1', { is: "pagelet1测试" })
-
+  var pagelet1 = new MyPagelet()
+  pagelet1.name = 'pagelet1'
+  pagelet1.data = { is: "pagelet1测试" }
   pagelet1.location = 'pagelet1'
   pagelet1.root = 'views'
   pagelet1.tpl = 'nest/p1.html'
   pagelet1.selector = 'pagelet1'
   pagelet1.delay = 2000
 
-  var subPagelet = new MyPagelet('pagelet2', 'nest/p', { t: "测试" })
+  var subPagelet = new MyPagelet()
+  subPagelet.name = 'pagelet2'
+  subPagelet.data =  {t: "测试" }
   subPagelet.selector = 'pagelet2'
   subPagelet.location = 'pagelet2'
   subPagelet.root = 'views'
@@ -65,15 +71,18 @@ app.get('/nest', function (req, res) {
 app.get('/nest2', function (req, res) {
   var bigpipe = new MyBigView(req, res, 'nest2/index', { title: "测试" })
 
-  var pagelet1 = new MyPagelet('pagelet1', { is: "pagelet1测试" })
-
+  var pagelet1 = new MyPagelet()
+  pagelet1.name = 'pagelet1'
+  pagelet1.data = { is: "pagelet1测试" }
   pagelet1.location = 'pagelet1'
   pagelet1.root = 'views'
   pagelet1.tpl = 'nest2/p1.html'
   pagelet1.selector = 'pagelet1'
   pagelet1.delay = 2000
 
-  var subPagelet = new MyPagelet('pagelet2', 'nest/p', { t: "测试" })
+  var subPagelet = new MyPagelet()
+  subPagelet.name = 'pagelet2'
+  subPagelet.data =  {t: "测试" }
   subPagelet.selector = 'pagelet2'
   subPagelet.location = 'pagelet2'
   subPagelet.root = 'views'

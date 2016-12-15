@@ -4,23 +4,12 @@ const debug = require('debug')('bigview')
 
 module.exports = class Pagelet {
   constructor () {
-    if (arguments.length >= 3) {
-        //(name, tpl, data) 
-       this.name   = arguments[0];
-       this.tpl      = arguments[1];
-       this.data      = arguments[2];
-     } else if (arguments.length == 2) {
-       // (name, data) 
-       this.name   = arguments[0];
-       this.data      = arguments[1]
-       this.tpl = 'index.html'
-     } else {
-       debug('Pagelet constructor(name, tpl, data) or constructor(name, data)')
-     }
-     
-     this.root = '.'
-     this.selector = '.xxxx'  // css
-     this.location = '#main'  //location
+     this.name = 'defaultname'
+     this.data = {}
+     this.tpl = 'index.html'
+     this.root = __dirname
+     this.selector = 'selector'  // css
+     this.location = 'location'  //location
 
      this.options = {} // for compiler
      this.done = false

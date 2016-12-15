@@ -13,7 +13,7 @@
     "testchunks": "^1.0.1"
   },
   "scripts": {
-    "start": "node app",
+    "start": "node bin",
     "test": "ava -v test -w"
   },
   "keywords": [],
