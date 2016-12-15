@@ -1,0 +1,16 @@
+{
+  "lerna": "2.0.0-beta.31",
+  "packages": [
+    "packages/*"
+  ],
+  "version": "0.0.0",
+  "publishConfig": {
+    "ignore": [
+      "example/**",
+      "public/**",
+      "bpmodules/**",
+      "views/**",
+      "test/**"
+    ]
+  }
+}
