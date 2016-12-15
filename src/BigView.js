@@ -26,8 +26,8 @@ module.exports = class BigView {
     let self = this
 
     return new Promise(function (resolve, reject) {
-      console.log('BigView final data = ' + text)
-      console.dir(text)
+      debug('BigView final data = ' + text)
+      debug(text)
       if (text.length > 0 )self.res.write(text)
     })
   }
@@ -52,7 +52,7 @@ module.exports = class BigView {
   }
 
   fetchAllData (){
-    console.log("BigView  fetchAllData start")
+    debug("BigView  fetchAllData start")
     let self = this
     let q = []
     for(var i in self.pagelets){
@@ -66,7 +66,7 @@ module.exports = class BigView {
   }
 
   start () {
-    console.log('BigView start')
+    debug('BigView start')
     let self = this
 
     // 1) this.before
@@ -83,7 +83,7 @@ module.exports = class BigView {
   
   end (time = 0) {
     if (this.done === true) return
-    console.log("BigView end")
+    debug("BigView end")
     let self = this
     
     // lifecycle after
@@ -99,7 +99,7 @@ module.exports = class BigView {
   }
   
   renderLayout () {
-    console.log("BigView renderLayout")
+    debug("BigView renderLayout")
     let self = this
     self.data = self.getData(self.data, self.pagelets)
     return self.compile(self.layout, self.data)

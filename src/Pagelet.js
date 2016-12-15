@@ -48,7 +48,7 @@ module.exports = class Pagelet {
 
   fetch () {
     if (this.owner.done === true) return
-    console.log('Pagelet fetch')
+    debug('  Pagelet fetch')
     let self = this
     return new Promise(function(resolve, reject){
       setTimeout(function() {
@@ -61,7 +61,7 @@ module.exports = class Pagelet {
   log () {
     let self = this
     return new Promise(function(resolve, reject){
-      console.log('log')
+      debug('log')
       // resolve(self.data)
     })
   }

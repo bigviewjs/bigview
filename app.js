@@ -87,4 +87,5 @@ app.get('/nest2', function (req, res) {
   bigpipe.start()
 });
 
-app.listen(5000);
+// app.listen(5000);
+module.exports = app
