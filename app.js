@@ -61,4 +61,30 @@ app.get('/nest', function (req, res) {
   bigpipe.start()
 });
 
+
+app.get('/nest2', function (req, res) {
+  var bigpipe = new MyBigView(req, res, 'nest2/index', { title: "测试" })
+
+  var pagelet1 = new MyPagelet('pagelet1', { is: "pagelet1测试" })
+
+  pagelet1.location = 'pagelet1'
+  pagelet1.root = 'views'
+  pagelet1.tpl = 'nest2/p1.html'
+  pagelet1.selector = 'pagelet1'
+  pagelet1.delay = 2000
+
+  var subPagelet = new MyPagelet('pagelet2', 'nest/p', { t: "测试" })
+  subPagelet.selector = 'pagelet2'
+  subPagelet.location = 'pagelet2'
+  subPagelet.root = 'views'
+  subPagelet.tpl = 'nest2/p2.html'
+  subPagelet.delay = 4000
+
+  pagelet1.addChild(subPagelet)
+
+  bigpipe.add(pagelet1)
+
+  bigpipe.start()
+});
+
 app.listen(5000);
