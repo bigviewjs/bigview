@@ -48,10 +48,12 @@ module.exports = class Pagelet {
   }
 
   fetch () {
+    if (this.owner.done === true) return
     console.log('Pagelet fetch')
     let self = this
     return new Promise(function(resolve, reject){
       setTimeout(function() {
+        self.owner.end()
         resolve(self.data)
       }, self.delay);
     })
@@ -78,6 +80,7 @@ module.exports = class Pagelet {
   }
 
   complile (tpl, data) {
+    if (this.owner.done === true) return
     // if (tpl) this.tpl = tpl
     // if (data) this.data = data
 

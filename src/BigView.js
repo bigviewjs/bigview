@@ -11,6 +11,7 @@ module.exports = class BigView {
     
     this.pagelets = []
     this.pageletActions = []
+    this.done = false
     return this
   }
 
@@ -20,7 +21,10 @@ module.exports = class BigView {
   * @api public
   */
   write (text) {
+    if (this.done === true) return
+
     let self = this
+
     return new Promise(function (resolve, reject) {
       console.log('BigView final data = ' + text)
       console.dir(text)
@@ -78,7 +82,8 @@ module.exports = class BigView {
   }
   
   end (time = 0) {
-    console.log("BigView renderLayout")
+    if (this.done === true) return
+    console.log("BigView end")
     let self = this
     
     // lifecycle after
@@ -87,6 +92,7 @@ module.exports = class BigView {
     return new Promise(function (resolve, reject) {
       setTimeout(function(){
         self.res.end()
+        self.done = true
         resolve(true)
       }, time)
     })
