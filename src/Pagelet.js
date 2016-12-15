@@ -7,7 +7,7 @@ module.exports = class Pagelet {
      this.name = 'defaultname'
      this.data = {}
      this.tpl = 'index.html'
-     this.root = __dirname
+     this.root = '.'
      this.selector = 'selector'  // css
      this.location = 'location'  //location
 

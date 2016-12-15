@@ -15,23 +15,11 @@ const MyPagelet = require('./MyPagelet')
 app.get('/', function (req, res) {
   var bigpipe = new MyBigView(req, res, 'basic/index', { title: "测试" })
 
-  var pagelet1 = new MyPagelet()
-  pagelet1.name = 'pagelet1'
-  pagelet1.data = { is: "pagelet1测试" }
-  pagelet1.location = 'pagelet1'
-  pagelet1.root = 'views'
-  pagelet1.tpl = 'basic/p1.html'
-  pagelet1.selector = 'pagelet1'
-  pagelet1.delay = 2000
+  var Pagelet1 = require('./bpmodules/p1')
+  var pagelet1 = new Pagelet1()
 
-  var pagelet2 = new MyPagelet()
-  pagelet2.name = 'pagelet2'
-  pagelet2.data =  {t: "测试" }
-  pagelet2.selector = 'pagelet2'
-  pagelet2.location = 'pagelet2'
-  pagelet2.root = 'views'
-  pagelet2.tpl = 'basic/p2.html'
-  pagelet2.delay = 4000
+  var Pagelet2 = require('./bpmodules/p2')
+  var pagelet2 = new Pagelet2()
 
   bigpipe.add(pagelet1)
   bigpipe.add(pagelet2)
@@ -47,7 +35,7 @@ app.get('/nest', function (req, res) {
   pagelet1.data = { is: "pagelet1测试" }
   pagelet1.location = 'pagelet1'
   pagelet1.root = 'views'
-  pagelet1.tpl = 'nest/p1.html'
+  pagelet1.tpl = 'basic/p1.html'
   pagelet1.selector = 'pagelet1'
   pagelet1.delay = 2000
 

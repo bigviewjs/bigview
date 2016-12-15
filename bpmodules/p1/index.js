@@ -1,11 +1,18 @@
-const Pagelet = require('.').Pagelet
+'use strict'
+
+const Pagelet = require('../../').Pagelet
+
+console.dir(Pagelet)
 
 module.exports = class MyPagelet extends Pagelet {
 	constructor () {
-		this.location = 'this'
+		super()
 		this.root = __dirname
+		this.name = 'pagelet1'
+		this.data = { is: "pagelet1测试" }
+		this.location = 'pagelet1'
 		this.tpl = 'p1.html'
-		this.selector = 'this'
+		this.selector = 'pagelet1'
 		this.delay = 2000
 	}
 }
