@@ -7,12 +7,14 @@
     "debug": "^2.3.3"
   },
   "devDependencies": {
+    "ava": "^0.17.0",
     "ejs": "^2.3.4",
-    "express": "^4.13.3"
+    "express": "^4.13.3",
+    "supertest": "^2.0.1"
   },
   "scripts": {
     "start": "node app",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ava -v test -w"
   },
   "keywords": [],
   "author": "i5ting",
