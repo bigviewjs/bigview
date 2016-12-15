@@ -5,7 +5,8 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
-    
+    <div id="pagelet2" class="pagelet2">load,,,,</div>
+
     <ul>
     <% pagelets.forEach(function(p){ %>
         <li><%= p.name %> | <%= p.selector %>
@@ -28,6 +29,10 @@
         })
         <% }) %>
 
+        bigpipe.ready('pagelet2',function(data){
+            $("#pagelet2").html(data);
+        })
+    
     </script>
 </body>
 </html>

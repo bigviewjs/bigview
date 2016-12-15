@@ -30,8 +30,9 @@ app.get('/', function (req, res) {
   pagelet2.tpl = 'p2.html'
   pagelet2.delay = 4000
 
+  pagelet1.addChild(pagelet2)
   bigpipe.add(pagelet1)
-  bigpipe.add(pagelet2)
+  // bigpipe.add(pagelet2)
 
   bigpipe.start()
 });

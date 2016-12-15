@@ -21,14 +21,16 @@ module.exports = class Pagelet {
      this.root = '.'
      this.selector = '.xxxx'  // css
      this.location = '#main'  //location
-     
-     //opts
-     this.lazy = false //获取fetch数据后，如果不立即渲染，则this.lazy=true，默认是立即渲染，不需要手动调用render页面
 
      this.options = {} // for compiler
      this.done = false
 
      this.delay = 0
+     this.children = []
+  }
+
+  addChild (subPagelet) {
+    this.children.push(subPagelet)
   }
 
   // private only call by bigview
@@ -40,11 +42,8 @@ module.exports = class Pagelet {
     
     return self.fetch()
       .then(self.complile.bind(self))
-      // // 获取fetch数据后，如果不立即渲染，则self.lazy=true
-      // // 默认是立即渲染，不需要手动调用render页面
-      // .then(self.log.bind(self))
-      // .then(self.writeToBrowser.bind(self))
-      // .then(self.finish.bind(self))
+
+      .then(self.finish.bind(self))
   }
 
   fetch () {
@@ -53,7 +52,7 @@ module.exports = class Pagelet {
     let self = this
     return new Promise(function(resolve, reject){
       setTimeout(function() {
-        self.owner.end()
+        // self.owner.end()
         resolve(self.data)
       }, self.delay);
     })
@@ -65,18 +64,6 @@ module.exports = class Pagelet {
       console.log('log')
       // resolve(self.data)
     })
-  }
-
-  writeToBrowser (html) {
-    let self = this
-
-    if (this.lazy === false && this.owner) {
-      console.log('writeToBrowser = ')
-      console.log(html)
-      return self.owner.write(html)
-    } else {
-      return self.noopPromise()
-    }
   }
 
   complile (tpl, data) {
@@ -95,14 +82,14 @@ module.exports = class Pagelet {
               console.log(err)
               reject(err)
             }
+
+            // writeToBrowser
             self.owner.write(str)
             resolve(str)
         });
-      } catch (err) {
-         if (err) {
-            console.log(err)
-            reject(err)
-          }
+      } catch (err) {      
+        console.log(err)
+        reject(err)
       }    
     })
   }
@@ -116,16 +103,16 @@ module.exports = class Pagelet {
 
   finish () {
     let self = this
-    if (self.lazy) {
-      console.log('lazy done = false, until do with api')
-      return Promise.resolve(true)
+    let q = []
+    for (let i in this.children) {
+      let subPagelet = this.children[i]
+      subPagelet.owner = this.owner
+
+      q.push(subPagelet._exec())
     }
 
-    return new Promise(function(resolve, reject){
+    return Promise.all(q).then(function(){
       self.done = true
-      resolve(true)
     }) 
   }
 }
-
-
