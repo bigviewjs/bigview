@@ -1,6 +1,6 @@
 'use strict'
 
-const Pagelet = require('../../').Pagelet
+const Pagelet = require('../../..').Pagelet
 
 module.exports = class MyPagelet extends Pagelet {
 	constructor () {
