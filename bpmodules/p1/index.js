@@ -2,8 +2,6 @@
 
 const Pagelet = require('../../').Pagelet
 
-console.dir(Pagelet)
-
 module.exports = class MyPagelet extends Pagelet {
 	constructor () {
 		super()
