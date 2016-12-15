@@ -10,7 +10,7 @@
     "ava": "^0.17.0",
     "ejs": "^2.3.4",
     "express": "^4.13.3",
-    "request": "^2.79.0"
+    "testchunks": "^1.0.1"
   },
   "scripts": {
     "start": "node app",

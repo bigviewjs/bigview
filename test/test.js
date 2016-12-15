@@ -4,12 +4,12 @@ const app = require('../app')
 
 const http = require('http')
 const request = require('request')
-const testChunks = require('../get-chunks')
+const testChunks = require('testchunks')
 
 
 test.cb('GET /', t => {
   testChunks(app, '/',function(chunks, error, response, body){
-    console.log(chunks.length)
+    console.log(chunks)
     t.end()
   })
 })
