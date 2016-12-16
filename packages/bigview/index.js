@@ -42,6 +42,10 @@ module.exports = class BigView {
     return new Promise(function (resolve, reject) {
       debug('renderLayout')
       self.res.render(tpl, data, function (err, str) {
+        if (err) {
+          debug('renderLayout ' + str)
+          console.log(err)
+        }
         debug(str)
         self.write(str)
         resolve(str)
