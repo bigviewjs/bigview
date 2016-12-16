@@ -17,7 +17,7 @@ module.exports = class BigView {
     this.previewFile = 'bigview.html'
 
     this.pagelets = []
-    this.pageletActions = []
+    this.allPagelets = []
     this.done = false
 
     this.chunks = []
@@ -53,7 +53,7 @@ module.exports = class BigView {
       return this.chunks.push(text)
     }
 
-    let pagelet = this.pagelets[this.chunks.length-1]
+    let pagelet = this.allPagelets[this.chunks.length-1]
     console.log(pagelet)
 
     let comment = `<!--这是${pagelet.name}-->`
@@ -82,6 +82,30 @@ module.exports = class BigView {
 
     let self = this
     this.pagelets.push(pagelet)
+
+    var re = []
+  
+    function getPagelets (pagelet) {
+      re.push(pagelet)
+      var a = []
+      if (pagelet.children) {
+        for(let i in pagelet.children){
+          let p = pagelet.children[i]
+          re.push(p)
+          if (p.children) {
+            getPagelets (p) 
+          }
+        }
+      }
+    }
+
+    getPagelets(pagelet)
+
+    for(let i in re) {
+      let _pagelet = re[i]
+      this.allPagelets.push(_pagelet)
+    }
+    console.log(this.allPagelets)
   }
 
   fetchAllData (){
