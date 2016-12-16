@@ -15,7 +15,7 @@ module.exports = class BigView {
     this.layout = layout
     this.data = data
     this.previewFile = 'bigview.html'
-
+    this.isMock = false
     this.pagelets = []
     this.allPagelets = []
     this.done = false
@@ -84,7 +84,7 @@ module.exports = class BigView {
     this.pagelets.push(pagelet)
 
     var re = []
-  
+    // 递归实现深度遍历，这是由于pagelet有子pagelet的原因
     function getPagelets (pagelet) {
       re.push(pagelet)
       var a = []
@@ -105,7 +105,7 @@ module.exports = class BigView {
       let _pagelet = re[i]
       this.allPagelets.push(_pagelet)
     }
-    console.log(this.allPagelets)
+    debug(this.allPagelets)
   }
 
   fetchAllData (){
@@ -197,7 +197,7 @@ module.exports = class BigView {
   }
 
   out () {
-    if (this.previewFile) fs.writeFileSync(this.previewFile, this.chunks.join('\n'))
+    if (this.isMock && this.previewFile) fs.writeFileSync(this.previewFile, this.chunks.join('\n'))
   }
 
   preview (f) {
