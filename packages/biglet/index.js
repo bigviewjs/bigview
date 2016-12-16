@@ -2,6 +2,11 @@
 
 const debug = require('debug')('biglet')
 
+/**
+ *
+ *
+ */
+
 module.exports = class Pagelet {
   constructor () {
      this.name = 'defaultname'

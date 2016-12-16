@@ -2,6 +2,11 @@
 
 const debug = require('debug')('bigview')
 
+/**
+ *
+ *
+ */ 
+
 module.exports = class BigView {
   constructor (req, res, layout, data) {
     this.req = req
