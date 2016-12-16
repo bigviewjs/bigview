@@ -14,7 +14,7 @@
   - a)，静态布局
   - b)，延时输出布局
 
-## 支持mock数据
+## 支持mock数据(TODO)
 
 ```
 var Pagelet1 = require('./bpmodules/basic/p1')
@@ -202,4 +202,28 @@ views/nest2/index.html是bp的布局文件
 </script>
 ```
 
+## 生成预览数据
 
+```
+app.get('/', function (req, res) {
+  var bigpipe = new MyBigView(req, res, 'basic/index', { title: "测试" })
+
+  var Pagelet1 = require('./bpmodules/basic/p1')
+  var pagelet1 = new Pagelet1()
+
+  var Pagelet2 = require('./bpmodules/basic/p2')
+  var pagelet2 = new Pagelet2()
+
+  bigpipe.add(pagelet1)
+  bigpipe.add(pagelet2)
+
+  // bigpipe.preview('aaaa.html')
+  bigpipe.previewFile = 'aaaa.html'
+  bigpipe.start()
+});
+```
+
+方法
+
+- 设置previewFile
+- bigpipe.preview('aaaa.html')
