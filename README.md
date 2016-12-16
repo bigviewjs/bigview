@@ -230,6 +230,7 @@ app.get('/', function (req, res) {
 
 ## 获取数据
 
+```js
 'use strict'
 
 const Pagelet = require('../../../../packages/biglet')
@@ -256,5 +257,62 @@ module.exports = class MyPagelet extends Pagelet {
         })
     }
 }
+```
 
 只需要重写fetch方法，并且返回Promise对象即可。如果想多个，就利用Promise的链式写法解决即可
+
+## 定义实现render方法，支持更多模板引擎
+
+```js
+'use strict'
+
+const Pagelet = require('../../../../packages/biglet')
+
+module.exports = class MyPagelet extends Pagelet {
+	constructor () {
+		super()
+
+		this.root = __dirname
+		this.name = 'pagelet1'
+		this.data = { is: "pagelet1测试" }
+		this.location = 'pagelet1'
+		this.tpl = 'p1.html'
+		this.selector = 'pagelet1'
+		this.delay = 2000
+	}
+
+    fetch () {        
+        return new Promise(function(resolve, reject){
+            setTimeout(function() {
+                // self.owner.end()
+                resolve(self.data)
+            }, 4000);
+        })
+    }
+
+    render (tpl, data) {
+        const ejs = require('ejs')
+        let self = this
+
+        return new Promise(function(resolve, reject){
+            ejs.renderFile(tpl, data, self.options, function(err, str){
+                // str => Rendered HTML string
+                if (err) {
+                    console.log(err)
+                    reject(err)
+                }
+                
+                resolve(str)
+            })
+        })
+    }
+}
+```
+
+重写render()方法，如果不重写则采用默认的模板引擎ejs编译。
+
+render方法的参数
+
+- tpl，即pagelet对应的模板
+- data，是pagelet对应的模板编译时需要的数据
+

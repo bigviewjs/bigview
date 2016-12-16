@@ -82,7 +82,7 @@ module.exports = class Pagelet {
     let self = this
 
     return new Promise(function(resolve, reject){
-      ejs.renderFile(self.root + '/' + self.tpl, self.data, self.options, function(err, str){
+      ejs.renderFile(tpl, data, self.options, function(err, str){
           // str => Rendered HTML string
           if (err) {
             console.log(err)
@@ -99,7 +99,7 @@ module.exports = class Pagelet {
 
     let self = this
 
-    return self.render().then(function(str){
+    return self.render(self.root + '/' + self.tpl, self.data).then(function(str){
       self.html = str
       // writeToBrowser
       if(!self.isMock) self.owner.write(str)
