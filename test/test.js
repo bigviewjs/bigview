@@ -1,6 +1,6 @@
 import test from 'ava'
 
-const app = require('../app')
+const app = require('../examples/app')
 
 const http = require('http')
 const request = require('request')

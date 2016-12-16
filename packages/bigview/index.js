@@ -33,7 +33,7 @@ module.exports = class BigView {
     return new Promise(function (resolve, reject) {
       debug('BigView final data = ' + text)
       debug(text)
-      if (text.length > 0 )self.res.write(text)
+      if (text && text.length > 0 )self.res.write(text)
     })
   }
   
