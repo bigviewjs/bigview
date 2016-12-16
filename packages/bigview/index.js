@@ -19,7 +19,7 @@ module.exports = class BigView {
     this.pagelets = []
     this.allPagelets = []
     this.done = false
-
+    this.layoutHtml = ''
     this.chunks = []
 
     return this
@@ -91,8 +91,10 @@ module.exports = class BigView {
       if (pagelet.children) {
         for(let i in pagelet.children){
           let p = pagelet.children[i]
+          p.parent = pagelet.name
           re.push(p)
-          if (p.children) {
+
+          if (p.children && p.children.length > 0) {
             getPagelets (p) 
           }
         }
@@ -161,7 +163,10 @@ module.exports = class BigView {
     debug("BigView renderLayout")
     let self = this
     self.data = self.getData(self.data, self.pagelets)
-    return self.compile(self.layout, self.data)
+    return self.compile(self.layout, self.data).then(function(str){
+      self.layoutHtml = str
+      return Promise.resolve(true)
+    })
   }
 
   /**
@@ -173,7 +178,7 @@ module.exports = class BigView {
   getData (data, pagelets) {
     let self = this
 
-    self.data.pagelets = pagelets ? pagelets : self.pagelets;
+    self.data.pagelets = pagelets ? pagelets : self.pagelets
     
     return self.data
   }
@@ -197,11 +202,39 @@ module.exports = class BigView {
   }
 
   out () {
-    if (this.isMock && this.previewFile) fs.writeFileSync(this.previewFile, this.chunks.join('\n'))
+    if (this.isMock && this.previewFile) {
+      fs.writeFileSync(this.previewFile, this.chunks.join('\n'))
+
+      let _d = this.data
+      delete _d.pagelets;
+
+      var _a = []
+
+      for(let i in this.allPagelets) {
+        let _p = this.allPagelets[i]
+        delete _p.owner
+        _a.push(_p)
+      }
+
+      let d = {
+        layout: this.layout,
+        layoutHtml: this.layoutHtml,
+        data: _d,
+        // pagelets: this.pagelets,
+        allPagelets: _a,
+        chunks: this.chunks
+      }
+      
+      var CircularJSON = require('circular-json')
+      var str = CircularJSON.stringify(d);
+      var o = JSON.parse(str)
+      fs.writeFileSync(this.previewFile + '.json', JSON.stringify(d, null, 4))
+
+    }
   }
 
   preview (f) {
-    this.previewFile = f;
+    this.previewFile = f
   }
 
   after () {

@@ -25,6 +25,7 @@ app.get('/', function (req, res) {
   bigpipe.add(pagelet2)
 
   // bigpipe.preview('aaaa.html')
+  bigpipe.isMock = true
   bigpipe.previewFile = 'aaaa.html'
   bigpipe.start()
 });
@@ -42,6 +43,10 @@ app.get('/nest', function (req, res) {
 
   bigpipe.add(pagelet1)
 
+  // bigpipe.preview('aaaa.html')
+  bigpipe.isMock = true
+  bigpipe.previewFile = 'aaaa.html'
+
   bigpipe.start()
 });
 
@@ -58,6 +63,10 @@ app.get('/nest2', function (req, res) {
   pagelet1.addChild(pagelet2)
 
   bigpipe.add(pagelet1)
+
+  // bigpipe.preview('aaaa.html')
+  bigpipe.isMock = true
+  bigpipe.previewFile = 'aaaa.html'
 
   bigpipe.start()
 });
