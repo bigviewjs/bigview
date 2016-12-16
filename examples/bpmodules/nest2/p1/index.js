@@ -14,4 +14,9 @@ module.exports = class MyPagelet extends Pagelet {
 		this.selector = 'pagelet1'
 		this.delay = 2000
 	}
+
+	fetch () {
+		let pagelet = this
+		return require('./req')(pagelet)
+	}
 }

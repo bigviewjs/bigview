@@ -43,15 +43,8 @@ module.exports = class Pagelet {
   _exec () {
     let self = this
     
-    return self.fetch()
-      .then(self.complile.bind(self))
-      .then(self.finish.bind(self))
-  }
-
-  fetch () {
     if (this.owner && this.owner.done === true) return
     debug('  Pagelet fetch')
-    let self = this
 
     self.data.po = {}
     var arr = ['name', 'tpl', 'root', 'selector', 'location', 'options', 'done', 'delay', 'children']
@@ -60,7 +53,14 @@ module.exports = class Pagelet {
       var k = arr[i]
       self.data.po[k] = self[k]
     }
-     
+
+    return self.fetch()
+      .then(self.complile.bind(self))
+      .then(self.finish.bind(self))
+  }
+
+  fetch () {
+    let self = this
     return new Promise(function(resolve, reject){
       setTimeout(function() {
         // self.owner.end()

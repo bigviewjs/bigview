@@ -316,3 +316,16 @@ render方法的参数
 - tpl，即pagelet对应的模板
 - data，是pagelet对应的模板编译时需要的数据
 
+
+
+## 模块目录的思考
+
+
+MyBigView.js 
+index.js
+
+./p1:
+index.js p1.html
+
+./p2:
+index.js p2.html
