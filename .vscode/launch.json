@@ -8,7 +8,8 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceRoot}/examples/bin.js",
+            //"program": "${workspaceRoot}/examples/bin.js",
+            "program": "${workspaceRoot}/mock.js",
             "cwd": "${workspaceRoot}"
         },
         {

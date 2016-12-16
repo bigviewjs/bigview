@@ -14,7 +14,7 @@ module.exports = class BigView {
     this.res = res
     this.layout = layout
     this.data = data
-    this.previewFile = 'previewFile.html'
+    this.previewFile = 'bigview.html'
 
     this.pagelets = []
     this.pageletActions = []

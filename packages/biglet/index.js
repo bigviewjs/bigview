@@ -1,6 +1,7 @@
 'use strict'
 
 const debug = require('debug')('biglet')
+const fs = require('fs')
 
 /**
  *
@@ -15,16 +16,24 @@ module.exports = class Pagelet {
      this.root = '.'
      this.selector = 'selector' // css
      this.location = 'location' //location
-
+     this.isMock = false
      this.options = {} // for compiler
      this.done = false
-
+     this.previewFile = 'biglet.html'
      this.delay = 0
      this.children = []
+     this.html = ''
   }
 
   addChild (subPagelet) {
     this.children.push(subPagelet)
+  }
+
+  mock (file) {
+    if (file) this.previewFile = file;
+
+    this.isMock = true
+    this._exec()
   }
 
   // private only call by bigview
@@ -41,7 +50,7 @@ module.exports = class Pagelet {
   }
 
   fetch () {
-    if (this.owner.done === true) return
+    if (this.owner && this.owner.done === true) return
     debug('  Pagelet fetch')
     let self = this
 
@@ -70,7 +79,7 @@ module.exports = class Pagelet {
   }
 
   complile (tpl, data) {
-    if (this.owner.done === true) return
+    if (this.owner && this.owner.done === true) return
     // if (tpl) this.tpl = tpl
     // if (data) this.data = data
 
@@ -85,9 +94,9 @@ module.exports = class Pagelet {
               console.log(err)
               reject(err)
             }
-
+            self.html = str
             // writeToBrowser
-            self.owner.write(str)
+            if(!self.isMock) self.owner.write(str)
             resolve(str)
         });
       } catch (err) {      
@@ -115,7 +124,14 @@ module.exports = class Pagelet {
     }
 
     return Promise.all(q).then(function(){
+      self.out()
       self.done = true
     }) 
+  }
+
+  out () {
+    console.log(this.html)
+    // 子的pagelets如何处理
+    if (this.isMock && this.previewFile) fs.writeFileSync(this.previewFile, this.html,  'utf8')
   }
 }
