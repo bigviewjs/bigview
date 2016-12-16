@@ -227,3 +227,34 @@ app.get('/', function (req, res) {
 
 - 设置previewFile
 - bigpipe.preview('aaaa.html')
+
+## 获取数据
+
+'use strict'
+
+const Pagelet = require('../../../../packages/biglet')
+
+module.exports = class MyPagelet extends Pagelet {
+	constructor () {
+		super()
+
+		this.root = __dirname
+		this.name = 'pagelet1'
+		this.data = { is: "pagelet1测试" }
+		this.location = 'pagelet1'
+		this.tpl = 'p1.html'
+		this.selector = 'pagelet1'
+		this.delay = 2000
+	}
+
+    fetch () {        
+        return new Promise(function(resolve, reject){
+            setTimeout(function() {
+                // self.owner.end()
+                resolve(self.data)
+            }, 4000);
+        })
+    }
+}
+
+只需要重写fetch方法，并且返回Promise对象即可。如果想多个，就利用Promise的链式写法解决即可
