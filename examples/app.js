@@ -10,8 +10,6 @@ app.engine('.html', ejs.__express);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 
-// const MyBigView = require('./MyBigView')
-
 app.get('/', require('./bpmodules/basic'));
 
 app.get('/nest',require('./bpmodules/nest'));
