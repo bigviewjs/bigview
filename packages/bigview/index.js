@@ -1,6 +1,7 @@
 'use strict'
 
 const debug = require('debug')('bigview')
+const fs = require('fs')
 
 /**
  *
@@ -13,10 +14,14 @@ module.exports = class BigView {
     this.res = res
     this.layout = layout
     this.data = data
-    
+    this.previewFile = 'previewFile.html'
+
     this.pagelets = []
     this.pageletActions = []
     this.done = false
+
+    this.chunks = []
+
     return this
   }
 
@@ -33,10 +38,29 @@ module.exports = class BigView {
     return new Promise(function (resolve, reject) {
       debug('BigView final data = ' + text)
       debug(text)
-      if (text && text.length > 0 )self.res.write(text)
+      if (text && text.length > 0 ) {
+        // save to chunks array for preview
+        self.setPageletChunk(text)
+
+        // write to Browser
+        self.res.write(text)
+      }
     })
   }
   
+  setPageletChunk (text) {
+    if (this.chunks.length < 1) {
+      return this.chunks.push(text)
+    }
+
+    let pagelet = this.pagelets[this.chunks.length-1]
+    console.log(pagelet)
+
+    let comment = `<!--这是${pagelet.name}-->`
+    let _t =  comment + '\n' + text
+    this.chunks.push(_t)
+  }
+
   compile (tpl, data) {
     let self = this
     return new Promise(function (resolve, reject) {
@@ -148,7 +172,17 @@ module.exports = class BigView {
     })
   }
 
+  out () {
+    if (this.previewFile) fs.writeFileSync(this.previewFile, this.chunks.join('\n'))
+  }
+
+  preview (f) {
+    this.previewFile = f;
+  }
+
   after () {
     debug('default after')
+    
+    this.out()
   }
 }

@@ -24,6 +24,7 @@ app.get('/', function (req, res) {
   bigpipe.add(pagelet1)
   bigpipe.add(pagelet2)
 
+  bigpipe.previewFile = 'aaaa.html'
   bigpipe.start()
 });
 
