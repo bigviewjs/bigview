@@ -30,7 +30,7 @@ module.exports = class Pagelet {
   }
 
   mock (file) {
-    if (file) this.previewFile = file;
+    if (file) this.previewFile = file
 
     this.isMock = true
     this._exec()
@@ -45,7 +45,6 @@ module.exports = class Pagelet {
     
     return self.fetch()
       .then(self.complile.bind(self))
-
       .then(self.finish.bind(self))
   }
 
@@ -66,7 +65,7 @@ module.exports = class Pagelet {
       setTimeout(function() {
         // self.owner.end()
         resolve(self.data)
-      }, self.delay);
+      }, self.delay)
     })
   }
   
@@ -78,32 +77,37 @@ module.exports = class Pagelet {
     })
   }
 
-  complile (tpl, data) {
-    if (this.owner && this.owner.done === true) return
-    // if (tpl) this.tpl = tpl
-    // if (data) this.data = data
-
+  render (tpl, data) {
     const ejs = require('ejs')
     let self = this
 
-    return new Promise(function (resolve, reject) {
-      try {
-        ejs.renderFile(self.root + '/' + self.tpl, self.data, self.options, function(err, str){
-            // str => Rendered HTML string
-            if (err) {
-              console.log(err)
-              reject(err)
-            }
-            self.html = str
-            // writeToBrowser
-            if(!self.isMock) self.owner.write(str)
-            resolve(str)
-        });
-      } catch (err) {      
-        console.log(err)
-        reject(err)
-      }    
+    return new Promise(function(resolve, reject){
+      ejs.renderFile(self.root + '/' + self.tpl, self.data, self.options, function(err, str){
+          // str => Rendered HTML string
+          if (err) {
+            console.log(err)
+            reject(err)
+          }
+         
+          resolve(str)
+      })
     })
+  }
+
+  complile () {
+    if (this.owner && this.owner.done === true) return
+
+    let self = this
+
+    return self.render().then(function(str){
+      self.html = str
+      // writeToBrowser
+      if(!self.isMock) self.owner.write(str)
+      
+      return Promise.resolve(true)
+    }).catch(function(err) {      
+      console.log('complile' + err)
+    }) 
   }
 
   noopPromise () {
