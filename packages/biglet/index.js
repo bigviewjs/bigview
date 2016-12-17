@@ -23,6 +23,8 @@ module.exports = class Pagelet {
      this.delay = 0
      this.children = []
      this.html = ''
+     this.js = ''
+     this.css = ''
   }
 
   addChild (subPagelet) {

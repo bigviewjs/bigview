@@ -436,13 +436,51 @@ pagelet的本章是返回模板引擎编译后的html片段。
 - p1.html 是模板
 - req.js 是获取api数据的，提供给模板引擎data的请求文件，返回Promise对象
 
-
 ## More
 
 pagelet能复用么？
 
 直接请求，也未尝不可
 
-## 请求参数问题
+- pagelet独立模块复用
+- http方式调用pagelet（需要深入思考一下）
 
-pagelet都有owner（即bigview），通过owner里的req来获取参数，稍后会有封装
+性能改进
+
+- req.js，有http改成rpc
+- 缓存模板
+- 缓存编译结果
+
+与传统Ajax比较
+
+- 减少HTTP请求数：多个模块更新合成一个请求
+- 请求数减少：多个chunk合成一个请求
+- 减少开发成本：前端无需多写JavaScript代码
+- 降低管理成本：模块更新由后端程序控制
+- URL优雅降级：页面链接使用真实地址
+- 代码一致性：页面加载不劢态刷新模块代码相同
+
+前端优化，参考微博的方式
+
+异步加载显示模块的方式：BigPipe方式降低模块开发成本、管理成本
+
+```
+<script>
+pl.View('pagelet1','pl1.css','pl1.js',
+'<span>Here is pagelet1</span>');
+</script>
+<script>
+pl.View('pagelet2','pl1.css','pl1.js',
+'<span>I am pagelet2</span>');
+</script>
+```
+
+模块的css可以采用各种预处理编写，在提供bigpipe打包功能，合并到一起或者单独引入(可以再考虑)。
+
+- 目前是模板引擎里嵌入js和css
+- 显示的方式，应该可以完成更多优化功能，对模板化更好
+- 优化开发方式
+
+## 参考 
+
+http://velocity.oreilly.com.cn/2011/ppts/WK_velocity.pdf
