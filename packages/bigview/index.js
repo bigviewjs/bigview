@@ -21,6 +21,10 @@ module.exports = class BigView {
     this.done = false
     this.layoutHtml = ''
     this.chunks = []
+    
+    if (req.query) this.query = req.query
+    if (req.params) this.params = req.params
+    if (req.body) this.body = req.body
 
     return this
   }
