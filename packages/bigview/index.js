@@ -3,11 +3,6 @@
 const debug = require('debug')('bigview')
 const fs = require('fs')
 
-/**
- *
- *
- */ 
-
 module.exports = class BigView {
   constructor (req, res, layout, data) {
     this.req = req
@@ -60,7 +55,7 @@ module.exports = class BigView {
     }
 
     let pagelet = this.allPagelets[this.chunks.length-1]
-    console.log(pagelet)
+    debug(pagelet)
 
     let comment = `<!--这是${pagelet.name}-->`
     let _t =  comment + '\n' + text
