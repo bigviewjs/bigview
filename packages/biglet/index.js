@@ -27,7 +27,8 @@ module.exports = class Pagelet {
      this.css = ''
   }
 
-  addChild (subPagelet) {
+  addChild (SubPagelet) {
+    let subPagelet = new SubPagelet()
     this.children.push(subPagelet)
   }
 

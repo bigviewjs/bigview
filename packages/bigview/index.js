@@ -78,7 +78,8 @@ module.exports = class BigView {
     })
   }
   
-  add (pagelet) {
+  add (Pagelet) {
+    let pagelet = new Pagelet()
     pagelet.owner = this
 
     let self = this
