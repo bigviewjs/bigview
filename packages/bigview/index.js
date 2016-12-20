@@ -79,7 +79,14 @@ module.exports = class BigView {
   }
   
   add (Pagelet) {
-    let pagelet = new Pagelet()
+    let pagelet
+    // console.log((Pagelet + '').split('extends').length)
+    if ((Pagelet + '').split('extends').length === 1){
+      pagelet = Pagelet
+    } else {
+      pagelet = new Pagelet()
+    }
+        
     pagelet.owner = this
 
     let self = this

@@ -28,7 +28,13 @@ module.exports = class Pagelet {
   }
 
   addChild (SubPagelet) {
-    let subPagelet = new SubPagelet()
+    let subPagelet
+    if ((SubPagelet + '').split('extends').length === 1){
+      subPagelet = SubPagelet
+    } else {
+      subPagelet = new SubPagelet()
+    }
+    
     this.children.push(subPagelet)
   }
 

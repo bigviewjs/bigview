@@ -13,7 +13,7 @@ module.exports = function (req, res) {
   var Pagelet2 = require('./p2')
   var pagelet2 = new Pagelet2()
 
-  pagelet1.addChild(pagelet2)
+  pagelet1.addChild(Pagelet2)
 
   bigpipe.add(pagelet1)
 

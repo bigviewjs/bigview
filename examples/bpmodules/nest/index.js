@@ -11,9 +11,9 @@ module.exports = function (req, res) {
   var pagelet1 = new Pagelet1()
 
   var Pagelet2 = require('./p2')
-  var pagelet2 = new Pagelet2()
+  // var pagelet2 = new Pagelet2()
 
-  pagelet1.addChild(pagelet2)
+  pagelet1.addChild(Pagelet2)
 
   bigpipe.add(pagelet1)
 
