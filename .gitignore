@@ -1,7 +1,8 @@
 *.log
 /.idea
-/node_modules
+node_modules
 aaaa.html
 bigview.html
 biglet.html
 aaaa.html.json
+packages/bigview-cli/node_modules/
