@@ -143,7 +143,14 @@ module.exports = class BigView {
       .catch(this.processError.bind(this))
   }
   
-  end (time = 0) {
+  end (time) {
+    let t
+    if (!time) {
+      t = 0
+    } else {
+      t = time
+    }
+    
     if (this.done === true) return
     debug("BigView end")
     let self = this
@@ -156,7 +163,7 @@ module.exports = class BigView {
         self.res.end()
         self.done = true
         resolve(true)
-      }, time)
+      }, t)
     })
   }
   
