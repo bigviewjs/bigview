@@ -1,3 +1,5 @@
+'use strict'
+
 const BigView = require('../../../packages/bigview')
 
 module.exports = class MyBigView extends BigView {
