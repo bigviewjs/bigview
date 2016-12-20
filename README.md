@@ -6,7 +6,7 @@
 - 具有测试性
 - 支持mock数据
 - 生成html片段（便于对比）
-- 提供scaffold（bigview-cli）
+- 提供Scaffold（bigview-cli）
 
 功能点
 
@@ -15,8 +15,7 @@
   - a)，静态布局
   - b)，延时输出布局
 
-
-## scaffold
+## Scaffold
 
 Install 
 
