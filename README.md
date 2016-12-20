@@ -6,6 +6,7 @@
 - 具有测试性
 - 支持mock数据
 - 生成html片段（便于对比）
+- 提供scaffold（bigview-cli）
 
 功能点
 
@@ -13,6 +14,33 @@
 - mode 2：支持子布局
   - a)，静态布局
   - b)，延时输出布局
+
+
+## scaffold
+
+Install 
+
+```
+$ npm i -g bigview-cli
+```
+
+Usages
+
+```
+$ bpm a b c
+generate ~/a/MyPagelet.js
+generate ~/a/index.html
+generate ~/a/index.js
+generate ~/a/req.js
+generate ~/b/MyPagelet.js
+generate ~/b/index.html
+generate ~/b/index.js
+generate ~/b/req.js
+generate ~/c/MyPagelet.js
+generate ~/c/index.html
+generate ~/c/index.js
+generate ~/c/req.js
+```
 
 ## 支持mock数据(TODO)
 
