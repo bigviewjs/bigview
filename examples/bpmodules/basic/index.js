@@ -7,14 +7,8 @@ const MyBigView = require('./MyBigView')
 module.exports = function (req, res) {
   var bigpipe = new MyBigView(req, res, 'basic/index', { title: "测试" })
 
-  var Pagelet1 = require('./p1')
-  var pagelet1 = new Pagelet1()
-
-  var Pagelet2 = require('./p2')
-  var pagelet2 = new Pagelet2()
-
-  bigpipe.add(pagelet1)
-  bigpipe.add(pagelet2)
+  bigpipe.add(require('./p1'))
+  bigpipe.add(require('./p2'))
 
   // bigpipe.preview('aaaa.html')
   bigpipe.isMock = true
