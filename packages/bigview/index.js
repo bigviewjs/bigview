@@ -145,7 +145,9 @@ module.exports = class BigView {
     // 4）this.end 通知浏览器，写入完成
   
     return this.before()
+      .then(this.beforeRenderLayout.bind(this))
       .then(this.renderLayout.bind(this))
+      .then(this.afterRenderLayout.bind(this))
       .then(this.fetchAllData.bind(this))
       .then(this.end.bind(this))
       .catch(this.processError.bind(this))
@@ -173,6 +175,14 @@ module.exports = class BigView {
         resolve(true)
       }, t)
     })
+  }
+  
+  beforeRenderLayout () {
+    return Promise.resolve(true)
+  }
+  
+  afterRenderLayout () {
+    return Promise.resolve(true)
   }
   
   renderLayout () {
