@@ -14,6 +14,19 @@
 - mode 2：支持子布局
   - a)，静态布局
   - b)，延时输出布局
+  
+## 生命周期
+
+bigview的生命周期
+
+- before
+- .then(this.beforeRenderLayout.bind(this))
+- .then(this.renderLayout.bind(this))
+- .then(this.afterRenderLayout.bind(this))
+- .then(this.beforeFetchAllData.bind(this))
+- .then(this.fetchAllData.bind(this))
+- .then(this.afterFetchAllData.bind(this)
+- end
 
 ## Scaffold
 

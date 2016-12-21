@@ -118,6 +118,15 @@ module.exports = class BigView {
     }
     debug(this.allPagelets)
   }
+  
+  
+  beforeFetchAllData () {
+    return Promise.resolve(true)
+  }
+  
+  afterFetchAllData () {
+    return Promise.resolve(true)
+  }
 
   fetchAllData (){
     debug("BigView  fetchAllData start")
@@ -148,7 +157,9 @@ module.exports = class BigView {
       .then(this.beforeRenderLayout.bind(this))
       .then(this.renderLayout.bind(this))
       .then(this.afterRenderLayout.bind(this))
+      .then(this.beforeFetchAllData.bind(this))
       .then(this.fetchAllData.bind(this))
+      .then(this.afterFetchAllData.bind(this))
       .then(this.end.bind(this))
       .catch(this.processError.bind(this))
   }
@@ -207,10 +218,6 @@ module.exports = class BigView {
     self.data.pagelets = pagelets ? pagelets : self.pagelets
     
     return self.data
-  }
-  
-  loadData () {
-    throw new Error('need impl')
   }
   
   processError (err) {

@@ -26,7 +26,11 @@ module.exports = class Pagelet {
      this.js = ''
      this.css = ''
   }
-
+  
+  before () {
+    return Promise.resolve(true)
+  }
+  
   addChild (SubPagelet) {
     let subPagelet
     if ((SubPagelet + '').split('extends').length === 1){
@@ -63,11 +67,24 @@ module.exports = class Pagelet {
       self.data.po[k] = self[k]
     }
 
-    return self.fetch()
+    return self.before()
+      .then(self.beforeFetch.bind(self))
+      .then(self.fetch.bind(self))
+      .then(self.afterFetch.bind(self))
+      .then(self.beforeCompile.bind(self))
       .then(self.complile.bind(self))
-      .then(self.finish.bind(self))
+      .then(self.afterCompile.bind(self))
+      .then(self.end.bind(self))
   }
 
+  beforeFetch () {
+    return Promise.resolve(true)
+  }
+  
+  afterFetch () {
+    return Promise.resolve(true)
+  }
+  
   fetch () {
     let self = this
     return new Promise(function(resolve, reject){
@@ -103,6 +120,14 @@ module.exports = class Pagelet {
     })
   }
 
+  beforeCompile () {
+    return Promise.resolve(true)
+  }
+  
+  afterCompile () {
+    return Promise.resolve(true)
+  }
+  
   complile () {
     if (this.owner && this.owner.done === true) return
 
@@ -126,7 +151,7 @@ module.exports = class Pagelet {
     })
   }
 
-  finish () {
+  end () {
     let self = this
     let q = []
     for (let i in this.children) {
