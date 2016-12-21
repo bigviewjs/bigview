@@ -1,6 +1,6 @@
 'use strict'
 
-const BigView = require('../../../packages/bigview')
+const BigView = require('../../../../packages/bigview')
 
 module.exports = class MyBigView extends BigView {
   before () {
@@ -20,8 +20,4 @@ module.exports = class MyBigView extends BigView {
     // console.log('afterRenderLayout')
     return Promise.resolve(true)
   }
-
-  // after () {
-  //
-  // }  
 }
