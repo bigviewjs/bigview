@@ -1,6 +1,15 @@
 # BigView （Node.js 4.x +）
 
-特性
+[![Build](https://travis-ci.org/i5ting/bigview.svg?branch=master)](https://travis-ci.org/i5ting/bigview)
+[![codecov.io](https://codecov.io/github/i5ting/bigview/coverage.svg?branch=master)](https://codecov.io/github/i5ting/bigview?branch=master)
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
+
+
+- bigview [![NPM version](https://img.shields.io/npm/v/bigview.svg?style=flat-square)](https://www.npmjs.com/package/bigview)
+- biglet [![NPM version](https://img.shields.io/npm/v/biglet.svg?style=flat-square)](https://www.npmjs.com/package/biglet)
+- bigview-cli [![NPM version](https://img.shields.io/npm/v/bigview-cli.svg?style=flat-square)](https://www.npmjs.com/package/bigview-cli)
+
+## 特性
 
 - 模块化
 - 具有测试性
