@@ -11,7 +11,7 @@ module.exports = function (req, res) {
   bigpipe.add(require('./p2'))
 
   // bigpipe.preview('aaaa.html')
-  bigpipe.isMock = true
-  bigpipe.previewFile = 'aaaa.html'
+  // bigpipe.isMock = true
+ //  bigpipe.previewFile = 'aaaa.html'
   bigpipe.start()
 }
