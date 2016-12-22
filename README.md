@@ -14,6 +14,7 @@
 - mode 2：支持子布局
   - a)，静态布局
   - b)，延时输出布局
+- mode 3：根据条件渲染模板
   
 ## 生命周期
 
@@ -217,16 +218,99 @@ views/nest2/index.html是bp的布局文件
 在bpmodules/nest2/p1/p1.html里，输出pagelet2的布局。
 
 ```
-<script>bigpipe.set("pagelet1", '<%= is %>');</script>
+  <script>bigpipe.set("pagelet1", '<%= is %>');</script>
 
-<div id="pagelet2" class="pagelet2">load,,,,</div>
+  <div id="pagelet2" class="pagelet2">load,,,,</div>
 
-<script>
-    bigpipe.ready('pagelet2',function(data){
-        $("#pagelet2").html(data);
-    })
-</script>
+  <script>
+      bigpipe.ready('pagelet2',function(data){
+          $("#pagelet2").html(data);
+      })
+  </script>
 ```
+
+## mode 3：根据条件渲染模板
+
+自定义p1和p2，设置`this.immediately = false`
+
+```
+'use strict'
+
+const Pagelet = require('../../../../packages/biglet')
+
+module.exports = class MyPagelet extends Pagelet {
+  constructor () {
+      super()
+      this.root = __dirname
+      this.name = 'pagelet1'
+      this.data = { is: "pagelet1测试" }
+      this.selector = 'pagelet1'
+      this.location = 'pagelet1'
+      this.tpl = 'p1.html'
+      this.delay = 4000
+      this.immediately = false
+  }
+
+  fetch () {
+		let pagelet = this
+		return require('./req')(pagelet)
+	}
+}
+
+```
+
+自定义BigView基类
+
+```
+'use strict'
+
+const BigView = require('../../../packages/bigview')
+
+module.exports = class MyBigView extends BigView {
+  before () {
+    let self = this
+     return new Promise(function(resolve, reject) {
+       self.showPagelet = self.query.a
+       resolve(true)
+    })
+  }
+
+  afterRenderLayout () {
+    let self = this
+
+    if (self.showPagelet === '1') {
+      self.run('pagelet1')
+    } else {
+      self.run('pagelet2')
+    }
+
+    // console.log('afterRenderLayout')
+    return Promise.resolve(true)
+  } 
+}
+```
+
+在bigview
+
+```
+'use strict'
+
+const debug = require('debug')('bigview')
+const fs = require('fs')
+const MyBigView = require('./MyBigView')
+
+module.exports = function (req, res) {
+  var bigpipe = new MyBigView(req, res, 'if/index', { title: "条件选择pagelet" })
+
+  bigpipe.add(require('./p1'))
+  bigpipe.add(require('./p2'))
+
+  bigpipe.start()
+}
+```
+
+- http://127.0.0.1:4005/if?a=1
+- http://127.0.0.1:4005/if?a=2
 
 ## 生成预览数据
 

@@ -10,12 +10,7 @@ module.exports = class MyBigView extends BigView {
        resolve(true)
     })
   }
-  
-  beforeRenderLayout () {
-    // console.log('beforeRenderLayout')
-    return Promise.resolve(true)
-  }
-  
+
   afterRenderLayout () {
     let self = this
 
@@ -27,9 +22,5 @@ module.exports = class MyBigView extends BigView {
 
     // console.log('afterRenderLayout')
     return Promise.resolve(true)
-  }
-
-  // after () {
-  //
-  // }  
+  } 
 }
