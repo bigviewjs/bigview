@@ -21,7 +21,7 @@ module.exports = class Pagelet {
      this.js = ''
      this.css = ''
      this.immediately = true
-     this.logger = this.owner.logger
+
      // this.display = 'block'
   }
   
@@ -34,6 +34,12 @@ module.exports = class Pagelet {
   // {{#each pagelets}}
   //   <div id="{{ location }}" style="display:{{ display }}">loading...{{ name }}...{{ display }}</div>
   // {{/each}}
+  get logger() {
+    if (this.owner && this.owner.logger) {
+      return this.logger = this.owner.logger
+    }
+  }
+  
   get display() {
     return this.immediately === false ? 'none' : 'block' 
   }
