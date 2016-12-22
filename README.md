@@ -1,7 +1,7 @@
 # BigView （Node.js 4.x +）
 
 [![Build](https://travis-ci.org/i5ting/bigview.svg?branch=master)](https://travis-ci.org/i5ting/bigview)
-[![codecov.io](https://codecov.io/github/i5ting/bigview/coverage.svg?branch=master)](https://codecov.io/github/i5ting/bigview?branch=master)
+[![codecov.io](https://codecov.io/github/i5ting/bigview/coverage.svg?branch=master)](https://codecov.io/github/i5ting/bigview?branch=v2)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
 
