@@ -1,0 +1,32 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <ul>
+    <% pagelets.forEach(function(p){ %>
+        <li><%= p.name %> | <%= p.selector %>
+    <% }) %>
+    </ul>
+
+    <% pagelets.forEach(function(p){ %>
+       <div id="<%= p.location %>" class="<%= p.location %>" style="display:<%= p.display %>">loading...<%= p.name %>...</div>
+    <% }) %>
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bigpipe.js"></script>
+    <script>
+        var bigpipe=new Bigpipe();
+
+        <% pagelets.forEach(function(p){ %>
+        
+        bigpipe.ready('<%= p.name %>',function(data){
+            $("#<%= p.location %>").show().html(data);
+        })
+        <% }) %>
+    
+    </script>
+</body>
+</html>

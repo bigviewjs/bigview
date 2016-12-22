@@ -12,6 +12,8 @@ app.set('view engine', 'html');
 
 app.get('/', require('./bpmodules/basic'));
 
+app.get('/if', require('./bpmodules/if'));
+
 app.get('/nest',require('./bpmodules/nest'));
 
 app.get('/nest2', require('./bpmodules/nest2'));

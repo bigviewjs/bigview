@@ -20,6 +20,21 @@ module.exports = class Pagelet {
      this.html = ''
      this.js = ''
      this.css = ''
+     this.immediately = true
+     // this.display = 'block'
+  }
+  
+  // lazy get value
+  // if immediately === false, pagelet will not render immediately
+  // so the container div should be hidden with {{display}}
+  //
+  // example
+  //
+  // {{#each pagelets}}
+  //   <div id="{{ location }}" style="display:{{ display }}">loading...{{ name }}...{{ display }}</div>
+  // {{/each}}
+  get display() {
+    return this.immediately === false ? 'none' : 'block' 
   }
   
   before () {
@@ -77,7 +92,7 @@ module.exports = class Pagelet {
   }
   
   afterFetch () {
-    return Promise.resolve(true)
+      return Promise.resolve(true)
   }
   
   fetch () {
@@ -124,7 +139,10 @@ module.exports = class Pagelet {
   }
   
   complile () {
-    if (this.owner && this.owner.done === true) return
+    if (this.immediately === true && this.owner && this.owner.done === true) {
+      console.log('no need to complet')
+      return Promise.resolve(true)
+    }
 
     let self = this
 

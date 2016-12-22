@@ -118,7 +118,32 @@ module.exports = class BigView {
     }
     debug(this.allPagelets)
   }
-  
+    
+  // when this.add(pagelet.immediately=false)
+  // then only used in afterRenderLayout ()
+  //
+  // example
+  //    afterRenderLayout () {
+  //      let self = this
+  //
+  //      if (self.showPagelet === '1') {
+  //        self.run('pagelet1')
+  //      } else {
+  //        self.run('pagelet2')
+  //      }
+  //
+  //      // console.log('afterRenderLayout')
+  //      return Promise.resolve(true)
+  //    }
+  run (pageletName) {
+    let _pagelet
+    for (let i in this.pagelets) {
+      let pagelet = this.pagelets[i]
+      if (pagelet.name === pageletName) {
+        pagelet.immediately = true
+      }
+    }
+  }
   
   beforeFetchAllData () {
     return Promise.resolve(true)
@@ -135,7 +160,7 @@ module.exports = class BigView {
     let q = []
     for(var i in self.pagelets){
       let _pagelet = self.pagelets[i]
-      q.push(_pagelet._exec())
+      if (_pagelet.immediately === true) q.push(_pagelet._exec())
     }
     
     return Promise.all(q)
