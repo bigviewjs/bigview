@@ -8,18 +8,30 @@
     "debug": "^2.3.3"
   },
   "devDependencies": {
-    "ava": "^0.17.0",
+    "ava": "^0.16.0",
     "ejs": "^2.3.4",
     "express": "^4.13.3",
     "open": "0.0.5",
     "testchunks": "^1.0.1",
-    "lerna": "2.0.0-beta.31"
+    "lerna": "2.0.0-beta.31",
+    "co-exec": "^1.0",
+    "codecov": "^1.0.1",
+    "ghooks": "^1.2.4",
+    "nyc": "^10.0.0",
+    "standard": "^8.4.0"
   },
   "scripts": {
     "start": "node examples/bin",
-    "test": "ava -v test -w"
+    "test": "./node_modules/.bin/nyc ./node_modules/.bin/ava -v",
+    "report-coverage": "./node_modules/.bin/nyc report --reporter=lcov > coverage.lcov && codecov",
+    "standard": "./node_modules/.bin/standard index.js"
   },
   "keywords": [],
   "author": "i5ting",
-  "license": "MIT"
+  "license": "MIT",
+  "config": {
+    "ghooks": {
+      "pre-commit": "npm run standard"
+    }
+  }
 }
