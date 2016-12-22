@@ -18,7 +18,8 @@ module.exports = class BigView {
     this.chunks = []
     this.js = ''
     this.css = ''
-    
+    this.logger = this.owner.req.logger
+
     if (req.query) this.query = req.query
     if (req.params) this.params = req.params
     if (req.body) this.body = req.body

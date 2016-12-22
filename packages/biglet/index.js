@@ -21,6 +21,7 @@ module.exports = class Pagelet {
      this.js = ''
      this.css = ''
      this.immediately = true
+     this.logger = this.owner.logger
      // this.display = 'block'
   }
   
