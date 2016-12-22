@@ -656,3 +656,16 @@ BigPipe的三种模式：
 ## 参考 
 
 http://velocity.oreilly.com.cn/2011/ppts/WK_velocity.pdf
+
+review
+
+- 测试独立
+- render同意
+- 初始化参数
+- fetch（）就够用了，不必before
+- layout：先返回布局（压测）
+- out模式：同步
+- 日志
+- 开关
+- 性能
+- 共享内存
