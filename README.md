@@ -669,3 +669,6 @@ review
 - 开关
 - 性能
 - 共享内存
+- 约定，所有的数据，只能绑定到data上（限制set）
+- pagelet（传model）
+- 继承自event，外接日志
