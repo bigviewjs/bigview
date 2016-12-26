@@ -5,24 +5,24 @@ const fs = require('fs')
 
 module.exports = class Pagelet {
   constructor () {
-     this.name = 'defaultname'
-     this.data = {}
-     this.tpl = 'index.html'
-     this.root = '.'
-     this.selector = 'selector' // css
-     this.location = 'location' //location
-     this.isMock = false
-     this.options = {} // for compiler
-     this.done = false
-     this.previewFile = 'biglet.html'
-     this.delay = 0
-     this.children = []
-     this.html = ''
-     this.js = ''
-     this.css = ''
-     this.immediately = true
+   this.name = 'defaultname'
+   this.data = {}
+   this.tpl = 'index.html'
+   this.root = '.'
+   this.selector = 'selector' // css
+   this.location = 'location' //location
+   this.isMock = false
+   this.options = {} // for compiler
+   this.done = false
+   this.previewFile = 'biglet.html'
+   this.delay = 0
+   this.children = []
+   this.html = ''
+   this.js = ''
+   this.css = ''
+   this.immediately = true
 
-     // this.display = 'block'
+   // this.display = 'block'
   }
   
   // lazy get value
@@ -99,7 +99,7 @@ module.exports = class Pagelet {
   }
   
   afterFetch () {
-      return Promise.resolve(true)
+    return Promise.resolve(true)
   }
   
   fetch () {
