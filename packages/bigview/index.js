@@ -19,6 +19,9 @@ module.exports = class BigView {
     this.chunks = []
     this.js = ''
     this.css = ''
+    // 默认是pipeline并行模式，pagelets快的先渲染
+    this.mode = 'pipeline' 
+    
     if (this.req.logger) this.logger = this.req.logger
 
     if (req.query) this.query = req.query
@@ -26,6 +29,14 @@ module.exports = class BigView {
     if (req.body) this.body = req.body
 
     return this
+  }
+  
+  set mode (mode) {
+    this.mode = mode
+  }
+  
+  get mode () {
+    return this.mode
   }
 
  /**
@@ -51,6 +62,11 @@ module.exports = class BigView {
     })
   }
   
+  /**
+   * Only for mock
+   *
+   * @api public
+   */
   setPageletChunk (text) {
     if (this.chunks.length < 1) {
       return this.chunks.push(text)
@@ -64,6 +80,11 @@ module.exports = class BigView {
     this.chunks.push(_t)
   }
 
+  /**
+   * compile（tpl + data）=> html
+   *
+   * @api public
+   */
   compile (tpl, data) {
     let self = this
     return new Promise(function (resolve, reject) {
@@ -155,7 +176,7 @@ module.exports = class BigView {
     return Promise.resolve(true)
   }
 
-  fetchAllData (){
+  fetchAllData () {
     debug("BigView  fetchAllData start")
     let self = this
     
