@@ -2,6 +2,7 @@
 
 const debug = require('debug')('bigview')
 const fs = require('fs')
+const Promise = require("bluebird")
 
 module.exports = class BigView {
   constructor (req, res, layout, data) {
