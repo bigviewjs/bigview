@@ -672,3 +672,8 @@ review
 - 约定，所有的数据，只能绑定到data上（限制set）
 - pagelet（传model）
 - 继承自event，外接日志
+
+- 静态布局和动态布局说明
+
+- bigview指定模板demo
+- pagelet指定外部模板demo
