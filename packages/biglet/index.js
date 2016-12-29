@@ -83,7 +83,12 @@ module.exports = class Pagelet {
       var k = arr[i]
       self.data.po[k] = self[k]
     }
-
+    
+    // 1) this.before
+    // 2）fetch，用于获取网络数据，可选
+    // 3）complile，用与编译模板为html
+    // 4）this.end 通知浏览器，写入完成
+    
     return self.before()
       .then(self.beforeFetch.bind(self))
       .then(self.fetch.bind(self))
