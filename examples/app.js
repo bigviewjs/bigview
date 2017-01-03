@@ -3,7 +3,11 @@
 var express = require('express');
 var path = require('path');
 var ejs = require('ejs');
+var cookieParser = require('cookie-parser');
+
 var app = express();
+
+app.use(cookieParser());
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.engine('.html', ejs.__express);

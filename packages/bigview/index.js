@@ -33,10 +33,19 @@ module.exports = class BigView extends EventEmitter {
     if (req.query) this.query = req.query
     if (req.params) this.params = req.params
     if (req.body) this.body = req.body
-    if (req.cookies) this.body = req.cookies
+    if (req.cookies) this.cookies = req.cookies
       
     this.on('write', this.write.bind(this));
     this.on('pageletWrite', this.pageletWrite.bind(this));
+    
+    if (this.query && this.query.bigview_mode) {
+      this.mode = this.query.bigview_mode
+    }
+    // 从this.cookies('bigview_mode') 其次
+    console.log("this.cookies = " + req.cookies)
+    if (this.cookies && this.cookies.bigview_mode) {
+      this.mode = this.cookies.bigview_mode
+    }
     
     return this
   }
@@ -44,14 +53,8 @@ module.exports = class BigView extends EventEmitter {
   set mode (mode) {
     console.log(mode)
     // 从this.query('bigview_mode') 第一
-    if (this.query && this.query.bigview_mode) {
-      mode = this.query.bigview_mode
-    }
-    // 从this.cookies('bigview_mode') 其次
-    console.log(this.cookies)
-    if (this.cookies && this.cookies.bigview_mode) {
-      mode = this.cookies.bigview_mode
-    }
+    if (!mode) mode = 'pipline'
+    
     // 用户设置第三
     if (fs.existsSync(__dirname + '/mode/' + mode + '.js') === true) {
       this._mode = mode  
@@ -60,10 +63,20 @@ module.exports = class BigView extends EventEmitter {
       this._mode = 'pipeline' 
       console.log(arr)
     }
-
-    const Mode = require('./mode/' + this._mode)
-    this.modeInstance = new Mode()
-    console.log(this.modeInstance)
+  }
+  
+  get mode () {
+    return this._mode
+  }
+  
+  get modeInstance () {
+    if (!this.mode) {
+      this.mode = 'pipline'
+    }
+    const Mode = require(__dirname + '/mode/' + this.mode)
+    this._modeInstance = new Mode()
+    console.log(this._modeInstance)
+    return this._modeInstance
   }
 
  /**
