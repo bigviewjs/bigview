@@ -187,9 +187,17 @@ module.exports = class Pagelet {
       q.push(subPagelet._exec())
     }
 
-    return Promise.all(q).then(function(){
+    return Promise.all(q).then(function(results){
       self.out()
       self.done = true
+
+      let arr = [self.html]
+
+      results.forEach(function(v, i, a) {
+          arr.push(v)
+      })
+
+      return Promise.resolve(arr)
     }) 
   }
 

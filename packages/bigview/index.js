@@ -2,7 +2,7 @@
 
 const debug = require('debug')('bigview')
 const fs = require('fs')
-const Promise = require("bluebird")
+global.Promise = require("bluebird")
 const EventEmitter = require('events')
 
 module.exports = class BigView extends EventEmitter {
@@ -26,7 +26,7 @@ module.exports = class BigView extends EventEmitter {
     // 默认是pipeline并行模式，pagelets快的先渲染
     this.mode = 'pipeline' 
     
-    const C = require('./mode/parallel')
+    const C = require('./mode/reduce')
     this.modeInstance = new C()
     console.dir(this.modeInstance)
     
@@ -59,7 +59,7 @@ module.exports = class BigView extends EventEmitter {
     if (!text) return
     console.dir(text)
     // 是否立即写入，如果不立即写入，放到this.cache里
-    if (this.modeInstance.isLayoutWriteImmediately && this.modeInstance.isLayoutWriteImmediately !== true) {
+    if (!isWriteImmediately && this.modeInstance.isLayoutWriteImmediately === false) {
       return this.cache.push(text)
     }
 
@@ -144,7 +144,7 @@ module.exports = class BigView extends EventEmitter {
           reject(err)
         }
         debug(str)
-        self.emit('write', str, self.modeInstance.isLayoutWriteImmediately)
+        self.emit('write', str)
         resolve(str)
       })
     })
@@ -267,7 +267,8 @@ module.exports = class BigView extends EventEmitter {
       
     if (this.cache.length > 0) {
       // 如果缓存this.cache里有数据，先写到浏览器，然后再结束
-      this.emit('write', this.cache.join(''))
+      // true will send right now
+      this.emit('write', this.cache.join(''), true)
     }
     debug("BigView end")
     let self = this
