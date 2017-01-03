@@ -3,7 +3,7 @@
 // 情况2： 随机，all完成之后，立即写入，即parallel模式
 // 情况3： 依次，写入
 // 情况4： 依次，不写入，all完成之后再写入(当前)
-module.exports = class ParallelMode {
+module.exports = class RenderMode {
   constructor () {
     this.isLayoutWriteImmediately = false
     this.isPageletWriteImmediately = false

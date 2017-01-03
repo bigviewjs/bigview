@@ -24,10 +24,8 @@ module.exports = class BigView extends EventEmitter {
     this.js = ''
     this.css = ''
     // 默认是pipeline并行模式，pagelets快的先渲染
-    this.mode = 'pipeline' 
     
-    const C = require('./mode/pipeline')
-    this.modeInstance = new C()
+    
     console.dir(this.modeInstance)
     
     if (this.req.logger) this.logger = this.req.logger
@@ -35,6 +33,7 @@ module.exports = class BigView extends EventEmitter {
     if (req.query) this.query = req.query
     if (req.params) this.params = req.params
     if (req.body) this.body = req.body
+    if (req.cookies) this.body = req.cookies
       
     this.on('write', this.write.bind(this));
     this.on('pageletWrite', this.pageletWrite.bind(this));
@@ -43,11 +42,28 @@ module.exports = class BigView extends EventEmitter {
   }
   
   set mode (mode) {
-    this._mode = mode
-  }
-  
-  get mode () {
-    return this._mode
+    console.log(mode)
+    // 从this.query('bigview_mode') 第一
+    if (this.query.bigview_mode) {
+      mode = this.query.bigview_mode
+    }
+    // 从this.cookies('bigview_mode') 其次
+    console.log(this.cookies)
+    if (this.cookies && this.cookies.bigview_mode) {
+      mode = this.cookies.bigview_mode
+    }
+    // 用户设置第三
+    if (fs.existsSync(__dirname + '/mode/' + mode + '.js') === true) {
+      this._mode = mode  
+    } else {
+      let arr = fs.readdirSync(__dirname + '/mode')
+      this._mode = 'pipeline' 
+      console.log(arr)
+    }
+
+    const Mode = require('./mode/' + this._mode)
+    this.modeInstance = new Mode()
+    console.log(this.modeInstance)
   }
 
  /**
