@@ -6,7 +6,9 @@
 module.exports = class CommonMode {
   constructor () {
     this.isLayoutWriteImmediately = true
-    this.isPageletWriteImmediately = true
+    this.isPageletWriteImmediately = false
+
+    this.total = []
   }
 
   /**
@@ -16,20 +18,33 @@ module.exports = class CommonMode {
    * @returns
    */
   execute (bigview) {
-    let self = bigview
+    let self = this
     
     // let q = []
     // for(var i in self.pagelets){
     //   let _pagelet = self.pagelets[i]
     //   if (_pagelet.immediately === true) q.push(_pagelet._exec())
     // }
+   
 
-   return Promise.reduce(self.pagelets, (total, _pagelet, index) => {
-        if (_pagelet.immediately === true) return _pagelet._exec()
-        else return Promise.resolve()
+   return Promise.reduce(bigview.pagelets, (total, _pagelet, index) => {
+     _pagelet.isPageletWriteImmediately = self.isPageletWriteImmediately
+        if (_pagelet.immediately === true) {
+          return _pagelet._exec().then(function(i){
+            self.total.push(i)
+            return Promise.resolve()
+          })
+        } else {
+          return Promise.resolve()
+        }
     }, 0).then(res => {
-        console.log(res)
-        return Promise.resolve(res)
+        let arr = []
+        self.total.forEach(function(i){
+            i.forEach(function(j){
+                arr.push(j)
+            })
+        })
+        return Promise.resolve(arr)
     })
   }
 }

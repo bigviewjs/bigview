@@ -26,7 +26,7 @@ module.exports = class BigView extends EventEmitter {
     // 默认是pipeline并行模式，pagelets快的先渲染
     this.mode = 'pipeline' 
     
-    const C = require('./mode/reduce')
+    const C = require('./mode/pipeline')
     this.modeInstance = new C()
     console.dir(this.modeInstance)
     
