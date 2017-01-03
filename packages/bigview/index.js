@@ -44,7 +44,7 @@ module.exports = class BigView extends EventEmitter {
   set mode (mode) {
     console.log(mode)
     // 从this.query('bigview_mode') 第一
-    if (this.query.bigview_mode) {
+    if (this.query && this.query.bigview_mode) {
       mode = this.query.bigview_mode
     }
     // 从this.cookies('bigview_mode') 其次
