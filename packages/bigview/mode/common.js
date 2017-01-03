@@ -8,38 +8,23 @@ module.exports = class CommonMode {
     // 情况2： 顺序，完成并写入，适合pipeline模式
     // 情况3： all完成之后，立即写入
     // 情况4： all完成之后，不写入
-    this.pageletMode = 1
   }
 
-
-  execute () {
-    let mode = this.pageletMode
-
-    switch (mode) {
-      case 1:
-        break;
-      case 2:
-        break;
-      default:
+  /**
+   * execute pagelets'action
+   * 
+   * @param {any} bigview
+   * @returns
+   */
+  execute (bigview) {
+    let self = bigview
+    
+    let q = []
+    for(var i in self.pagelets){
+      let _pagelet = self.pagelets[i]
+      if (_pagelet.immediately === true) q.push(_pagelet._exec())
     }
+    
+    return Promise.all(q)
   }
-  
-  allsequence () {
-    promise.reduce().then(function(results){
-      return Promise.resolve(results)
-    })
-  }
-  
-  allRandom () {
-    promise.all().each(function(results){
-      return Promise.resolve(results)
-    })
-  }
-  
-  allRandom () {
-    promise.all().each(function(results){
-      return Promise.resolve(results)
-    })
-  }
-  
 }

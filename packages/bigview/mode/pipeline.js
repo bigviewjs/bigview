@@ -1,4 +1,4 @@
-module.exports = class CommonMode {
+module.exports = class PiplineMode {
   constructor () {
     this.isLayoutWriteImmediately = true
     this.isPageletWriteImmediately = true
@@ -8,9 +8,14 @@ module.exports = class CommonMode {
     // 情况2： 顺序，完成并写入，适合pipeline模式
     // 情况3： all完成之后，立即写入
     // 情况4： all完成之后，不写入
-    this.pageletMode = 1
   }
 
+  /**
+   * execute pagelets'action
+   * 
+   * @param {any} bigview
+   * @returns
+   */
   execute (bigview) {
     let self = bigview
     
@@ -22,5 +27,4 @@ module.exports = class CommonMode {
     
     return Promise.all(q)
   }
-   
 }

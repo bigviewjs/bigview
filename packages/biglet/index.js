@@ -21,6 +21,7 @@ module.exports = class Pagelet {
    this.js = ''
    this.css = ''
    this.immediately = true
+   this.isPageletWriteImmediately = true
 
    // this.display = 'block'
   }
@@ -161,9 +162,9 @@ module.exports = class Pagelet {
     return self.render(self.root + '/' + self.tpl, self.data).then(function(str){
       self.html = str
       // writeToBrowser
-      if(!self.isMock) self.owner.emit('write', str, true)
+      if(!self.isMock) self.owner.emit('pageletWrite', str, self.isPageletWriteImmediately)
       
-      return Promise.resolve(true)
+      return Promise.resolve(str)
     }).catch(function(err) {      
       console.log('complile' + err)
     }) 

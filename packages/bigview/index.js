@@ -26,7 +26,7 @@ module.exports = class BigView extends EventEmitter {
     // 默认是pipeline并行模式，pagelets快的先渲染
     this.mode = 'pipeline' 
     
-    const C = require('./mode/pipeline')
+    const C = require('./mode/parallel')
     this.modeInstance = new C()
     console.dir(this.modeInstance)
     
@@ -37,6 +37,7 @@ module.exports = class BigView extends EventEmitter {
     if (req.body) this.body = req.body
       
     this.on('write', this.write.bind(this));
+    this.on('pageletWrite', this.pageletWrite.bind(this));
     
     return this
   }
@@ -59,6 +60,35 @@ module.exports = class BigView extends EventEmitter {
     console.dir(text)
     // 是否立即写入，如果不立即写入，放到this.cache里
     if (this.modeInstance.isLayoutWriteImmediately && this.modeInstance.isLayoutWriteImmediately !== true) {
+      return this.cache.push(text)
+    }
+
+    if (this.done === true) return
+
+    let self = this
+
+    return new Promise(function (resolve, reject) {
+      debug('BigView final data = ' + text)
+      debug(text)
+      if (text && text.length > 0 ) {
+        // save to chunks array for preview
+        self.setPageletChunk(text)
+
+        // write to Browser
+        self.res.write(text)
+      }
+    })
+  }
+
+  /**
+  * Write data to Browser.
+  *
+  * @api public
+  */
+  pageletWrite (text, isWriteImmediately) {
+    if (!text) return
+    console.dir(text)
+    if (isWriteImmediately === false) {
       return this.cache.push(text)
     }
 
