@@ -3,9 +3,12 @@
 const debug = require('debug')('bigview')
 const fs = require('fs')
 const Promise = require("bluebird")
+const EventEmitter = require('events')
 
-module.exports = class BigView {
+module.exports = class BigView extends EventEmitter {
   constructor (req, res, layout, data) {
+    super()
+
     this.req = req
     this.res = res
     this.layout = layout
@@ -16,27 +19,34 @@ module.exports = class BigView {
     this.allPagelets = []
     this.done = false
     this.layoutHtml = ''
+    this.cache = []
     this.chunks = []
     this.js = ''
     this.css = ''
     // 默认是pipeline并行模式，pagelets快的先渲染
     this.mode = 'pipeline' 
     
+    const C = require('./mode/common')
+    this.modeInstance = new C()
+    console.dir(this.modeInstance)
+    
     if (this.req.logger) this.logger = this.req.logger
 
     if (req.query) this.query = req.query
     if (req.params) this.params = req.params
     if (req.body) this.body = req.body
-
+      
+    this.on('write', this.write.bind(this));
+    
     return this
   }
   
   set mode (mode) {
-    this.mode = mode
+    this._mode = mode
   }
   
   get mode () {
-    return this.mode
+    return this._mode
   }
 
  /**
@@ -44,7 +54,14 @@ module.exports = class BigView {
   *
   * @api public
   */
-  write (text) {
+  write (text, isWriteImmediately) {
+    if (!text) return
+    console.dir(text)
+    // 是否立即写入，如果不立即写入，放到this.cache里
+    if (this.modeInstance.isLayoutWriteImmediately && this.modeInstance.isLayoutWriteImmediately !== true) {
+      return this.cache.push(text)
+    }
+
     if (this.done === true) return
 
     let self = this
@@ -87,20 +104,22 @@ module.exports = class BigView {
    */
   compile (tpl, data) {
     let self = this
+    if (!tpl) return Promise.resolve(true)
     return new Promise(function (resolve, reject) {
       debug('renderLayout')
       self.res.render(tpl, data, function (err, str) {
         if (err) {
           debug('renderLayout ' + str)
           console.log(err)
+          reject(err)
         }
         debug(str)
-        self.write(str)
+        self.emit('write', str, self.modeInstance.isLayoutWriteImmediately)
         resolve(str)
       })
     })
   }
-  
+
   add (Pagelet) {
     let pagelet
     // console.log((Pagelet + '').split('extends').length)
@@ -221,6 +240,11 @@ module.exports = class BigView {
     }
     
     if (this.done === true) return
+      
+    if (this.cache.length > 0) {
+      // 如果缓存this.cache里有数据，先写到浏览器，然后再结束
+      this.emit('write', this.cache.join(''))
+    }
     debug("BigView end")
     let self = this
     

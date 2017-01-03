@@ -161,7 +161,7 @@ module.exports = class Pagelet {
     return self.render(self.root + '/' + self.tpl, self.data).then(function(str){
       self.html = str
       // writeToBrowser
-      if(!self.isMock) self.owner.write(str)
+      if(!self.isMock) self.owner.emit('write', str, true)
       
       return Promise.resolve(true)
     }).catch(function(err) {      
