@@ -26,7 +26,7 @@ module.exports = class BigView extends EventEmitter {
     // 默认是pipeline并行模式，pagelets快的先渲染
     this.mode = 'pipeline' 
     
-    const C = require('./mode/common')
+    const C = require('./mode/pipeline')
     this.modeInstance = new C()
     console.dir(this.modeInstance)
     
@@ -197,15 +197,9 @@ module.exports = class BigView extends EventEmitter {
 
   fetchAllData () {
     debug("BigView  fetchAllData start")
-    let self = this
-    
-    let q = []
-    for(var i in self.pagelets){
-      let _pagelet = self.pagelets[i]
-      if (_pagelet.immediately === true) q.push(_pagelet._exec())
-    }
-    
-    return Promise.all(q)
+    let bigview = this
+
+    return this.modeInstance.execute(bigview)
       // .then(function(){
       //   console.log('BigView fetchAllData end')
       // })
