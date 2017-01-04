@@ -8,6 +8,7 @@
 - bigview [![NPM version](https://img.shields.io/npm/v/bigview.svg?style=flat-square)](https://www.npmjs.com/package/bigview)
 - biglet [![NPM version](https://img.shields.io/npm/v/biglet.svg?style=flat-square)](https://www.npmjs.com/package/biglet)
 - bigview-cli [![NPM version](https://img.shields.io/npm/v/bigview-cli.svg?style=flat-square)](https://www.npmjs.com/package/bigview-cli)
+- bigconsole [![NPM version](https://img.shields.io/npm/v/bigconsole.svg?style=flat-square)](https://www.npmjs.com/package/bigconsole)
 
 ## 特性
 
