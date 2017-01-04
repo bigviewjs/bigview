@@ -20,12 +20,11 @@
 
 功能点
 
-- mode 1：支持一个布局n个模块
-- mode 2：支持子布局
-  - a)，静态布局
-  - b)，延时输出布局
-- mode 3：根据条件渲染模板
-  
+- 支持静态布局和动态布局
+- 支持5种bigpipe渲染模式
+- 支持子pagelet，无限级嵌套
+- 支持根据条件渲染模板，延时输出布局
+
 ## 生命周期
 
 bigview的生命周期
@@ -39,7 +38,14 @@ bigview的生命周期
 - .then(this.afterFetchAllData.bind(this)
 - end
 
-pagelet的生命周期
+bigview的生命周期精简
+
+- before
+- renderLayout
+- fetchAllData
+- end
+
+biglet的生命周期
 
 - before
 - .then(self.fetch.bind(self))
