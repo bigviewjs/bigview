@@ -117,23 +117,6 @@ module.exports = class BigViewBase extends EventEmitter {
     this.chunks.push(_t)
   }
 
-
-  beforeFetchAllData() {
-    return Promise.resolve(true)
-  }
-
-  afterFetchAllData() {
-    return Promise.resolve(true)
-  }
-
-  beforeRenderLayout() {
-    return Promise.resolve(true)
-  }
-
-  afterRenderLayout() {
-    return Promise.resolve(true)
-  }
-
   /**
    * 子类重写此方法，可以自定义
    *
@@ -189,5 +172,22 @@ module.exports = class BigViewBase extends EventEmitter {
       console.log(err)
       resolve(true)
     })
+  }
+
+  // lifecycle
+  beforeFetchAllData() {
+    return Promise.resolve(true)
+  }
+
+  afterFetchAllData() {
+    return Promise.resolve(true)
+  }
+
+  beforeRenderLayout() {
+    return Promise.resolve(true)
+  }
+
+  afterRenderLayout() {
+    return Promise.resolve(true)
   }
 }
