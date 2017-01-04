@@ -114,7 +114,7 @@ module.exports = class Pagelet extends PageletBase {
     }
   }
   
-  complile(tpl, data) {
+  compile(tpl, data) {
     const ejs = require('ejs')
     let self = this
 
@@ -139,7 +139,7 @@ module.exports = class Pagelet extends PageletBase {
 
     let self = this
 
-    return self.complile(self.root + '/' + self.tpl, self.data).then(function(str) {
+    return self.compile(self.root + '/' + self.tpl, self.data).then(function(str) {
       self.html = str
         // writeToBrowser
       if (!self.isMock) self.owner.emit('pageletWrite', str, self.isPageletWriteImmediately)
