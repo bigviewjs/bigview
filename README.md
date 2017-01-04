@@ -660,7 +660,7 @@ review
 - 测试独立
 - render同意
 - 初始化参数
-- fetch（）就够用了，不必before
+- fetch（）就够用了，不必before（精简生命周期，fetch后增加parse）
 - layout：先返回布局（压测）
 - out模式：同步
 - 日志
@@ -669,7 +669,7 @@ review
 - 共享内存
 - 约定，所有的数据，只能绑定到data上（限制set）
 - pagelet（传model）
-- 继承自event，外接日志
+- 继承自event，外接日志(基本实现)
 
 - 静态布局和动态布局说明
 
