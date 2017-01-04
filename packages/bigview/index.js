@@ -49,29 +49,6 @@ module.exports = class BigView extends BigViewBase {
     return this
   }
 
-  /**
-   * compile（tpl + data）=> html
-   *
-   * @api public
-   */
-  compile(tpl, data) {
-    let self = this
-    if (!tpl) return Promise.resolve(true)
-    return new Promise(function(resolve, reject) {
-      debug('renderLayout')
-      self.res.render(tpl, data, function(err, str) {
-        if (err) {
-          debug('renderLayout ' + str)
-          console.log(err)
-          reject(err)
-        }
-        debug(str)
-        self.emit('write', str)
-        resolve(str)
-      })
-    })
-  }
-
   add(Pagelet) {
     let pagelet
       // console.log((Pagelet + '').split('extends').length)
@@ -144,9 +121,10 @@ module.exports = class BigView extends BigViewBase {
     let self = this
 
     // 1) this.before
-    // 2）渲染布局
-    // 3）Promise.all() 并行处理pagelets（策略是随机，fetch快的优先）
+    // 2）renderLayout: 渲染布局
+    // 3）fetchAllData: Promise.all() 并行处理pagelets（策略是随机，fetch快的优先）
     // 4）this.end 通知浏览器，写入完成
+    // 5) processError
 
     return this.before()
       .then(this.beforeRenderLayout.bind(this))
@@ -166,6 +144,29 @@ module.exports = class BigView extends BigViewBase {
     })
   }
 
+  /**
+   * compile（tpl + data）=> html
+   *
+   * @api public
+   */
+  compile(tpl, data) {
+    let self = this
+    if (!tpl) return Promise.resolve(true)
+    return new Promise(function(resolve, reject) {
+      debug('renderLayout')
+      self.res.render(tpl, data, function(err, str) {
+        if (err) {
+          debug('renderLayout ' + str)
+          console.log(err)
+          reject(err)
+        }
+        debug(str)
+        self.emit('write', str)
+        resolve(str)
+      })
+    })
+  }
+
   renderLayout() {
     debug("BigView renderLayout")
     let self = this
@@ -181,9 +182,6 @@ module.exports = class BigView extends BigViewBase {
     let bigview = this
 
     return this.modeInstance.execute(bigview)
-      // .then(function(){
-      //   console.log('BigView fetchAllData end')
-      // })
   }
 
   end(time) {
