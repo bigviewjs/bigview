@@ -20,13 +20,6 @@ module.exports = class ReduceRenderMode {
   execute (bigview) {
     let self = this
     
-    // let q = []
-    // for(var i in self.pagelets){
-    //   let _pagelet = self.pagelets[i]
-    //   if (_pagelet.immediately === true) q.push(_pagelet._exec())
-    // }
-   
-
    return Promise.reduce(bigview.pagelets, (total, _pagelet, index) => {
      _pagelet.isPageletWriteImmediately = self.isPageletWriteImmediately
         if (_pagelet.immediately === true) {
