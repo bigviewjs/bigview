@@ -4,81 +4,81 @@ const debug = require('debug')('biglet')
 const fs = require('fs')
 
 class PageletBase {
-  beforeParse () {
+  beforeParse() {
     return Promise.resolve(true)
   }
-  
-  afterParse () {
+
+  afterParse() {
     return Promise.resolve(true)
   }
-  
-  beforeFetch () {
+
+  beforeFetch() {
     return Promise.resolve(true)
   }
-  
-  afterFetch () {
+
+  afterFetch() {
     return Promise.resolve(true)
   }
-  
-  beforeCompile () {
+
+  beforeCompile() {
     return Promise.resolve(true)
   }
-  
-  afterCompile () {
+
+  afterCompile() {
     return Promise.resolve(true)
   }
-  
-  log () {
+
+  log() {
     let self = this
-    return new Promise(function(resolve, reject){
+    return new Promise(function(resolve, reject) {
       debug('log')
-      // resolve(self.data)
+        // resolve(self.data)
     })
   }
 
-  noopPromise () {
+  noopPromise() {
     let self = this
-    return new Promise(function(resolve, reject){
+    return new Promise(function(resolve, reject) {
       resolve(true)
     })
   }
-  
-  toJsHtml (html, quotation) {
+
+  toJsHtml(html, quotation) {
     let regexp
     if (quotation === "'") {
       regexp = /(\r\n(\s)*)|(\n(\s)*)|(\r(\s)*)|(\')|(\t)/g
-    }else{
+    } else {
       regexp = /(\r\n(\s)*)|(\n(\s)*)|(\r(\s)*)|(\")|(\t)/g
     }
-    
-    return html.replace(regexp, function (word) {
+
+    return html.replace(regexp, function(word) {
       var char = word.substring(0, 1)
-      
+
       if (char === "\r" || char === "\n") {
         return "\\n"
-      }else if (char === '"') {
+      } else if (char === '"') {
         return '\\"'
-      }else if (char === "'") {
+      } else if (char === "'") {
         return "\\'"
-      }else if (char === "\t") {
+      } else if (char === "\t") {
         return "\\t"
-      }else{
+      } else {
         return word
       }
     })
   }
 
-  toLineHtml (html) {
+  toLineHtml(html) {
     let regexp = /(\r\n(\s)*)|(\n(\s)*)|(\r(\s)*)|(\")|(\t)/g
 
-    return html.replace(regexp, function (word) {
+    return html.replace(regexp, function(word) {
       var char = word.substring(0, 1)
-      
-      if(char === "\r" || char === "\n"){
+
+      if (char === "\r" || char === "\n") {
         return ""
-      }else if (char === "\t") {
+      } else if (char === "\t") {
         return ""
-      }else{
+      } else {
         return word
       }
     })
@@ -87,7 +87,7 @@ class PageletBase {
 
 
 module.exports = class Pagelet extends PageletBase {
-  constructor () {
+  constructor() {
     super()
     this.name = 'defaultname'
     this.data = {}
@@ -107,9 +107,9 @@ module.exports = class Pagelet extends PageletBase {
     this.immediately = true
     this.isPageletWriteImmediately = true
 
-   // this.display = 'block'
+    // this.display = 'block'
   }
-  
+
   // lazy get value
   // if immediately === false, pagelet will not render immediately
   // so the container div should be hidden with {{display}}
@@ -124,27 +124,27 @@ module.exports = class Pagelet extends PageletBase {
       return this.logger = this.owner.logger
     }
   }
-  
+
   get display() {
-    return this.immediately === false ? 'none' : 'block' 
+    return this.immediately === false ? 'none' : 'block'
   }
-  
-  before () {
+
+  before() {
     return Promise.resolve(true)
   }
-  
-  addChild (SubPagelet) {
+
+  addChild(SubPagelet) {
     let subPagelet
-    if ((SubPagelet + '').split('extends').length === 1){
+    if ((SubPagelet + '').split('extends').length === 1) {
       subPagelet = SubPagelet
     } else {
       subPagelet = new SubPagelet()
     }
-    
+
     this.children.push(subPagelet)
   }
 
-  mock (file) {
+  mock(file) {
     if (file) this.previewFile = file
 
     this.isMock = true
@@ -155,26 +155,26 @@ module.exports = class Pagelet extends PageletBase {
   // step1: fetch data
   // step2: compile(tpl + data) => html
   // step3: write html to browser
-  _exec () {
+  _exec() {
     let self = this
-    
+
     if (this.owner && this.owner.done === true) return
     debug('  Pagelet fetch')
 
     self.data.po = {}
     var arr = ['name', 'tpl', 'root', 'selector', 'location', 'options', 'done', 'delay', 'children']
 
-    for(var i in arr) {
+    for (var i in arr) {
       var k = arr[i]
       self.data.po[k] = self[k]
     }
-    
+
     // 1) this.before
     // 2）fetch，用于获取网络数据，可选
     // 3) parse，用于处理fetch获取的数据
     // 4）render，用与编译模板为html
     // 5）this.end 通知浏览器，写入完成
-    
+
     return self.before()
       // .then(self.beforeFetch.bind(self))
       .then(self.fetch.bind(self))
@@ -188,13 +188,13 @@ module.exports = class Pagelet extends PageletBase {
       .then(self.end.bind(self))
   }
 
-  parse () {  
+  parse() {
     return Promise.resolve(true)
   }
 
-  fetch () {
+  fetch() {
     let self = this
-    return new Promise(function(resolve, reject){
+    return new Promise(function(resolve, reject) {
       setTimeout(function() {
         // self.owner.end()
         resolve(self.data)
@@ -202,24 +202,24 @@ module.exports = class Pagelet extends PageletBase {
     })
   }
 
-  complile (tpl, data) {
+  complile(tpl, data) {
     const ejs = require('ejs')
     let self = this
 
-    return new Promise(function(resolve, reject){
-      ejs.renderFile(tpl, data, self.options, function(err, str){
-          // str => Rendered HTML string
-          if (err) {
-            console.log(err)
-            reject(err)
-          }
-         
-          resolve(str)
+    return new Promise(function(resolve, reject) {
+      ejs.renderFile(tpl, data, self.options, function(err, str) {
+        // str => Rendered HTML string
+        if (err) {
+          console.log(err)
+          reject(err)
+        }
+
+        resolve(str)
       })
     })
   }
 
-  render () {
+  render() {
     if (this.immediately === true && this.owner && this.owner.done === true) {
       console.log('no need to complet')
       return Promise.resolve(true)
@@ -227,18 +227,18 @@ module.exports = class Pagelet extends PageletBase {
 
     let self = this
 
-    return self.complile(self.root + '/' + self.tpl, self.data).then(function(str){
+    return self.complile(self.root + '/' + self.tpl, self.data).then(function(str) {
       self.html = str
-      // writeToBrowser
-      if(!self.isMock) self.owner.emit('pageletWrite', str, self.isPageletWriteImmediately)
-      
+        // writeToBrowser
+      if (!self.isMock) self.owner.emit('pageletWrite', str, self.isPageletWriteImmediately)
+
       return Promise.resolve(str)
-    }).catch(function(err) {      
+    }).catch(function(err) {
       console.log('complile' + err)
-    }) 
+    })
   }
 
-  end () {
+  end() {
     let self = this
     let q = []
     for (let i in this.children) {
@@ -248,22 +248,22 @@ module.exports = class Pagelet extends PageletBase {
       q.push(subPagelet._exec())
     }
 
-    return Promise.all(q).then(function(results){
+    return Promise.all(q).then(function(results) {
       self.out()
       self.done = true
 
       let arr = [self.html]
 
       results.forEach(function(v, i, a) {
-          arr.push(v)
+        arr.push(v)
       })
 
       return Promise.resolve(arr)
-    }) 
+    })
   }
 
-  out () {
+  out() {
     // 子的pagelets如何处理
-    if (this.isMock && this.previewFile) fs.writeFileSync(this.previewFile, this.html,  'utf8')
+    if (this.isMock && this.previewFile) fs.writeFileSync(this.previewFile, this.html, 'utf8')
   }
 }
