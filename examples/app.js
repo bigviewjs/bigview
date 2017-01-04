@@ -22,5 +22,18 @@ app.get('/nest',require('./bpmodules/nest'));
 
 app.get('/nest2', require('./bpmodules/nest2'));
 
+app.get('/default', function (req, res) {
+  var pagelets = []
+  
+  pagelets.push(require('./bpmodules/basic/p1'))
+  pagelets.push(require('./bpmodules/basic/p2'))
+    
+  res.render('basic/default', {
+    title: "default test",
+    pagelets: pagelets
+  })
+});
+
+
 // app.listen(5000);
 module.exports = app

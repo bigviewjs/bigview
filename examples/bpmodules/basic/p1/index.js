@@ -16,6 +16,7 @@ module.exports = class MyPagelet extends Pagelet {
   
   compile(tpl, data) {
     const ejs = require('ejs')
+    ejs.cache = require('lru-cache')(1000)
     let self = this
 
     return new Promise(function(resolve, reject) {

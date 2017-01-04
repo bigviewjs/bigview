@@ -112,6 +112,19 @@ module.exports = class Pagelet extends PageletBase {
     } else {
       return Promise.resolve(pagelet.data)
     }
+    
+    // return new Promise(function(resolve, reject) {
+    //   fs.exists(parseFile, (exists) => {
+    //     console.log(exists ? 'it\'s there' : 'no passwd!');
+    //     if (exists === true) {
+    //       return require(parseFile)(pagelet, bigview).then(function(data) {
+    //         return Promise.resolve(pagelet.data = data)
+    //       })
+    //     } else {
+    //       resolve(pagelet.data)
+    //     }
+    //   })
+    // })
   }
   
   compile(tpl, data) {
