@@ -39,7 +39,7 @@ module.exports = class BigView extends BigViewBase {
       this.mode = this.query.bigview_mode
     }
     // 从this.cookies('bigview_mode') 其次
-    debug("this.cookies = " + req.cookies)
+    // debug("this.cookies = " + req.cookies)
     if (this.cookies && this.cookies.bigview_mode) {
       this.mode = this.cookies.bigview_mode
     }
