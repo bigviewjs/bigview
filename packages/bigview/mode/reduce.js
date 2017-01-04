@@ -4,7 +4,7 @@
 // 情况3： 依次，写入(当前)
 // 情况4： 依次，不写入，all完成之后再写入
 module.exports = class ReduceMode {
-  constructor () {
+  constructor() {
     this.isLayoutWriteImmediately = true
     this.isPageletWriteImmediately = true
   }
@@ -15,15 +15,15 @@ module.exports = class ReduceMode {
    * @param {any} bigview
    * @returns
    */
-  execute (bigview) {
+  execute(bigview) {
     let self = bigview
-  
-   return Promise.reduce(self.pagelets, (total, _pagelet, index) => {
-        if (_pagelet.immediately === true) return _pagelet._exec()
-        else return Promise.resolve()
+
+    return Promise.reduce(self.pagelets, (total, _pagelet, index) => {
+      if (_pagelet.immediately === true) return _pagelet._exec()
+      else return Promise.resolve()
     }, 0).then(res => {
-        console.log(res)
-        return Promise.resolve(res)
+      console.log(res)
+      return Promise.resolve(res)
     })
   }
 }
