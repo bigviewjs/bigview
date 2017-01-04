@@ -24,7 +24,7 @@ module.exports = class Pagelet extends PageletBase {
     this.css = ''
     this.immediately = true
     this.isPageletWriteImmediately = true
-
+    this.parser = 'parse.js'
     // this.display = 'block'
   }
   
@@ -89,9 +89,29 @@ module.exports = class Pagelet extends PageletBase {
       }, self.delay)
     })
   }
-
+  // parse.js demo
+  // 'use strict'
+  //
+  // module.exports = function (pagelet, bigview) {
+  //   let orderInfo = bigview.orderInfo
+  //   let data = {
+  //      a: 1
+  //   }
+  //
+  //   return Promise.resolve(data)
+  // }
   parse() {
-    return Promise.resolve(true)
+    let pagelet = this
+    let bigview = pagelet.owner
+    let parseFile = pagelet.root + '/' + pagelet.parser
+    
+    if (fs.existsSync(parseFile) === true) {
+      return require(parseFile)(pagelet, bigview).then(function(data) {
+        return Promise.resolve(pagelet.data = data)
+      })
+    } else {
+      return Promise.resolve(pagelet.data)
+    }
   }
   
   complile(tpl, data) {
