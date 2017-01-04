@@ -1,6 +1,6 @@
 'use strict'
 
-const debug = require('debug')('bigview')
+const debug = require('debug')('biglet')
 const fs = require('fs')
 global.Promise = require("bluebird")
 const EventEmitter = require('events')
@@ -159,7 +159,6 @@ module.exports = class BigViewBase extends EventEmitter {
       var str = CircularJSON.stringify(d);
       var o = JSON.parse(str)
       fs.writeFileSync(this.previewFile + '.json', JSON.stringify(d, null, 4))
-
     }
   }
 

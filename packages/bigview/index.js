@@ -1,7 +1,6 @@
 'use strict'
 
-const debug = require('debug')('bigview')
-global.Promise = require("bluebird")
+const debug = require('debug')('biglet')
 const BigViewBase = require('./base')
 
 module.exports = class BigView extends BigViewBase {
