@@ -6,7 +6,7 @@ const MyBigView = require('./MyBigView')
 
 module.exports = function (req, res) {
   var bigpipe = new MyBigView(req, res, 'basic/index', { title: "测试" })
-  bigpipe.mode = 'render'
+  // bigpipe.mode = 'render'
   bigpipe.add(require('./p1'))
   bigpipe.add(require('./p2'))
 

@@ -635,14 +635,17 @@ var FM=function(a,b,c){function bN(b,c){a.clear&&(bN=a.clear)(b,c)}function bM(b
 <script>FM.view({"ns":"pl.top.index","domid":"plc_top","css":[],"js":["home/js/pl/top/index.js?version=8fde40d2c1ecd58b"],"html":""})</script>
 
 <script>
-pl.View('pagelet1','pl1.css','pl1.js',
-'<span>Here is pagelet1</span>');
-</script>
-<script>
-pl.View('pagelet2','pl1.css','pl1.js',
-'<span>I am pagelet2</span>');
+pl.trigger('pagelet1',{
+  css: ['pl1.css'],
+  js: ['pl1.js'],
+  data: {},
+  html:'<span>Here is pagelet1</span>'
+});
 </script>
 ```
+
+- 同一个pagelet可能触发多次
+
 
 模块的css可以采用各种预处理编写，在提供bigpipe打包功能，合并到一起或者单独引入(可以再考虑)。
 
@@ -670,16 +673,16 @@ http://velocity.oreilly.com.cn/2011/ppts/WK_velocity.pdf
 review
 
 - 测试独立
-- render同意
+- render统一（？）
 - 初始化参数
 - fetch（）就够用了，不必before（精简生命周期，fetch后增加parse）
-- layout：先返回布局（压测）
+- layout：先返回布局（压测）（ok）
 - out模式：同步
 - 日志
 - 开关
 - 性能
 - 共享内存
-- 约定，所有的数据，只能绑定到data上（限制set）
+- 约定，所有的数据，只能绑定到data上，改成parse
 - pagelet（传model）
 - 继承自event，外接日志(基本实现)
 
@@ -687,3 +690,6 @@ review
 
 - bigview指定模板demo
 - pagelet指定外部模板demo
+
+- ng proxy给个头compress,expire-buffer
+- 分享
