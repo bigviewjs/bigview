@@ -1,7 +1,6 @@
 'use strict'
 
 const debug = require('debug')('bigview')
-const fs = require('fs')
 global.Promise = require("bluebird")
 const BigViewBase = require('./base')
 
