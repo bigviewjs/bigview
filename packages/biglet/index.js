@@ -43,7 +43,6 @@ module.exports = class Pagelet extends PageletBase {
   // step1: fetch data
   // step2: compile(tpl + data) => html
   // step3: write html to browser
-  
   _exec() {
     let self = this
 
