@@ -693,3 +693,4 @@ review
 
 - ng proxy给个头compress,expire-buffer
 - 分享
+- 封装前端bigpipe库
