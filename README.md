@@ -42,12 +42,9 @@ bigview的生命周期
 pagelet的生命周期
 
 - before
-- .then(self.beforeFetch.bind(self))
 - .then(self.fetch.bind(self))
-- .then(self.afterFetch.bind(self))
-- .then(self.beforeCompile.bind(self))
-- .then(self.complile.bind(self))
-- .then(self.afterCompile.bind(self))
+- .then(self.parse.bind(self))
+- .then(self.render.bind(self))
 - end
 
 ## Scaffold
