@@ -83,6 +83,18 @@ class PageletBase {
       }
     })
   }
+  
+  mock(file) {
+    if (file) this.previewFile = file
+
+    this.isMock = true
+    this._exec()
+  }
+  
+  out() {
+    // 子的pagelets如何处理
+    if (this.isMock && this.previewFile) fs.writeFileSync(this.previewFile, this.html, 'utf8')
+  }
 }
 
 
@@ -128,11 +140,7 @@ module.exports = class Pagelet extends PageletBase {
   get display() {
     return this.immediately === false ? 'none' : 'block'
   }
-
-  before() {
-    return Promise.resolve(true)
-  }
-
+  
   addChild(SubPagelet) {
     let subPagelet
     if ((SubPagelet + '').split('extends').length === 1) {
@@ -143,18 +151,12 @@ module.exports = class Pagelet extends PageletBase {
 
     this.children.push(subPagelet)
   }
-
-  mock(file) {
-    if (file) this.previewFile = file
-
-    this.isMock = true
-    this._exec()
-  }
-
+  
   // private only call by bigview
   // step1: fetch data
   // step2: compile(tpl + data) => html
   // step3: write html to browser
+  
   _exec() {
     let self = this
 
@@ -187,11 +189,11 @@ module.exports = class Pagelet extends PageletBase {
       // .then(self.afterCompile.bind(self))
       .then(self.end.bind(self))
   }
-
-  parse() {
+  
+  before() {
     return Promise.resolve(true)
   }
-
+  
   fetch() {
     let self = this
     return new Promise(function(resolve, reject) {
@@ -202,6 +204,10 @@ module.exports = class Pagelet extends PageletBase {
     })
   }
 
+  parse() {
+    return Promise.resolve(true)
+  }
+  
   complile(tpl, data) {
     const ejs = require('ejs')
     let self = this
@@ -260,10 +266,5 @@ module.exports = class Pagelet extends PageletBase {
 
       return Promise.resolve(arr)
     })
-  }
-
-  out() {
-    // 子的pagelets如何处理
-    if (this.isMock && this.previewFile) fs.writeFileSync(this.previewFile, this.html, 'utf8')
   }
 }
