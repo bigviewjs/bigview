@@ -17,8 +17,9 @@
 - 支持mock数据
 - 生成html片段（便于对比）
 - 提供Scaffold（bigview-cli）
+- 提供调试UI（bigconsole）
 
-功能点
+## 功能点
 
 - 支持静态布局和动态布局
 - 支持5种bigpipe渲染模式
