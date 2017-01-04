@@ -1,6 +1,6 @@
 'use strict'
 
-const debug = require('debug')('biglet')
+const debug = require('debug')('bigview')
 const fs = require('fs')
 global.Promise = require("bluebird")
 const EventEmitter = require('events')
@@ -12,7 +12,7 @@ module.exports = class BigViewBase extends EventEmitter {
   }
 
   set mode(mode) {
-    console.log(mode)
+    debug(mode)
       // 从this.query('bigview_mode') 第一
     if (!mode) mode = 'pipline'
 
@@ -22,7 +22,7 @@ module.exports = class BigViewBase extends EventEmitter {
     } else {
       let arr = fs.readdirSync(__dirname + '/mode')
       this._mode = 'pipeline'
-      console.log(arr)
+      debug(arr)
     }
   }
 
@@ -36,7 +36,7 @@ module.exports = class BigViewBase extends EventEmitter {
     }
     const Mode = require(__dirname + '/mode/' + this.mode)
     this._modeInstance = new Mode()
-    console.log(this._modeInstance)
+    debug(this._modeInstance)
     return this._modeInstance
   }
 
@@ -47,7 +47,7 @@ module.exports = class BigViewBase extends EventEmitter {
    */
   write(text, isWriteImmediately) {
     if (!text) return
-    console.dir(text)
+    debug(text)
       // 是否立即写入，如果不立即写入，放到this.cache里
     if (!isWriteImmediately && this.modeInstance.isLayoutWriteImmediately === false) {
       return this.cache.push(text)
@@ -77,7 +77,7 @@ module.exports = class BigViewBase extends EventEmitter {
    */
   pageletWrite(text, isWriteImmediately) {
     if (!text) return
-    console.dir(text)
+    debug(text)
     if (isWriteImmediately === false) {
       return this.cache.push(text)
     }

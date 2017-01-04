@@ -1,6 +1,6 @@
 'use strict'
 
-const debug = require('debug')('biglet')
+const debug = require('debug')('bigview')
 const BigViewBase = require('./base')
 
 module.exports = class BigView extends BigViewBase {
@@ -23,7 +23,7 @@ module.exports = class BigView extends BigViewBase {
     this.css = ''
       // 默认是pipeline并行模式，pagelets快的先渲染
 
-    console.dir(this.modeInstance)
+    debug(this.modeInstance)
 
     if (this.req.logger) this.logger = this.req.logger
 
@@ -39,7 +39,7 @@ module.exports = class BigView extends BigViewBase {
       this.mode = this.query.bigview_mode
     }
     // 从this.cookies('bigview_mode') 其次
-    console.log("this.cookies = " + req.cookies)
+    debug("this.cookies = " + req.cookies)
     if (this.cookies && this.cookies.bigview_mode) {
       this.mode = this.cookies.bigview_mode
     }
