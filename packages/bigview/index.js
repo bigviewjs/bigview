@@ -127,7 +127,7 @@ module.exports = class BigView extends BigViewBase {
 
         // 1) this.before
         // 2）renderLayout: 渲染布局
-        // 3）fetchAllData: Promise.all() 并行处理pagelets（策略是随机，fetch快的优先）
+        // 3）renderPagelets: Promise.all() 并行处理pagelets（策略是随机，fetch快的优先）
         // 4）this.end 通知浏览器，写入完成
         // 5) processError
 
@@ -135,9 +135,9 @@ module.exports = class BigView extends BigViewBase {
             .then(this.beforeRenderLayout.bind(this))
             .then(this.renderLayout.bind(this))
             .then(this.afterRenderLayout.bind(this))
-            .then(this.beforeFetchAllData.bind(this))
-            .then(this.fetchAllData.bind(this))
-            .then(this.afterFetchAllData.bind(this))
+            .then(this.beforeRenderPagelets.bind(this))
+            .then(this.renderPagelets.bind(this))
+            .then(this.afterRenderPagelets.bind(this))
             .then(this.end.bind(this))
             .catch(this.processError.bind(this))
     }
@@ -181,12 +181,12 @@ module.exports = class BigView extends BigViewBase {
         self.data = self.getData(self.data, self.pagelets);
         return self.compile(self.layout, self.data).then(function (str) {
             self.layoutHtml = str;
-            return Promise.resolve(true)
+            return str
         })
     }
 
-    fetchAllData() {
-        debug("BigView  fetchAllData start");
+    renderPagelets() {
+        debug("BigView  renderPagelets start");
         let bigview = this;
 
         return this.modeInstance.execute(bigview)

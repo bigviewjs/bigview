@@ -159,11 +159,11 @@ module.exports = class BigViewBase extends EventEmitter {
     }
 
     // lifecycle;
-    beforeFetchAllData() {
+    beforeRenderPagelets() {
         return Promise.resolve(true)
     }
 
-    afterFetchAllData() {
+    afterRenderPagelets() {
         return Promise.resolve(true)
     }
 

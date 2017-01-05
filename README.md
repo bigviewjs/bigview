@@ -39,16 +39,16 @@ bigview的生命周期
 - .then(this.beforeRenderLayout.bind(this))
 - .then(this.renderLayout.bind(this))
 - .then(this.afterRenderLayout.bind(this))
-- .then(this.beforeFetchAllData.bind(this))
-- .then(this.fetchAllData.bind(this))
-- .then(this.afterFetchAllData.bind(this)
+- .then(this.beforeRenderPagelets.bind(this))
+- .then(this.renderPagelets.bind(this))
+- .then(this.afterRenderPagelets.bind(this)
 - end
 
 bigview的生命周期精简
 
 - before
 - renderLayout
-- fetchAllData
+- renderPagelets
 - end
 
 biglet的生命周期
