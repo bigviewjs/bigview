@@ -24,7 +24,7 @@
     "testchunks": "^1.0.1"
   },
   "scripts": {
-    "start": "node --trace_gc –trace-bailout –trace-deopt examples/bin",
+    "start": "node --trace_gc examples/bin",
     "test": "./node_modules/.bin/nyc ./node_modules/.bin/ava -v",
     "report-coverage": "./node_modules/.bin/nyc report --reporter=lcov > coverage.lcov && codecov",
     "standard": "./node_modules/.bin/standard index.js"
