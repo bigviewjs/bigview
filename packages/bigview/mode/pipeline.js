@@ -17,14 +17,15 @@ module.exports = class PiplineMode {
 	 * @returns
 	 */
 	execute(bigview) {
-		let self = bigview
-
 		let q = []
-		for (var i in self.pagelets) {
-			let _pagelet = self.pagelets[i]
-			_pagelet.isPageletWriteImmediately = this.isPageletWriteImmediately
-			if (_pagelet.immediately === true) q.push(_pagelet._exec())
-		}
+        let self = this
+
+		bigview.pagelets.forEach(function (_pagelet) {
+			_pagelet.isPageletWriteImmediately = self.isPageletWriteImmediately
+			if (_pagelet.immediately === true) {
+				q.push(_pagelet._exec())
+			}
+		});
 
 		return Promise.all(q)
 	}
