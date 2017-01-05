@@ -44,3 +44,4 @@ jspm_packages
 .npm
 
 # Optional REPL hist
+.vscode
