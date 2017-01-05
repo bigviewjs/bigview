@@ -34,7 +34,7 @@
   "license": "MIT",
   "config": {
     "ghooks": {
-      "pre-commit": "npm run standard"
+      "pre-commit": ""
     }
   }
 }
