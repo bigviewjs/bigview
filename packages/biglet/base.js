@@ -28,14 +28,6 @@ class PageletBase {
     return Promise.resolve(true)
   }
 
-  log() {
-    let self = this
-    return new Promise(function(resolve, reject) {
-      debug('log')
-        // resolve(self.data)
-    })
-  }
-
   noopPromise() {
     let self = this
     return new Promise(function(resolve, reject) {
