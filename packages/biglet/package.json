@@ -1,14 +1,14 @@
 {
-  "name": "biglet",
-  "version": "1.2.5",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "debug": "^2.3.3"
-  },
-  "author": "",
-  "license": "ISC"
+	"name": "biglet",
+	"version": "1.2.5",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"dependencies": {
+		"debug": "^2.3.3"
+	},
+	"author": "",
+	"license": "ISC"
 }

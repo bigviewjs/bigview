@@ -1,15 +1,15 @@
 {
-  "name": "bigview",
-  "version": "1.2.5",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "bluebird": "^3.4.7",
-    "debug": "^2.3.3"
-  },
-  "author": "",
-  "license": "ISC"
+	"name": "bigview",
+	"version": "1.2.5",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"dependencies": {
+		"bluebird": "^3.4.7",
+		"debug": "^2.3.3"
+	},
+	"author": "",
+	"license": "ISC"
 }
