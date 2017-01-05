@@ -1,3 +1,4 @@
+'use strict'
 // pagelets 4种情况
 // 情况1： 随机，先完成的先写入，即pipeline模式(当前)
 // 情况2： 随机，all完成之后，立即写入，即parallel模式
