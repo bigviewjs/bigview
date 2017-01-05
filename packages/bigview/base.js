@@ -8,7 +8,6 @@ const EventEmitter = require('events');
 module.exports = class BigViewBase extends EventEmitter {
     constructor(req, res, layout, data) {
         super();
-        return this
     }
 
     set mode(mode) {
@@ -53,19 +52,15 @@ module.exports = class BigViewBase extends EventEmitter {
 
         if (this.done === true) return;
 
-        let self = this;
+        debug('BigView final data = ' + text);
+        debug(text);
+        if (text && text.length > 0) {
+            // save to chunks array for preview;
+            this.setPageletChunk(text);
 
-        return new Promise(function (resolve, reject) {
-            debug('BigView final data = ' + text);
-            debug(text);
-            if (text && text.length > 0) {
-                // save to chunks array for preview;
-                self.setPageletChunk(text);
-
-                // write to Browser;
-                self.res.write(text);
-            }
-        });
+            // write to Browser;
+            this.res.write(text);
+        }
     }
 
     /**
