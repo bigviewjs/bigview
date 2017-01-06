@@ -17,7 +17,6 @@ class Pagelet extends PageletBase {
         this.isMock = false;
         
         this.previewFile = 'biglet.html';
-        this.delay = 0;
         this.children = [];
         // 用来缓存当前pagelet布局模板编译生成的html字符串
         this.html = '';
@@ -54,7 +53,7 @@ class Pagelet extends PageletBase {
         debug('  Pagelet fetch');
 
         self.data.po = {};
-        var arr = ['name', 'tpl', 'root', 'selector', 'location', 'options', 'delay', 'children'];
+        var arr = ['name', 'tpl', 'root', 'selector', 'location','children'];
 
         arr.forEach(function (key) {
             self.data.po[key] = self[key]
@@ -84,13 +83,7 @@ class Pagelet extends PageletBase {
     }
 
     fetch() {
-        let self = this;
-        return new Promise(function (resolve, reject) {
-            setTimeout(function () {
-                // self.owner.end()
-                resolve(self.data)
-            }, self.delay)
-        })
+        return Promise.resolve(this.data)
     }
 
     parse() {
