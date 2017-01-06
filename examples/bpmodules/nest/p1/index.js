@@ -12,7 +12,13 @@ module.exports = class MyPagelet extends Pagelet {
 		this.location = 'pagelet1'
 		this.tpl = 'p1.html'
 		this.selector = 'pagelet1'
-		this.delay = 2000
 	}
-  
+    
+    fetch() {
+        return this.sleep(2000)
+    }
+    
+    sleep(time) {
+        return new Promise((resolve) => setTimeout(resolve, time))
+    }
 }
