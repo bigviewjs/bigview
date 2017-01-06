@@ -8,18 +8,16 @@ const EventEmitter = require('events');
 module.exports = class BigViewBase extends EventEmitter {
     constructor(req, res, layout, data) {
         super();
+        
+        this._mode = 'pipline';
     }
 
     set mode(mode) {
-        debug(mode);
-        // 从this.query('bigview_mode') 第一
-        if (!mode) mode = 'pipline';
+        debug('bigview mode = ' + mode);
 
         // 用户设置第三
         if (fs.existsSync(__dirname + '/mode/' + mode + '.js') === true) {
             this._mode = mode;
-        } else {
-            this._mode = 'pipeline';
         }
     }
 
@@ -28,9 +26,6 @@ module.exports = class BigViewBase extends EventEmitter {
     }
 
     get modeInstance() {
-        if (!this.mode) {
-            this.mode = 'pipline';
-        }
         const Mode = require(__dirname + '/mode/' + this.mode);
         this._modeInstance = new Mode();
         debug(this._modeInstance);

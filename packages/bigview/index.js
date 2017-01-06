@@ -28,13 +28,7 @@ class BigView extends BigViewBase {
         this.css = '';
         // 默认是pipeline并行模式，pagelets快的先渲染
         // 如果是动态布局，会有this.data.pagelets
-        this.isDynamicLayout = true
-
-        debug(this.modeInstance);
-
-        if (this.req.logger) {
-            this.logger = this.req.logger
-        }
+        this.isDynamicLayout = true;
 
         if (req.query) {
             this.query = req.query
@@ -54,15 +48,6 @@ class BigView extends BigViewBase {
 
         this.on('write', this.write.bind(this));
         this.on('pageletWrite', this.pageletWrite.bind(this));
-
-        if (this.query && this.query.bigview_mode) {
-            this.mode = this.query.bigview_mode
-        }
-        // 从this.cookies('bigview_mode') 其次
-        // debug("this.cookies = " + req.cookies)
-        if (this.cookies && this.cookies.bigview_mode) {
-            this.mode = this.cookies.bigview_mode
-        }
     }
 
     add(Pagelet) {
