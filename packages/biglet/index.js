@@ -39,10 +39,7 @@ class Pagelet extends PageletBase {
 
         this.children.push(subPagelet)
     }
-    
-    renderOption() {
-      return {}
-    }
+
     // private only call by bigview
     // step1: fetch data
     // step2: compile(tpl + data) => html
@@ -112,6 +109,10 @@ class Pagelet extends PageletBase {
                 }
             });
         })
+    }
+
+    renderOption() {
+      return {}
     }
 
     compile(tpl, data) {
