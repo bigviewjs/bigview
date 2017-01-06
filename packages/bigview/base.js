@@ -5,6 +5,12 @@ const fs = require('fs');
 global.Promise = require("bluebird");
 const EventEmitter = require('events');
 
+const PipelineMode = require('./mode/pipeline.js');
+const ParallelMode = require('./mode/parallel.js');
+const ReduceMode = require('./mode/reduce.js');
+const ReducerenderMode = require('./mode/reducerender.js');
+const RenderMode = require('./mode/render.js');
+
 module.exports = class BigViewBase extends EventEmitter {
     constructor(req, res, layout, data) {
         super();
@@ -35,16 +41,35 @@ module.exports = class BigViewBase extends EventEmitter {
         if (fs.existsSync(__dirname + '/mode/' + mode + '.js') === true) {
             this._mode = mode;
         }
+        
+        switch(mode) {
+            case 'pipeline':
+                this._modeInstance = new PipelineMode();
+                break;
+            case 'parallel':
+                this._modeInstance = new ParallelMode();
+                break;
+            case 'reduce':
+                this._modeInstance = new ReduceMode();
+                break;
+            case 'reducerender':
+                this._modeInstance = new ReducerenderMode();
+                break;
+            case 'render':
+                this._modeInstance = new RenderMode();
+                break;
+            default:
+              this._modeInstance = new PipelineMode();
+        }
     }
 
     get mode() {
+        debug('mode = ' + this._mode);
         return this._mode;
     }
 
     get modeInstance() {
-        const Mode = require(__dirname + '/mode/' + this.mode);
-        this._modeInstance = new Mode();
-        debug(this._modeInstance);
+        debug('modeInstance = ' + this._modeInstance);
         return this._modeInstance;
     }
 
