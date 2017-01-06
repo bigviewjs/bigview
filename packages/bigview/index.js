@@ -3,7 +3,7 @@
 const debug = require('debug')('bigview');
 const BigViewBase = require('./base');
 
-module.exports = class BigView extends BigViewBase {
+class BigView extends BigViewBase {
     constructor(req, res, layout, data) {
         super(req, res, layout, data);
         
@@ -229,3 +229,5 @@ module.exports = class BigView extends BigViewBase {
         return Promise.resolve();
     }
 };
+
+module.exports = BigView;
