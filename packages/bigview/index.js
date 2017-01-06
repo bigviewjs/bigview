@@ -209,8 +209,8 @@ module.exports = class BigView extends BigViewBase {
         if (this.cache.length > 0) {
             // 如果缓存this.cache里有数据，先写到浏览器，然后再结束
             // true will send right now
-            let writeImmediately  = true;
-            this.emit('write', this.cache.join(''), writeImmediately)
+            let isWriteImmediately  = true;
+            this.emit('write', this.cache.join(''), isWriteImmediately)
         }
 
         debug("BigView end");
