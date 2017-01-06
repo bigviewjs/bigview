@@ -147,6 +147,7 @@ class Pagelet {
         });
 
         return Promise.all(queue).then(function (results) {
+            // 如果需要可以在bigview处捕获，生成mock的数据
             self.owner.emit('pageletEnd',self)
           
             return [self.html].concat(results)
