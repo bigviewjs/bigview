@@ -16,17 +16,16 @@ class Pagelet extends PageletBase {
         this.location = 'location'; //location
         this.isMock = false;
         this.options = {}; // for compiler
-        // this.done = false;
         this.previewFile = 'biglet.html';
         this.delay = 0;
         this.children = [];
         this.html = '';
-        this.js = '';
-        this.css = '';
+        // 为延时渲染提供的
         this.immediately = true;
+        // 为mode提供的
         this.isPageletWriteImmediately = true;
+        // 在parse方法里，默认的加载文件
         this.parser = 'parse.js';
-        // this.display = 'block'
     }
 
     addChild(SubPagelet) {
@@ -162,8 +161,6 @@ class Pagelet extends PageletBase {
 
         return Promise.all(queue).then(function (results) {
             self.out();
-            // self.done = true;
-
             return [self.html].concat(results)
         })
     }
