@@ -1,6 +1,7 @@
 'use strict'
 
 const debug = require('debug')('bigview');
+const Promise = require("bluebird");
 
 // pagelets 5种情况
 // 情况1： 随机，先完成的先写入，即pipeline模式

@@ -1,6 +1,7 @@
 'use strict';
 
 const debug = require('debug')('bigview');
+const Promise = require("bluebird");
 const BigViewBase = require('./base');
 
 class BigView extends BigViewBase {

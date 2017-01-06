@@ -2,7 +2,7 @@
 
 const debug = require('debug')('bigview');
 const fs = require('fs');
-global.Promise = require("bluebird");
+const Promise = require("bluebird");
 const EventEmitter = require('events');
 
 const PipelineMode = require('./mode/pipeline.js');
