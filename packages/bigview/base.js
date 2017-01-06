@@ -38,104 +38,62 @@ module.exports = class BigViewBase extends EventEmitter {
     }
 
     /**
-     * Write data to Browser.
+     * Write bigview data to Browser.
      *
      * @api public;
      */
     write(text, isWriteImmediately) {
-        if (!text) return;
+        if (!text) {
+            throw new Error(' Write empty data to Browser.')
+        }
+
         debug(text);
+
         // 是否立即写入，如果不立即写入，放到this.cache里
         if (!isWriteImmediately && this.modeInstance.isLayoutWriteImmediately === false) {
             return this.cache.push(text);
         }
 
-        if (this.done === true) return;
+        if (this.done === true) {
+            throw new Error(' Write data to Browser after bigview.dong = true.')
+        }
 
         debug('BigView final data = ' + text);
         debug(text);
+        
         if (text && text.length > 0) {
-            // save to chunks array for preview;
-            this.setPageletChunk(text);
-
             // write to Browser;
             this.res.write(text);
         }
     }
 
     /**
-     * Write data to Browser.
+     * Write pagelet data to Browser.
      *
      * @api public
      */
     pageletWrite(text, isWriteImmediately) {
-        if (!text) return;
+        if (!text) {
+            throw new Error(' Write empty data to Browser.')
+        }
+        
         debug(text);
+
         if (isWriteImmediately === false) {
             return this.cache.push(text);
         }
 
-        if (this.done === true) return;
+        if (this.done === true) {
+            throw new Error(' Write data to Browser after bigview.dong = true.')
+        }
 
         debug('BigView final data = ' + text);
         debug(text);
-        if (text && text.length > 0) {
-            // save to chunks array for preview;
-            this.setPageletChunk(text);
 
+        if (text && text.length > 0) {
             // write to Browser;
             this.res.write(text);
         }
-    }
-
-    /**
-     * Only for mock
-     *
-     * @api public
-     */
-    setPageletChunk(text) {
-        if (this.chunks.length < 1) {
-            return this.chunks.push(text);
-        }
-
-        let pagelet = this.allPagelets[this.chunks.length - 1];
-        debug(pagelet);
-
-        let comment = `<!--这是${pagelet.name}-->`;
-        let _t = comment + '\n' + text;
-        this.chunks.push(_t);
-    }
-
-    out() {
-        if (this.isMock && this.previewFile) {
-            fs.writeFileSync(this.previewFile, this.chunks.join('\n'));
-
-            let _d = this.data;
-            delete _d.pagelets;
-
-            var _a = [];
-
-            for (let i in this.allPagelets) {
-                let _p = this.allPagelets[i];
-                delete _p.owner;
-                _a.push(_p);
-            }
-
-            let d = {
-                layout: this.layout,
-                layoutHtml: this.layoutHtml,
-                data: _d,
-                // pagelets: this.pagelets,
-                allPagelets: _a,
-                chunks: this.chunks
-            };
-
-            fs.writeFileSync(this.previewFile + '.json', JSON.stringify(d, null, 4));
-        }
-    }
-
-    preview(file) {
-        this.previewFile = file;
     }
 
     processError(err) {

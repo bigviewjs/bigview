@@ -15,9 +15,10 @@ class BigView extends BigViewBase {
         // 如果是动态布局会自动注入pagelets
         this.data = data || {};
         
-        this.previewFile = 'bigview.html';
-        this.isMock = false;
+        // 存放add的pagelets，带有父子级别的
         this.pagelets = [];
+        
+        // 存放所有的pagelets，无父子级别的
         this.allPagelets = [];
         this.done = false;
         this.layoutHtml = '';
