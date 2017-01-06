@@ -43,10 +43,11 @@ class Pagelet {
         let self = this;
 
         if (this.owner && this.owner.done === true) {
+            console.error("pagelet " + this.name + " execute after bigview.done")
             return
         }
 
-        debug('  Pagelet fetch');
+        debug('Pagelet fetch');
 
         self.data.po = {};
         var arr = ['name', 'tpl', 'root', 'selector', 'location','children'];
@@ -132,7 +133,7 @@ class Pagelet {
 
             return str
         }).catch(function (err) {
-            console.log('complile' + err)
+            console.error('complile' + err)
         })
     }
 
