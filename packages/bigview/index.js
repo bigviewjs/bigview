@@ -6,11 +6,15 @@ const BigViewBase = require('./base');
 module.exports = class BigView extends BigViewBase {
     constructor(req, res, layout, data) {
         super(req, res, layout, data);
-
+        
         this.req = req;
         this.res = res;
         this.layout = layout;
-        this.data = data;
+        
+        // 用于为页面模板提供数据
+        // 如果是动态布局会自动注入pagelets
+        this.data = data || {};
+        
         this.previewFile = 'bigview.html';
         this.isMock = false;
         this.pagelets = [];

@@ -6,55 +6,6 @@ const fs = require('fs')
 
 class PageletBase {
 
-
-	noopPromise() {
-		let self = this
-		return new Promise(function(resolve, reject) {
-			resolve(true);
-		})
-	}
-
-	toJsHtml(html, quotation) {
-		let regexp
-		if (quotation === "'") {
-			regexp = /(\r\n(\s)*)|(\n(\s)*)|(\r(\s)*)|(\')|(\t)/g
-		} else {
-			regexp = /(\r\n(\s)*)|(\n(\s)*)|(\r(\s)*)|(\")|(\t)/g
-		}
-
-		return html.replace(regexp, function(word) {
-			var char = word.substring(0, 1)
-
-			if (char === "\r" || char === "\n") {
-				return "\\n"
-			} else if (char === '"') {
-				return '\\"'
-			} else if (char === "'") {
-				return "\\'"
-			} else if (char === "\t") {
-				return "\\t"
-			} else {
-				return word
-			}
-		})
-	}
-
-	toLineHtml(html) {
-		let regexp = /(\r\n(\s)*)|(\n(\s)*)|(\r(\s)*)|(\")|(\t)/g
-
-		return html.replace(regexp, function(word) {
-			var char = word.substring(0, 1)
-
-			if (char === "\r" || char === "\n") {
-				return ""
-			} else if (char === "\t") {
-				return ""
-			} else {
-				return word
-			}
-		})
-	}
-
 	mock(file) {
 		if (file) {
 		    this.previewFile = file;

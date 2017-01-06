@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const PageletBase = require('./base');
 
-module.exports = class Pagelet extends PageletBase {
+class Pagelet extends PageletBase {
     constructor() {
         super();
         this.name = 'defaultname';
@@ -167,4 +167,6 @@ module.exports = class Pagelet extends PageletBase {
             return [self.html].concat(results)
         })
     }
-};
+}
+
+module.exports = Pagelet;
