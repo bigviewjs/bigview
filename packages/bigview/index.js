@@ -147,10 +147,8 @@ module.exports = class BigView extends BigViewBase {
     }
 
     before() {
-        return new Promise(function (resolve, reject) {
-            debug('default before');
-            resolve(true)
-        })
+        debug('default before');
+        return Promise.resolve();
     }
 
     /**
@@ -199,42 +197,35 @@ module.exports = class BigView extends BigViewBase {
         debug("BigView  renderPagelets start");
         let bigview = this;
 
-        return this.modeInstance.execute(bigview)
+        return this.modeInstance.execute(bigview);
     }
 
-    end(time) {
-        let t;
-        if (!time) {
-            t = 0
-        } else {
-            t = time
+    end() {
+        if (this.done === true) {
+            let err = new Error("bigview.done = true");
+            return Promise.reject(err);
         }
-
-        if (this.done === true) return;
 
         if (this.cache.length > 0) {
             // 如果缓存this.cache里有数据，先写到浏览器，然后再结束
             // true will send right now
-            this.emit('write', this.cache.join(''), true)
+            let writeImmediately  = true;
+            this.emit('write', this.cache.join(''), writeImmediately)
         }
+
         debug("BigView end");
+
         let self = this;
 
-        // lifecycle after
-        self.after();
-
-        return new Promise(function (resolve, reject) {
-            setTimeout(function () {
-                self.res.end();
-                self.done = true;
-                resolve(true)
-            }, t)
-        })
+        // lifecycle self.after before res.end
+        return self.after().then(function () {
+            self.res.end();
+            return self.done = true;
+        });
     }
 
     after() {
         debug('default after');
-
-        this.out()
+        return Promise.resolve();
     }
 };
