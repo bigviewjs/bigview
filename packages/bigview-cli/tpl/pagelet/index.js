@@ -3,7 +3,7 @@
 const Pagelet = require('biglet')
 
 module.exports = class MyPagelet extends Pagelet {
-  constructor () {
+  constructor() {
     super()
     this.root = __dirname
     this.name = '{{name}}'
@@ -14,13 +14,16 @@ module.exports = class MyPagelet extends Pagelet {
     this.delay = 0
   }
 
-  fetch () {
+  fetch() {
     let self = this
     return new Promise(function(resolve, reject){
       setTimeout(function() {
-        // self.owner.end()
         resolve(self.data)
       }, self.delay)
     })
+  }
+  
+  parse() {
+      return Promise.resolve(this.data = {})
   }
 }
