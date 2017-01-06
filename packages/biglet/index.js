@@ -15,10 +15,11 @@ class Pagelet extends PageletBase {
         this.selector = 'selector'; // css
         this.location = 'location'; //location
         this.isMock = false;
-        this.options = {}; // for compiler
+        
         this.previewFile = 'biglet.html';
         this.delay = 0;
         this.children = [];
+        // 用来缓存当前pagelet布局模板编译生成的html字符串
         this.html = '';
         // 为延时渲染提供的
         this.immediately = true;
@@ -38,7 +39,10 @@ class Pagelet extends PageletBase {
 
         this.children.push(subPagelet)
     }
-
+    
+    renderOption() {
+      return {}
+    }
     // private only call by bigview
     // step1: fetch data
     // step2: compile(tpl + data) => html
@@ -113,9 +117,10 @@ class Pagelet extends PageletBase {
     compile(tpl, data) {
         const ejs = require('ejs');
         let self = this;
+        let option = self.renderOption();
 
         return new Promise(function (resolve, reject) {
-            ejs.renderFile(tpl, data, self.options, function (err, str) {
+            ejs.renderFile(tpl, data, option, function (err, str) {
                 // str => Rendered HTML string
                 if (err) {
                     console.log(err);
