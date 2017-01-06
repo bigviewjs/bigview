@@ -43,8 +43,8 @@ class Pagelet {
         let self = this;
 
         if (this.owner && this.owner.done === true) {
-            console.error("pagelet " + this.name + " execute after bigview.done")
-            return
+            let err = new Error("pagelet " + this.name + " execute after bigview.done")
+            return Promise.reject(err)
         }
 
         debug('Pagelet fetch');
