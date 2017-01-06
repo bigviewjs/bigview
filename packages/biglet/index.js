@@ -3,20 +3,16 @@
 const debug = require('debug')('biglet');
 const fs = require('fs');
 const path = require('path');
-const PageletBase = require('./base');
 
-class Pagelet extends PageletBase {
+class Pagelet {
     constructor() {
-        super();
         this.name = 'defaultname';
         this.data = {};
         this.tpl = 'index.html';
         this.root = '.';
         this.selector = 'selector'; // css
         this.location = 'location'; //location
-        this.isMock = false;
-        
-        this.previewFile = 'biglet.html';
+
         this.children = [];
         // 用来缓存当前pagelet布局模板编译生成的html字符串
         this.html = '';
@@ -66,16 +62,10 @@ class Pagelet extends PageletBase {
         // 5）this.end 通知浏览器，写入完成
 
         return self.before()
-        // .then(self.beforeFetch.bind(self))
             .then(self.fetch.bind(self))
-            // .then(self.afterFetch.bind(self))
-            // .then(self.beforeParse.bind(self))
             .then(self.parse.bind(self))
-            // .then(self.afterParse.bind(self))
-            // .then(self.beforeCompile.bind(self))
             .then(self.render.bind(self))
-            // .then(self.afterCompile.bind(self))
-            .then(self.end.bind(self))
+            .then(self.end.bind(self));
     }
 
     before() {
@@ -138,9 +128,7 @@ class Pagelet extends PageletBase {
         return self.compile(tplPath, self.data).then(function (str) {
             self.html = str;
             // writeToBrowser
-            if (!self.isMock) {
-                self.owner.emit('pageletWrite', str, self.isPageletWriteImmediately)
-            }
+            self.owner.emit('pageletWrite', str, self.isPageletWriteImmediately)
 
             return str
         }).catch(function (err) {
@@ -159,10 +147,24 @@ class Pagelet extends PageletBase {
         });
 
         return Promise.all(queue).then(function (results) {
-            self.out();
+            self.owner.emit('pageletEnd',self)
+          
             return [self.html].concat(results)
         })
     }
+
+	// lazy get value
+	// if immediately === false, pagelet will not render immediately
+	// so the container div should be hidden with {{display}}
+	//
+	// example
+	//
+	// {{#each pagelets}}
+	//   <div id="{{ location }}" style="display:{{ display }}">loading...{{ name }}...{{ display }}</div>
+	// {{/each}}
+	get display() {
+		return this.immediately === false ? 'none' : 'block';
+	}
 }
 
 module.exports = Pagelet;
