@@ -3,35 +3,14 @@
 const debug = require('debug')('biglet')
 const fs = require('fs')
 
+
 class PageletBase {
-	beforeParse() {
-		return Promise.resolve(true)
-	}
 
-	afterParse() {
-		return Promise.resolve(true)
-	}
-
-	beforeFetch() {
-		return Promise.resolve(true)
-	}
-
-	afterFetch() {
-		return Promise.resolve(true)
-	}
-
-	beforeCompile() {
-		return Promise.resolve(true)
-	}
-
-	afterCompile() {
-		return Promise.resolve(true)
-	}
 
 	noopPromise() {
 		let self = this
 		return new Promise(function(resolve, reject) {
-			resolve(true)
+			resolve(true);
 		})
 	}
 
@@ -77,15 +56,19 @@ class PageletBase {
 	}
 
 	mock(file) {
-		if (file) this.previewFile = file
+		if (file) {
+		    this.previewFile = file;
+		}
 
-		this.isMock = true
-		this._exec()
+		this.isMock = true;
+		this._exec();
 	}
 
 	out() {
 		// 子的pagelets如何处理
-		if (this.isMock && this.previewFile) fs.writeFileSync(this.previewFile, this.html, 'utf8')
+		if (this.isMock && this.previewFile) {
+            fs.writeFileSync(this.previewFile, this.html, 'utf8');
+        }
 	}
 
 	// lazy get value
@@ -97,16 +80,19 @@ class PageletBase {
 	// {{#each pagelets}}
 	//   <div id="{{ location }}" style="display:{{ display }}">loading...{{ name }}...{{ display }}</div>
 	// {{/each}}
-	get logger() {
+	set logger(logger) {
 		if (this.owner && this.owner.logger) {
-			return this.logger = this.owner.logger
+            this._logger = this.owner.logger;
 		}
+	}
+  
+	get logger() {
+		return this._logger;
 	}
 
 	get display() {
-		return this.immediately === false ? 'none' : 'block'
+		return this.immediately === false ? 'none' : 'block';
 	}
 }
-
 
 module.exports = PageletBase

@@ -106,19 +106,6 @@ module.exports = class BigViewBase extends EventEmitter {
         this.chunks.push(_t);
     }
 
-    /**
-     * 子类重写此方法，可以自定义
-     *
-     * @api public
-     */
-    getData(data, pagelets) {
-        let self = this;
-
-        self.data.pagelets = pagelets ? pagelets : self.pagelets;
-
-        return self.data;
-    }
-
     out() {
         if (this.isMock && this.previewFile) {
             fs.writeFileSync(this.previewFile, this.chunks.join('\n'));

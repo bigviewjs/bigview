@@ -22,6 +22,8 @@ module.exports = class BigView extends BigViewBase {
         this.js = '';
         this.css = '';
         // 默认是pipeline并行模式，pagelets快的先渲染
+        // 如果是动态布局，会有this.data.pagelets
+        this.isDynamicLayout = true
 
         debug(this.modeInstance);
 
@@ -177,8 +179,14 @@ module.exports = class BigView extends BigViewBase {
 
     renderLayout() {
         debug("BigView renderLayout");
+
+        // 动态布局
+        if (this.isDynamicLayout) {
+            this.data.pagelets = this.pagelets;
+        }
+
         let self = this;
-        self.data = self.getData(self.data, self.pagelets);
+
         return self.compile(self.layout, self.data).then(function (str) {
             self.layoutHtml = str;
             return str
