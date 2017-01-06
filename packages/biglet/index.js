@@ -26,7 +26,7 @@ class Pagelet {
 
     addChild(SubPagelet) {
         let subPagelet;
-        if ((SubPagelet + '').split('extends').length === 1) {
+        if ((SubPagelet.toString()).split('extends').length === 1) {
             subPagelet = SubPagelet
         } else {
             subPagelet = new SubPagelet()

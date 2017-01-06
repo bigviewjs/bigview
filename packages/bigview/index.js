@@ -66,8 +66,8 @@ module.exports = class BigView extends BigViewBase {
 
     add(Pagelet) {
         let pagelet;
-        // console.log((Pagelet + '').split('extends').length)
-        if ((Pagelet + '').split('extends').length === 1) {
+
+        if ((Pagelet.toString()).split('extends').length === 1) {
             pagelet = Pagelet
         } else {
             pagelet = new Pagelet()
