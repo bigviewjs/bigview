@@ -67,7 +67,7 @@ class BigView extends BigViewBase {
 
         this.allPagelets = this.allPagelets.concat(re);
 
-        debug(this.allPagelets)
+        debug('bigview allPagelets = ' + this.allPagelets)
     }
 
     // when this.add(pagelet.immediately=false)
