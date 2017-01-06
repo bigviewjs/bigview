@@ -62,8 +62,6 @@ module.exports = class BigView extends BigViewBase {
         if (this.cookies && this.cookies.bigview_mode) {
             this.mode = this.cookies.bigview_mode
         }
-
-        return this
     }
 
     add(Pagelet) {
