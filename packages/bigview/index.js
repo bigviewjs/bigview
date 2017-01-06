@@ -22,10 +22,10 @@ class BigView extends BigViewBase {
         this.allPagelets = [];
         this.done = false;
         this.layoutHtml = '';
+        
+        // 用于缓存res.write的内容
         this.cache = [];
-        this.chunks = [];
-        this.js = '';
-        this.css = '';
+        
         // 默认是pipeline并行模式，pagelets快的先渲染
         // 如果是动态布局，会有this.data.pagelets
         this.isDynamicLayout = true;
