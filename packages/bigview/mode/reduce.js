@@ -20,7 +20,9 @@ module.exports = class ReduceMode {
 		let self = bigview
 
 		return Promise.reduce(self.pagelets, (total, _pagelet, index) => {
-			if (_pagelet.immediately === true) return _pagelet._exec()
+			if (_pagelet.immediately === true) {
+			  return _pagelet._exec()
+			}
 			else return Promise.resolve()
 		}, 0).then(res => {
 			console.log(res)

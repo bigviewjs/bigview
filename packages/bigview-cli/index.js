@@ -26,7 +26,9 @@ function generatePageletModule (moduleName) {
 }
 
 function gOne(tpl, moduleName) {
-  if (/^\./.test(tpl)) return
+  if (/^\./.test(tpl)) {
+    return
+  }
   // console.log(tpl)
   var mkdirp = require('mkdirp');
 
@@ -35,8 +37,11 @@ function gOne(tpl, moduleName) {
   var dest = destDir + "/" + tpl
   
   mkdirp(destDir, function (err) {
-      if (err) console.error(err)
-      else console.log('generate ' + dest)
+      if (err) {
+        console.error(err)
+      } else {
+        console.log('generate ' + dest)
+      }
         
       tpl_apply.tpl_apply(source, {
         tpl: tpl,
