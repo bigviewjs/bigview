@@ -16,7 +16,7 @@ class Pagelet extends PageletBase {
         this.location = 'location'; //location
         this.isMock = false;
         this.options = {}; // for compiler
-        this.done = false;
+        // this.done = false;
         this.previewFile = 'biglet.html';
         this.delay = 0;
         this.children = [];
@@ -54,7 +54,7 @@ class Pagelet extends PageletBase {
         debug('  Pagelet fetch');
 
         self.data.po = {};
-        var arr = ['name', 'tpl', 'root', 'selector', 'location', 'options', 'done', 'delay', 'children'];
+        var arr = ['name', 'tpl', 'root', 'selector', 'location', 'options', 'delay', 'children'];
 
         arr.forEach(function (key) {
             self.data.po[key] = self[key]
@@ -162,7 +162,7 @@ class Pagelet extends PageletBase {
 
         return Promise.all(queue).then(function (results) {
             self.out();
-            self.done = true;
+            // self.done = true;
 
             return [self.html].concat(results)
         })
