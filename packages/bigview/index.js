@@ -35,7 +35,7 @@ class BigView extends BigViewBase {
     }
 
     add(Pagelet) {
-        let pagelet;
+        let pagelet, re = [];
 
         if ((Pagelet.toString()).split('extends').length === 1) {
             pagelet = Pagelet
@@ -46,8 +46,6 @@ class BigView extends BigViewBase {
         pagelet.owner = this;
 
         this.pagelets.push(pagelet);
-
-        let re = [];
 
         // 递归实现深度遍历，这是由于pagelet有子pagelet的原因
         function getPagelets(pagelet) {
