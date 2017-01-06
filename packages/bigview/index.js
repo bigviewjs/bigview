@@ -30,22 +30,6 @@ class BigView extends BigViewBase {
         // 如果是动态布局，会有this.data.pagelets
         this.isDynamicLayout = true;
 
-        if (req.query) {
-            this.query = req.query
-        }
-
-        if (req.params) {
-            this.params = req.params
-        }
-
-        if (req.body) {
-            this.body = req.body
-        }
-
-        if (req.cookies) {
-            this.cookies = req.cookies
-        }
-
         this.on('write', this.write.bind(this));
         this.on('pageletWrite', this.pageletWrite.bind(this));
     }

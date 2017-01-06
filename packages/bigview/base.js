@@ -11,6 +11,22 @@ module.exports = class BigViewBase extends EventEmitter {
         
         this._mode = 'pipline';
     }
+    
+    get query() {
+        return this.req.query
+    }
+    
+    get params() {
+        return this.req.params
+    }
+    
+    get body() {
+        return this.req.body
+    }
+    
+    get cookies() {
+        return this.req.cookies
+    }
 
     set mode(mode) {
         debug('bigview mode = ' + mode);
