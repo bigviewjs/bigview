@@ -73,14 +73,24 @@ class Pagelet {
         return Promise.resolve(true)
     }
 
+    /**
+     * 用于发起网络请求获取数据
+     */
     fetch() {
         return Promise.resolve(this.data)
     }
-
+    
+    /**
+     * 用于对fetch获取的数据进行处理
+     * 约定 return Promise.resolve(this.data = xxx)
+     */
     parse() {
         return Promise.resolve(this.data)
     }
 
+    /**
+     * render配置项
+     */
     renderOption() {
       return {}
     }
