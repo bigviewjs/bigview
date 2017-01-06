@@ -80,10 +80,10 @@ module.exports = class BigViewBase extends EventEmitter {
      */
     write(text, isWriteImmediately) {
         if (!text) {
-            throw new Error(' Write empty data to Browser.')
+            throw new Error('Write empty data to Browser.')
         }
 
-        debug(text);
+        debug('Write bigview data to Browser ' + text);
 
         // 是否立即写入，如果不立即写入，放到this.cache里
         if (!isWriteImmediately && this.modeInstance.isLayoutWriteImmediately === false) {
@@ -110,10 +110,10 @@ module.exports = class BigViewBase extends EventEmitter {
      */
     pageletWrite(text, isWriteImmediately) {
         if (!text) {
-            throw new Error(' Write empty data to Browser.')
+            throw new Error('Write empty data to Browser.')
         }
         
-        debug(text);
+        debug('Write pagelet data to Browser ' + text);
 
         if (isWriteImmediately === false) {
             return this.cache.push(text);
@@ -134,7 +134,7 @@ module.exports = class BigViewBase extends EventEmitter {
 
     processError(err) {
         return new Promise(function (resolve, reject) {
-            console.log(err);
+            console.error(err);
             resolve(true);
         });
     }
