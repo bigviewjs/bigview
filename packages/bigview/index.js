@@ -45,6 +45,7 @@ class BigView extends BigViewBase {
         }
 
         pagelet.owner = this;
+        pagelet.dataStore = this.dataStore;
 
         this.pagelets.push(pagelet);
 
@@ -140,7 +141,7 @@ class BigView extends BigViewBase {
                     reject(err)
                 }
                 debug(str);
-                self.emit('write', str);
+                self.emit('write', str, true);
                 resolve(str)
             })
         })
@@ -165,7 +166,6 @@ class BigView extends BigViewBase {
     renderPagelets() {
         debug("BigView  renderPagelets start");
         let bigview = this;
-
         return this.modeInstance.execute(bigview);
     }
 

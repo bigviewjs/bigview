@@ -3,10 +3,14 @@
 const debug = require('debug')('bigview')
 const fs = require('fs')
 const MyBigView = require('./MyBigView')
+const DataStore = require('./DataStore')
 
 module.exports = function (req, res) {
     
     var bigpipe = new MyBigView(req, res, 'basic/index', { title: "测试" })
+    
+    bigpipe.dataStore = new DataStore()
+    
     // bigpipe.mode = 'render'
     bigpipe.add(require('./p1'))
     bigpipe.add(require('./p2'))
@@ -14,8 +18,6 @@ module.exports = function (req, res) {
     if (req.query && req.query.bigview_mode) {
         bigpipe.mode = req.query.bigview_mode
     }
-    
-    // console.log(bigpipe.mode)
     
     // 从this.cookies('bigview_mode') 其次
     // debug("this.cookies = " + req.cookies)

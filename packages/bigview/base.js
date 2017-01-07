@@ -15,7 +15,15 @@ module.exports = class BigViewBase extends EventEmitter {
     constructor(req, res, layout, data) {
         super();
         
-        this._mode = 'pipline';
+        this.mode = 'pipline';
+    }
+    
+    set dataStore(obj) {
+        this._dataStore = obj
+    }
+    
+    get dataStore() {
+        return this._dataStore
     }
     
     get query() {

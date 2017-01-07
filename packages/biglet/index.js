@@ -49,13 +49,6 @@ class Pagelet {
 
         debug('Pagelet fetch');
 
-        self.data.po = {};
-        var arr = ['name', 'tpl', 'root', 'selector', 'location','children'];
-
-        arr.forEach(function (key) {
-            self.data.po[key] = self[key]
-        });
-
         // 1) this.before
         // 2）fetch，用于获取网络数据，可选
         // 3) parse，用于处理fetch获取的数据
