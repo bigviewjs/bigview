@@ -694,3 +694,10 @@ review
 - ng proxy给个头compress,expire-buffer
 - 分享
 - 封装前端bigpipe库
+
+## 感谢
+
+- 冯地木
+- 张凯
+- 张代应
+- 陈愉镔
