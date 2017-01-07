@@ -20,4 +20,8 @@ module.exports = class MyBigView extends BigView {
     // console.log('afterRenderLayout')
     return Promise.resolve(true)
   }
+
+  // after () {
+  //
+  // }  
 }
