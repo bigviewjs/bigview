@@ -90,35 +90,36 @@ class BigView extends BigViewBase {
      * @api public;
      */
     showErrorPagelet(error) {
-            console.log(error);
-            // reset this.pagelets
-            this.pagelets = [];
-            // add error pagelet
-            this.pagelets.push(this.errorPagelet);
+        debug(error);
+        // reset this.pagelets
+        this.pagelets = [];
+        // add error pagelet
+        this.pagelets.push(this.errorPagelet);
 
-            // start with render error pagelet
-            this.renderPagelets()
-                .then(this.end.bind(this))
-                .catch(this.processError.bind(this))
+        // start with render error pagelet
+        this.renderPagelets()
+            .then(this.end.bind(this))
+            .catch(this.processError.bind(this))
 
-            return Promise.reject(new Error('interrupt， no need to continue!'))
-        }
-        // when this.add(pagelet.immediately=false)
-        // then only used in afterRenderLayout ()
-        //
-        // example
-        //    afterRenderLayout () {
-        //      let self = this
-        //
-        //      if (self.showPagelet === '1') {
-        //        self.run('pagelet1')
-        //      } else {
-        //        self.run('pagelet2')
-        //      }
-        //
-        //      // console.log('afterRenderLayout')
-        //      return Promise.resolve(true)
-        //    }
+        return Promise.reject(new Error('interrupt， no need to continue!'))
+    }
+
+    // when this.add(pagelet.immediately=false)
+    // then only used in afterRenderLayout ()
+    //
+    // example
+    //    afterRenderLayout () {
+    //      let self = this
+    //
+    //      if (self.showPagelet === '1') {
+    //        self.run('pagelet1')
+    //      } else {
+    //        self.run('pagelet2')
+    //      }
+    //
+    //      // console.log('afterRenderLayout')
+    //      return Promise.resolve(true)
+    //    }
     run(pageletName) {
         this.pagelets.forEach(function(pagelet) {
             if (pagelet.name === pageletName) {

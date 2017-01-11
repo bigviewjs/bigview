@@ -127,10 +127,21 @@ class Pagelet {
     }
 
     end() {
+        return this.trigger(this.children)
+    }
+
+    trigger(pageletOrPagelets) {
+        let arr = []
+        if (Array.isArray(pageletOrPagelets)) {
+            arr = pageletOrPagelets
+        } else {
+            arr.push(pageletOrPagelets)
+        }
+
         let self = this;
         let queue = [];
 
-        this.children.forEach(function (subPagelet) {
+        arr.forEach(function (subPagelet) {
             subPagelet.owner = self.owner;
 
             queue.push(subPagelet._exec())
