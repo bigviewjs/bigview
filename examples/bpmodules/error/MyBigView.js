@@ -17,7 +17,6 @@ module.exports = class MyBigView extends BigView {
 	}
 
 	afterRenderLayout() {
-		let self = this
 		// console.log('afterRenderLayout')
 		return new Promise(function(resolve, reject) {
 			setTimeout(function() {
@@ -26,8 +25,4 @@ module.exports = class MyBigView extends BigView {
 			}, 0)
 		})
 	}
-
-	// after () {
-	//
-	// }  
 }
