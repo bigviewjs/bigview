@@ -20,6 +20,8 @@ app.get('/data', require('./bpmodules/dataStore'));
 
 app.get('/if', require('./bpmodules/if'));
 
+app.get('/error', require('./bpmodules/error'));
+
 app.get('/nest',require('./bpmodules/nest'));
 
 app.get('/nest2', require('./bpmodules/nest2'));

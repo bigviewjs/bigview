@@ -16,6 +16,9 @@ module.exports = class BigViewBase extends EventEmitter {
         super();
         
         this.mode = 'pipline';
+
+        this.on('write', this.write.bind(this));
+        this.on('pageletWrite', this.pageletWrite.bind(this));
     }
     
     set dataStore(obj) {
