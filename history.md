@@ -3,7 +3,7 @@
 ## Version
 
 - v1.2.8 (2017年1月11日，i5ting)
-  - 出错模块
+  - bigview支持错误模块显示，仅限于布局之前
   - Pagelet里触发其他模块
 
 ## Desgin 
