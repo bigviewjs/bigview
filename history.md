@@ -1,16 +1,25 @@
+# History
 
-## v1
+## Version
+
+- v1.2.8 (2017年1月11日，i5ting)
+  - 出错模块
+  - Pagelet里触发其他模块
+
+## Desgin 
+
+### v1
 
 - 实现基本功能(pipeline管线模式)
 
-## v2
+### v2
 
 - pipeline管线模式
 - 多种布局
 - 实现pagelet嵌套
 - 生命周期回调
 
-## v3
+### v3
 
 - 增加3种模式mode
 - 考虑加入[joi](https://github.com/hapijs/joi),对pagelet.data进行校验

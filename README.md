@@ -30,6 +30,7 @@
   - render.js 一次渲染模式：即普通模式，不写入布局，所有pagelet执行完成，一次写入到浏览器。支持搜索引擎，用来支持那些不支持JS的客户端。
 - 支持子pagelet，无限级嵌套
 - 支持根据条件渲染模板，延时输出布局
+- bigview支持错误模块显示，仅限于布局之前
 
 ## 生命周期
 
@@ -331,13 +332,129 @@ module.exports = function (req, res) {
 - http://127.0.0.1:4005/if?a=1
 - http://127.0.0.1:4005/if?a=2
 
-
 ## 出错模块
 
 - bigview出错，即在所有pagelets渲染之前，显示错误模块，终端其他模块渲染
 - 如果是pagelets里的某一个出错，可以自己根据模板去，模块内的错误就模块自己处理就好了
 
+```js
+    var bigpipe = new MyBigView(req, res, 'error/index', { title: "测试" })
+    // bigpipe.mode = 'render'
+    bigpipe.add(require('./p1'))
+    bigpipe.addErrorPagelet(require('./error'))
+```
 
+显示ErrorPagelet，可以在bigview的生命周期，执行子Pagelets之前。reject一个error即可。
+
+比如在afterRenderLayout里，reject
+
+```
+	afterRenderLayout() {
+		let self = this
+		// console.log('afterRenderLayout')
+		return new Promise(function(resolve, reject) {
+			setTimeout(function() {
+				reject(new Error('xxxxxx'))
+				// resolve()
+			}, 0)
+		})
+	}
+```
+
+通过`addErrorPagelet`设置Error时要显示的模块，如果要包含多个，请使用pagelet子模块。
+
+另外，如果设置了ErrorPagelet，布局的时候可以使用errorPagelet来控制错误显示
+
+```
+<!doctype html>
+<html class="no-js">
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div id="<%= errorPagelet.location %>" class="<%= errorPagelet.selector %>">
+        <ul>
+        <% pagelets.forEach(function(p){ %>
+            <li><%= p.name %> | <%= p.selector %>
+        <% }) %>
+        </ul>
+
+        <% pagelets.forEach(function(p){ %>
+        <div id="<%= p.location %>" class="<%= p.selector %>">loading...<%= p.name %>...</div>
+        <% }) %>
+    </div>
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bigpipe.js"></script>
+    <script>
+        var bigpipe=new Bigpipe();
+
+        <% pagelets.forEach(function(p){ %>
+        
+        bigpipe.ready('<%= p.name %>',function(data){
+            $("#<%= p.location %>").html(data);
+        })
+        <% }) %>
+        
+        bigpipe.ready('<%= errorPagelet.name %>',function(data){
+            $("#<%= errorPagelet.location %>").html(data);
+        })
+    </script>
+    <script src="/bigconsole.min.js"></script> 
+</body>
+</html>
+```
+
+## Pagelet里触发其他模块
+
+提供trigger方法，可以触发1个多个多个其他模块，无序并行。结果返回的是Promise
+
+```
+'use strict'
+
+const Pagelet = require('../../../../packages/biglet')
+
+module.exports = class MyPagelet extends Pagelet {
+	constructor () {
+		super()
+
+		this.root = __dirname
+		this.name = 'pagelet1'
+	}
+
+	fetch () {
+    // 触发一个模块
+    this.trigger(require('./somePagelet'))
+    // 触发一个模块
+    this.trigger([require('./somePagelet1'), require('./somePagelet2')])
+	}
+}
+
+```
+
+也可以强制的fetch里完成
+
+```
+'use strict'
+
+const Pagelet = require('../../../../packages/biglet')
+
+module.exports = class MyPagelet extends Pagelet {
+	constructor () {
+		super()
+
+		this.root = __dirname
+		this.name = 'pagelet1'
+	}
+
+	fetch () {
+    // 触发多个模块
+    return this.trigger([require('./somePagelet1'), require('./somePagelet2')])
+	}
+}
+
+```
 
 ## 生成预览数据
 
