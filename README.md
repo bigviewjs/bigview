@@ -414,6 +414,9 @@ module.exports = function (req, res) {
 'use strict'
 
 const Pagelet = require('../../../../packages/biglet')
+const somePagelet1 = require('./somePagelet1')
+const somePagelet2 = require('./somePagelet2')
+const somePagelet = require('./somePagelet')
 
 module.exports = class MyPagelet extends Pagelet {
 	constructor () {
@@ -425,13 +428,21 @@ module.exports = class MyPagelet extends Pagelet {
 
 	fetch () {
     // 触发一个模块
-    this.trigger(require('./somePagelet'))
+    this.trigger(new somePagelet())
     // 触发一个模块
-    this.trigger([require('./somePagelet1'), require('./somePagelet2')])
+    this.trigger([new somePagelet1(), new somePagelet2()])
 	}
 }
 
 ```
+
+不允许，直接
+
+```
+return this.trigger([require('./somePagelet1'), require('./somePagelet2')])
+```
+
+这样会有缓存，不会根据业务请求来进行不同处理。
 
 也可以强制的fetch里完成
 
@@ -439,6 +450,9 @@ module.exports = class MyPagelet extends Pagelet {
 'use strict'
 
 const Pagelet = require('../../../../packages/biglet')
+const somePagelet1 = require('./somePagelet1')
+const somePagelet2 = require('./somePagelet2')
+const somePagelet = require('./somePagelet')
 
 module.exports = class MyPagelet extends Pagelet {
 	constructor () {
@@ -450,7 +464,7 @@ module.exports = class MyPagelet extends Pagelet {
 
 	fetch () {
     // 触发多个模块
-    return this.trigger([require('./somePagelet1'), require('./somePagelet2')])
+    return this.trigger([new somePagelet1, new somePagelet2()])
 	}
 }
 
