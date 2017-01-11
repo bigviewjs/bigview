@@ -143,7 +143,9 @@ class Pagelet {
 
         arr.forEach(function (subPagelet) {
             subPagelet.owner = self.owner;
-
+            if (!subPagelet._exec) {
+                throw new Error('you should use like this.trigger(new somePagelet()')
+            }
             queue.push(subPagelet._exec())
         });
 
