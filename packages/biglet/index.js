@@ -10,12 +10,15 @@ class Pagelet {
         this.data = {};
         this.tpl = 'index.html';
         this.root = '.';
-        this.selector = 'selector'; // css
-        this.location = 'location'; //location
-
         this.children = [];
+
+        this.domid = 'location'; //location
+        this.css = 'selector'; // css
+        this.js = 'location'; //location
         // 用来缓存当前pagelet布局模板编译生成的html字符串
         this.html = '';
+        this.error = undefined;
+
         // 为延时渲染提供的
         this.immediately = true;
         // 为mode提供的
@@ -169,6 +172,20 @@ class Pagelet {
 	get display() {
 		return this.immediately === false ? 'none' : 'block';
 	}
+
+    get payload() {
+        return {
+            domid: this.domid,
+            js: this.js,
+            css: this.css,
+            html: this.html,
+            error: this.error
+        }
+    }
+
+    get view() {
+        return `<script charset=\"utf-8\">bigview.view(${this.payload})</script>`
+    }
 }
 
 module.exports = Pagelet;
