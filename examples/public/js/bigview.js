@@ -52,7 +52,7 @@ var Bigview = function () {
     var self = this;
     // payload={domid, html='',}
     this.view = function(payload) {
-        self.trigger('pageletArrave', payload);
+        self.trigger('pageletArrive', payload);
 
         if(payload.domid) {
             self.trigger(payload.domid, payload);

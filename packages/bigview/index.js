@@ -175,7 +175,7 @@ class BigView extends BigViewBase {
                     reject(err)
                 }
                 debug(str);
-                let html = str + Utils.end()
+                let html = str + Utils.ready()
                 self.emit('bigviewWrite', html, true);
                 resolve(html)
             })

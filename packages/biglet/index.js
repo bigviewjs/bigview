@@ -3,6 +3,7 @@
 const debug = require('debug')('biglet');
 const fs = require('fs');
 const path = require('path');
+const escape_html = require('escape-html');
 
 class Pagelet {
     constructor() {
@@ -120,10 +121,12 @@ class Pagelet {
 
         return self.compile(tplPath, self.data).then(function (str) {
             self.html = str;
-            // writeToBrowser
-            self.owner.emit('pageletWrite', str, self.isPageletWriteImmediately)
 
-            return str
+            let view = self.view
+            // writeToBrowser
+            self.owner.emit('pageletWrite', view, self.isPageletWriteImmediately)
+
+            return view
         }).catch(function (err) {
             console.error('complile' + err)
         })
@@ -174,20 +177,22 @@ class Pagelet {
 	}
 
     get payload() {
-        return {
+        let _payload = {
             domid: this.domid,
             js: this.js,
             css: this.css,
             html: this.escapedHtml,
             error: this.error
         }
+        console.log(_payload)
+        return JSON.stringify(_payload)
     }
 
     get view() {
         return `<script charset=\"utf-8\">bigview.view(${this.payload})</script>`
     }
 
-    escapedHtml() {
+    get escapedHtml() {
         function toJsHtml(html, quotation) {
             let regexp;
             if (quotation === "'") {
@@ -213,7 +218,7 @@ class Pagelet {
             })
         }
 
-        return toJsHtml(this.html);
+        return escape_html(this.html);
     }
 }
 
