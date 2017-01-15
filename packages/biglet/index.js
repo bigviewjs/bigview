@@ -178,13 +178,42 @@ class Pagelet {
             domid: this.domid,
             js: this.js,
             css: this.css,
-            html: this.html,
+            html: this.escapedHtml,
             error: this.error
         }
     }
 
     get view() {
         return `<script charset=\"utf-8\">bigview.view(${this.payload})</script>`
+    }
+
+    escapedHtml() {
+        function toJsHtml(html, quotation) {
+            let regexp;
+            if (quotation === "'") {
+                regexp = /(\r\n(\s)*)|(\n(\s)*)|(\r(\s)*)|(\')|(\t)/g;
+            } else {
+                regexp = /(\r\n(\s)*)|(\n(\s)*)|(\r(\s)*)|(\")|(\t)/g;
+            }
+
+            return html.replace(regexp, function(word) {
+                var char = word.substring(0, 1);
+
+                if (char === "\r" || char === "\n") {
+                    return "\\n";
+                } else if (char === '"') {
+                    return '\\"';
+                } else if (char === "'") {
+                    return "\\'";
+                } else if (char === "\t") {
+                    return "\\t";
+                } else {
+                    return word;
+                }
+            })
+        }
+
+        return toJsHtml(this.html);
     }
 }
 
