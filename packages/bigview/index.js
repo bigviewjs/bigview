@@ -3,6 +3,7 @@
 const debug = require('debug')('bigview');
 const Promise = require("bluebird");
 const BigViewBase = require('./base');
+const Utils = require('./utils');
 
 class BigView extends BigViewBase {
     constructor(req, res, layout, data) {
@@ -174,8 +175,9 @@ class BigView extends BigViewBase {
                     reject(err)
                 }
                 debug(str);
-                self.emit('write', str, true);
-                resolve(str)
+                let html = str + Utils.end()
+                self.emit('bigviewWrite', html, true);
+                resolve(html)
             })
         })
     }
@@ -213,7 +215,8 @@ class BigView extends BigViewBase {
             // 如果缓存this.cache里有数据，先写到浏览器，然后再结束
             // true will send right now
             let isWriteImmediately = true;
-            this.emit('write', this.cache.join(''), isWriteImmediately)
+            let html = this.cache.join('') + Utils.end()
+            this.emit('bigviewWrite', html, isWriteImmediately)
         }
 
         debug("BigView end");

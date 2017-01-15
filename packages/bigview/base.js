@@ -17,7 +17,7 @@ module.exports = class BigViewBase extends EventEmitter {
         
         this.mode = 'pipline';
 
-        this.on('write', this.write.bind(this));
+        this.on('bigviewWrite', this.bigviewWrite.bind(this));
         this.on('pageletWrite', this.pageletWrite.bind(this));
     }
     
@@ -89,7 +89,7 @@ module.exports = class BigViewBase extends EventEmitter {
      *
      * @api public;
      */
-    write(text, isWriteImmediately) {
+    bigviewWrite(text, isWriteImmediately) {
         if (!text) {
             throw new Error('Write empty data to Browser.')
         }
