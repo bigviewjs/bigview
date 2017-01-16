@@ -7,7 +7,10 @@ exports.ready = function(data) {
     if (data) {
         _data = data;
     }
-    return `<script charset=\"utf-8\">bigview.ready({})</script>`
+
+    _data = JSON.stringify(_data);
+    
+    return `<script charset=\"utf-8\">bigview.ready(${_data})</script>`
 }
 
 // end
@@ -17,5 +20,8 @@ exports.end = function(data) {
     if (data) {
         _data = data;
     }
-    return `<script charset=\"utf-8\">bigview.end({})</script>`
+    
+    _data = JSON.stringify(_data);
+
+    return `<script charset=\"utf-8\">bigview.end(${_data})</script>`
 }
