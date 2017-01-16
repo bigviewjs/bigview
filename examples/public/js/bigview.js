@@ -92,6 +92,10 @@ var Bigview = function () {
     		oldEl.innerHTML = html;
     		return oldEl;
     	@*/
+        if(!oldEl){
+            console.log(el + ' is not exist in dom')
+            return
+        }
     	var newEl = oldEl.cloneNode(false);
     	newEl.innerHTML = html;
     	oldEl.parentNode.replaceChild(newEl, oldEl);

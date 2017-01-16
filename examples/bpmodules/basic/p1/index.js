@@ -15,7 +15,7 @@ module.exports = class MyPagelet extends Pagelet {
               name: this.name
           }
       }
-      this.selector = 'pagelet1'
+      this.domid = 'pagelet1'
       this.location = 'pagelet1'
       this.tpl = 'p1.html'
       this.delay = 4000

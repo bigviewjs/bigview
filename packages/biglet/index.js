@@ -13,9 +13,9 @@ class Pagelet {
         this.root = '.';
         this.children = [];
 
-        this.domid = 'location'; //location
-        this.css = 'selector'; // css
-        this.js = 'location'; //location
+        this.domid = 'you should add a domid'; //location
+        this.css = []; // css
+        this.js = []; //location
         // 用来缓存当前pagelet布局模板编译生成的html字符串
         this.html = '';
         this.error = undefined;
@@ -184,7 +184,7 @@ class Pagelet {
             html: this.escapedHtml,
             error: this.error
         }
-        console.log(_payload)
+
         return JSON.stringify(_payload)
     }
 
@@ -193,31 +193,6 @@ class Pagelet {
     }
 
     get escapedHtml() {
-        function toJsHtml(html, quotation) {
-            let regexp;
-            if (quotation === "'") {
-                regexp = /(\r\n(\s)*)|(\n(\s)*)|(\r(\s)*)|(\')|(\t)/g;
-            } else {
-                regexp = /(\r\n(\s)*)|(\n(\s)*)|(\r(\s)*)|(\")|(\t)/g;
-            }
-
-            return html.replace(regexp, function(word) {
-                var char = word.substring(0, 1);
-
-                if (char === "\r" || char === "\n") {
-                    return "\\n";
-                } else if (char === '"') {
-                    return '\\"';
-                } else if (char === "'") {
-                    return "\\'";
-                } else if (char === "\t") {
-                    return "\\t";
-                } else {
-                    return word;
-                }
-            })
-        }
-
         return escape_html(this.html);
     }
 }
