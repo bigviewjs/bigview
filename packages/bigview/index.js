@@ -121,13 +121,16 @@ class BigView extends BigViewBase {
     //      // console.log('afterRenderLayout')
     //      return Promise.resolve(true)
     //    }
-    run(pageletName) {
-        this.pagelets.forEach(function(pagelet) {
-            if (pagelet.name === pageletName) {
-                pagelet.immediately = true
-            }
-        })
-    }
+    //
+    // Note: you can do this when datastore changed
+    //
+    // run(pageletName) {
+    //     this.pagelets.forEach(function(pagelet) {
+    //         if (pagelet.name === pageletName) {
+    //             pagelet.immediately = true
+    //         }
+    //     })
+    // }
 
     start() {
         debug('BigView start');
