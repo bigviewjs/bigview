@@ -7,7 +7,6 @@ const escape_html = require('escape-html');
 
 class Pagelet {
     constructor() {
-        this.name = 'defaultname';
         this.data = {};
         this.tpl = 'index.html';
         this.root = '.';
@@ -47,7 +46,7 @@ class Pagelet {
         let self = this;
 
         if (this.owner && this.owner.done === true) {
-            let err = new Error("pagelet " + this.name + " execute after bigview.done")
+            let err = new Error("pagelet " + this.domid + " execute after bigview.done")
             return Promise.reject(err)
         }
 
@@ -95,7 +94,6 @@ class Pagelet {
     compile(tpl, data) {
         let self = this;
         let option = self.renderOption();
-        this.domid = this.name;
         
         self.owner.res.render
 
@@ -123,13 +121,7 @@ class Pagelet {
         let tplPath = path.join(self.root + '/' + self.tpl);
 
         return self.compile(tplPath, self.data).then(function (str) {
-            self.html = str;
-
-            let view = self.view
-            // writeToBrowser
-            self.owner.emit('pageletWrite', view, self.isPageletWriteImmediately)
-
-            return view
+            return self.writePagelet(str)
         }).catch(function (err) {
             console.error('complile' + err)
         })
@@ -197,6 +189,16 @@ class Pagelet {
 
     get escapedHtml() {
         return escape_html(this.html);
+    }
+    
+    //event wrapper
+    writePagelet(html) {
+        this.html = html;
+        let view = this.view;
+        
+        this.owner.emit('pageletWrite', view, this.isPageletWriteImmediately)
+
+        return view
     }
 }
 

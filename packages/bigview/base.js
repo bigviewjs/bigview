@@ -166,4 +166,10 @@ module.exports = class BigViewBase extends EventEmitter {
     afterRenderLayout() {
         return Promise.resolve(true)
     }
+    
+    // event wrapper
+    
+    writeBigview(html, isWriteImmediately) {
+        this.emit('bigviewWrite', html, isWriteImmediately)
+    }
 };
