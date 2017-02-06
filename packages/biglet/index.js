@@ -184,7 +184,7 @@ class Pagelet {
             domid: this.domid,
             js: this.js,
             css: this.css,
-            html: this.html,
+            html: this.html, // fix by dimu
             error: this.error
         }
 
