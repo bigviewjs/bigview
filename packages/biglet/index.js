@@ -194,8 +194,11 @@ class Pagelet {
     //event wrapper
     writePagelet(html) {
         this.html = html;
+        
+        // wrap html to script tag
         let view = this.view;
         
+        // bigpipe write
         this.owner.emit('pageletWrite', view, this.isPageletWriteImmediately)
 
         return view
