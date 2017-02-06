@@ -4,13 +4,16 @@
     "packages/*"
   ],
   "version": "1.3.1",
-  "publishConfig": {
-    "ignore": [
-      "example/**",
-      "public/**",
-      "bpmodules/**",
-      "views/**",
-      "test/**"
-    ]
+  "commands": {
+      "publishConfig": {
+        "ignore": [
+          "example/**",
+          "public/**",
+          "bpmodules/**",
+          "views/**",
+          "test/**"
+        ]
+      }
   }
+  
 }
