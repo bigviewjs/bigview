@@ -2,15 +2,13 @@
 
 // ready
 // 当布局输出完成的时候，触发
-exports.ready = function(data) {
-    let _data = {}
-    if (data) {
-        _data = data;
-    }
+exports.ready = function(isDebug) {
 
-    _data = JSON.stringify(_data);
+    if(isDebug === true) {
+        return `<script charset=\"utf-8\">bigview.debug=true;bigview.ready();</script>`
+    }
     
-    return `<script charset=\"utf-8\">bigview.ready(${_data})</script>`
+    return `<script charset=\"utf-8\">bigview.ready();</script>`
 }
 
 // end
