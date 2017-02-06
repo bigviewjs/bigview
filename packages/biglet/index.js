@@ -93,12 +93,15 @@ class Pagelet {
     }
 
     compile(tpl, data) {
-        const ejs = require('ejs');
         let self = this;
         let option = self.renderOption();
+        this.domid = this.name;
+        
+        self.owner.res.render
 
         return new Promise(function (resolve, reject) {
-            ejs.renderFile(tpl, data, option, function (err, str) {
+            // self.res.render(tpl, data, function(err, str) {
+            self.owner.res.render(tpl, data, function (err, str) {
                 // str => Rendered HTML string
                 if (err) {
                     console.log(err);
@@ -181,7 +184,7 @@ class Pagelet {
             domid: this.domid,
             js: this.js,
             css: this.css,
-            html: this.escapedHtml,
+            html: this.html,
             error: this.error
         }
 
