@@ -169,7 +169,7 @@ module.exports = class BigViewBase extends EventEmitter {
     
     // event wrapper
     
-    writeBigview(html, isWriteImmediately) {
+    write(html, isWriteImmediately) {
         this.emit('bigviewWrite', html, isWriteImmediately)
     }
 };

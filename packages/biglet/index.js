@@ -23,8 +23,6 @@ class Pagelet {
         this.immediately = true;
         // 为mode提供的
         this.isPageletWriteImmediately = true;
-        // 在parse方法里，默认的加载文件
-        this.parser = 'parse.js';
     }
 
     addChild(SubPagelet) {
@@ -192,7 +190,7 @@ class Pagelet {
     }
     
     //event wrapper
-    writePagelet(html) {
+    write(html) {
         this.html = html;
         
         // wrap html to script tag
