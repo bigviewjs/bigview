@@ -32,22 +32,23 @@ class BigView extends BigViewBase {
         this.isDynamicLayout = true;
     }
 
-    add(Pagelet) {
+    _getPageletObj(Pagelet) {
         let pagelet = new Pagelet();
 
         pagelet.owner = this;
         pagelet.dataStore = this.dataStore;
 
+        return pagelet;
+    }
+
+    add(Pagelet) {
+        let pagelet = this._getPageletObj(Pagelet);
         this.pagelets.push(pagelet);
     }
 
     // refact
     addErrorPagelet(Pagelet) {
-        let pagelet = new Pagelet();
-
-        pagelet.owner = this;
-        pagelet.dataStore = this.dataStore;
-
+        let pagelet = this._getPageletObj(Pagelet);
         this.errorPagelet = pagelet;
     }
 
