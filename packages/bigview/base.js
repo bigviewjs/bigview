@@ -12,11 +12,19 @@ const RenderMode = require('./mode/render.js');
 
 const PROMISE_RESOLVE = Promise.resolve(true);
 
+const ModeInstanceMappings = {
+    pipeline: new PipelineMode(),
+    parallel: new ParallelMode(),
+    reduce: new ReduceMode(),
+    reducerender: new ReducerenderMode(),
+    render: new RenderMode()
+}
+
 module.exports = class BigViewBase extends EventEmitter {
     constructor(req, res, layout, data) {
         super();
         
-        this.mode = 'pipline';
+        this.mode = 'pipeline';
 
         this.on('bigviewWrite', this.bigviewWrite.bind(this));
         this.on('pageletWrite', this.pageletWrite.bind(this));
@@ -49,26 +57,8 @@ module.exports = class BigViewBase extends EventEmitter {
     set mode(mode) {
         debug('bigview mode = ' + mode);
         
-        // map
-        switch(mode) {
-            case 'pipeline':
-                this._modeInstance = new PipelineMode();
-                break;
-            case 'parallel':
-                this._modeInstance = new ParallelMode();
-                break;
-            case 'reduce':
-                this._modeInstance = new ReduceMode();
-                break;
-            case 'reducerender':
-                this._modeInstance = new ReducerenderMode();
-                break;
-            case 'render':
-                this._modeInstance = new RenderMode();
-                break;
-            default:
-              this._modeInstance = new PipelineMode();
-        }
+        this._mode = mode;
+        this._modeInstance = ModeInstanceMappings[mode];
     }
 
     get mode() {
@@ -166,6 +156,10 @@ module.exports = class BigViewBase extends EventEmitter {
     
     // event wrapper
     write(html, isWriteImmediately) {
-        this.emit('bigviewWrite', html, isWriteImmediately)
+        let _isWriteImmediately = true;
+        if (isWriteImmediately) {
+            _isWriteImmediately = isWriteImmediately;
+        }
+        this.emit('bigviewWrite', html, _isWriteImmediately)
     }
 };
