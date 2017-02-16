@@ -50,6 +50,12 @@ BigEvent.extend = function(obj) {
 
 var Bigview = function () {
     var self = this;
+    
+    this.log = function(str) {
+        if (this.debug === true) {
+            console.log(str)
+        }
+    }
     // payload={domid, html='',}
     this.view = function(payload) {
         self.trigger('pageletArrive', payload);
@@ -60,22 +66,22 @@ var Bigview = function () {
     };
     
     this.ready = function(data) {
-        console.log('ready')
+        this.log('ready')
         self.trigger('ready', data)
     };
     
     this.end = function(data) {
-        console.log('end')
+        this.log('end')
         self.trigger('end', data)
     };
     
     this.error = function(payload) {
-        console.log('error')
+        this.log('error')
         self.trigger('error', payload)
     };
 
     this.on('pageletArrive', function(payload) {
-        console.log(payload)
+        this.log(payload)
         if(payload.error) {
           self.trigger('error', payload)  
         }

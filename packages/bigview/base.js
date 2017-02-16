@@ -1,7 +1,6 @@
 'use strict';
 
 const debug = require('debug')('bigview');
-const fs = require('fs');
 const Promise = require("bluebird");
 const EventEmitter = require('events');
 
@@ -10,6 +9,8 @@ const ParallelMode = require('./mode/parallel.js');
 const ReduceMode = require('./mode/reduce.js');
 const ReducerenderMode = require('./mode/reducerender.js');
 const RenderMode = require('./mode/render.js');
+
+const PROMISE_RESOLVE = Promise.resolve(true);
 
 module.exports = class BigViewBase extends EventEmitter {
     constructor(req, res, layout, data) {
@@ -22,37 +23,33 @@ module.exports = class BigViewBase extends EventEmitter {
     }
     
     set dataStore(obj) {
-        this._dataStore = obj
+        this._dataStore = obj;
     }
     
     get dataStore() {
-        return this._dataStore
+        return this._dataStore;
     }
     
     get query() {
-        return this.req.query
+        return this.req.query;
     }
     
     get params() {
-        return this.req.params
+        return this.req.params;
     }
     
     get body() {
-        return this.req.body
+        return this.req.body;
     }
     
     get cookies() {
-        return this.req.cookies
+        return this.req.cookies;
     }
 
     set mode(mode) {
         debug('bigview mode = ' + mode);
-
-        // 用户设置第三
-        if (fs.existsSync(__dirname + '/mode/' + mode + '.js') === true) {
-            this._mode = mode;
-        }
         
+        // map
         switch(mode) {
             case 'pipeline':
                 this._modeInstance = new PipelineMode();
@@ -145,30 +142,29 @@ module.exports = class BigViewBase extends EventEmitter {
 
     processError(err) {
         return new Promise(function (resolve, reject) {
-            console.error(err);
+            debug(err);
             resolve(true);
         });
     }
 
     // lifecycle;
     beforeRenderPagelets() {
-        return Promise.resolve(true)
+        return PROMISE_RESOLVE;
     }
 
     afterRenderPagelets() {
-        return Promise.resolve(true)
+        return PROMISE_RESOLVE;
     }
 
     beforeRenderLayout() {
-        return Promise.resolve(true)
+        return PROMISE_RESOLVE;
     }
 
     afterRenderLayout() {
-        return Promise.resolve(true)
+        return PROMISE_RESOLVE;
     }
     
     // event wrapper
-    
     write(html, isWriteImmediately) {
         this.emit('bigviewWrite', html, isWriteImmediately)
     }

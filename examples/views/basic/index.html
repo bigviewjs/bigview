@@ -7,27 +7,16 @@
 <body>
     <ul>
     <% pagelets.forEach(function(p){ %>
-        <li><%= p.name %> | <%= p.selector %>
+        <li><%= p.domid %> | <%= p.selector %>
     <% }) %>
     </ul>
 
     <% pagelets.forEach(function(p){ %>
-       <div id="<%= p.location %>" class="<%= p.selector %>">loading...<%= p.name %>...</div>
+       <div id="<%= p.domid %>" class="<%= p.selector %>">loading...<%= p.domid %>...</div>
     <% }) %>
 
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bigview.js"></script>
-    <script>
-        var bigpipe=new Bigpipe();
-
-        <% pagelets.forEach(function(p){ %>
-        
-        bigpipe.ready('<%= p.name %>',function(data){
-            $("#<%= p.location %>").html(data);
-        })
-        <% }) %>
-    
-    </script>
     <script src="/bigconsole.min.js"></script> 
 </body>
 </html>

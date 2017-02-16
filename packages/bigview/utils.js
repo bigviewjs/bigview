@@ -19,6 +19,7 @@ exports.end = function(data) {
         _data = data;
     }
     
+    _data = ''
     _data = JSON.stringify(_data);
 
     return `<script charset=\"utf-8\">bigview.end(${_data})</script>`

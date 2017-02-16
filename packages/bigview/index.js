@@ -4,6 +4,7 @@ const debug = require('debug')('bigview');
 const Promise = require("bluebird");
 const BigViewBase = require('./base');
 const Utils = require('./utils');
+const PROMISE_RESOLVE = Promise.resolve(true);
 
 class BigView extends BigViewBase {
     constructor(req, res, layout, data) {
@@ -20,8 +21,6 @@ class BigView extends BigViewBase {
         // 存放add的pagelets，带有父子级别的
         this.pagelets = [];
 
-        // 存放所有的pagelets，无父子级别的
-        this.allPagelets = [];
         this.done = false;
         this.layoutHtml = '';
 
@@ -30,7 +29,7 @@ class BigView extends BigViewBase {
 
         // 默认是pipeline并行模式，pagelets快的先渲染
         // 如果是动态布局，会有this.data.pagelets
-        this.isDynamicLayout = true;
+        // this.isDynamicLayout = true;
     }
 
     add(Pagelet) {
@@ -46,33 +45,13 @@ class BigView extends BigViewBase {
         pagelet.dataStore = this.dataStore;
 
         this.pagelets.push(pagelet);
-
-        // 递归实现深度遍历，这是由于pagelet有子pagelet的原因
-        function getPagelets(pagelet) {
-            re.push(pagelet);
-
-            if (pagelet.children) {
-                pagelet.children.forEach(function(child) {
-                    child.parent = pagelet.name;
-                    re.push(child);
-
-                    if (child.children && child.children.length > 0) {
-                        getPagelets(child)
-                    }
-                });
-            }
-        }
-
-        getPagelets(pagelet);
-
-        this.allPagelets = this.allPagelets.concat(re);
-
-        debug('bigview allPagelets = ' + this.allPagelets)
     }
 
+    // refact
     addErrorPagelet(Pagelet) {
         let pagelet;
 
+        // TODO
         if ((Pagelet.toString()).split('extends').length === 1) {
             pagelet = Pagelet
         } else {
@@ -105,33 +84,6 @@ class BigView extends BigViewBase {
         return Promise.reject(new Error('interrupt， no need to continue!'))
     }
 
-    // when this.add(pagelet.immediately=false)
-    // then only used in afterRenderLayout ()
-    //
-    // example
-    //    afterRenderLayout () {
-    //      let self = this
-    //
-    //      if (self.showPagelet === '1') {
-    //        self.run('pagelet1')
-    //      } else {
-    //        self.run('pagelet2')
-    //      }
-    //
-    //      // console.log('afterRenderLayout')
-    //      return Promise.resolve(true)
-    //    }
-    //
-    // Note: you can do this when datastore changed
-    //
-    // run(pageletName) {
-    //     this.pagelets.forEach(function(pagelet) {
-    //         if (pagelet.name === pageletName) {
-    //             pagelet.immediately = true
-    //         }
-    //     })
-    // }
-
     start() {
         debug('BigView start');
 
@@ -155,7 +107,7 @@ class BigView extends BigViewBase {
 
     before() {
         debug('default before');
-        return Promise.resolve();
+        return PROMISE_RESOLVE;
     }
 
     /**
@@ -198,7 +150,7 @@ class BigView extends BigViewBase {
 
         return self.compile(self.layout, self.data).then(function(str) {
             self.layoutHtml = str;
-            return str
+            return str;
         })
     }
 
@@ -235,7 +187,7 @@ class BigView extends BigViewBase {
 
     after() {
         debug('default after');
-        return Promise.resolve();
+        return PROMISE_RESOLVE;
     }
 };
 

@@ -1,9 +1,7 @@
 'use strict';
 
 const debug = require('debug')('biglet');
-const fs = require('fs');
 const path = require('path');
-const escape_html = require('escape-html');
 
 class Pagelet {
     constructor() {
@@ -11,22 +9,21 @@ class Pagelet {
         this.tpl = 'index.html';
         this.root = '.';
         this.children = [];
-
+        
+        // payload for write to bigview.view(...)
         this.domid = 'you should add a domid'; //location
         this.css = []; // css
-        this.js = []; //location
-        // 用来缓存当前pagelet布局模板编译生成的html字符串
-        this.html = '';
+        this.js = []; // js
+        this.html = '';// 用来缓存当前pagelet布局模板编译生成的html字符串
         this.error = undefined;
 
-        // 为延时渲染提供的
-        this.immediately = true;
         // 为mode提供的
         this.isPageletWriteImmediately = true;
     }
 
     addChild(SubPagelet) {
         let subPagelet;
+        // TODO: refact
         if ((SubPagelet.toString()).split('extends').length === 1) {
             subPagelet = SubPagelet
         } else {
@@ -42,11 +39,11 @@ class Pagelet {
     // step3: write html to browser
     _exec() {
         let self = this;
-
-        if (this.owner && this.owner.done === true) {
-            let err = new Error("pagelet " + this.domid + " execute after bigview.done")
-            return Promise.reject(err)
-        }
+        // TODO ....
+        // if (this.owner && this.owner.done === true) {
+        //     let err = new Error("pagelet " + this.domid + " execute after bigview.done")
+        //     return Promise.reject(err)
+        // }
 
         debug('Pagelet fetch');
 
@@ -83,36 +80,28 @@ class Pagelet {
     }
 
     /**
-     * render配置项
+     * compile
      */
-    renderOption() {
-      return {}
-    }
-
     compile(tpl, data) {
         let self = this;
-        let option = self.renderOption();
-        
-        self.owner.res.render
 
         return new Promise(function (resolve, reject) {
-            // self.res.render(tpl, data, function(err, str) {
             self.owner.res.render(tpl, data, function (err, str) {
                 // str => Rendered HTML string
                 if (err) {
                     console.log(err);
-                    reject(err)
+                    reject(err);
                 }
 
-                resolve(str)
+                resolve(str);
             })
         })
     }
 
     render() {
-        if (this.immediately === true && this.owner && this.owner.done === true) {
+        if (this.owner && this.owner.done === true) {
             console.log('no need to complet');
-            return Promise.resolve(true)
+            return Promise.resolve(true);
         }
 
         let self = this;
@@ -126,10 +115,11 @@ class Pagelet {
     }
 
     end() {
-        return this.trigger(this.children)
+        return this.renderChildren(this.children)
     }
-
-    trigger(pageletOrPagelets) {
+    
+    // refact name && remove pagelet
+    renderChildren(pageletOrPagelets) {
         let arr = []
         if (Array.isArray(pageletOrPagelets)) {
             arr = pageletOrPagelets
@@ -150,31 +140,18 @@ class Pagelet {
 
         return Promise.all(queue).then(function (results) {
             // 如果需要可以在bigview处捕获，生成mock的数据
-            self.owner.emit('pageletEnd',self)
+            self.owner.emit('pageletEnd', self)
           
             return [self.html].concat(results)
         })
     }
-
-	// lazy get value
-	// if immediately === false, pagelet will not render immediately
-	// so the container div should be hidden with {{display}}
-	//
-	// example
-	//
-	// {{#each pagelets}}
-	//   <div id="{{ location }}" style="display:{{ display }}">loading...{{ name }}...{{ display }}</div>
-	// {{/each}}
-	get display() {
-		return this.immediately === false ? 'none' : 'block';
-	}
 
     get payload() {
         let _payload = {
             domid: this.domid,
             js: this.js,
             css: this.css,
-            html: this.html, // fix by dimu
+            html: this.html, // fix by dimu.feng
             error: this.error
         }
 
@@ -185,10 +162,6 @@ class Pagelet {
         return `<script charset=\"utf-8\">bigview.view(${this.payload})</script>`
     }
 
-    get escapedHtml() {
-        return escape_html(this.html);
-    }
-    
     //event wrapper
     write(html) {
         this.html = html;
@@ -198,8 +171,8 @@ class Pagelet {
         
         // bigpipe write
         this.owner.emit('pageletWrite', view, this.isPageletWriteImmediately)
-
-        return view
+        // 不需要return，因为end无参数
+        // return view;
     }
 }
 
