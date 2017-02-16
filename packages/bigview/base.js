@@ -130,10 +130,7 @@ module.exports = class BigViewBase extends EventEmitter {
     
     // event wrapper
     write(html, isWriteImmediately) {
-        let _isWriteImmediately = true;
-        if (isWriteImmediately) {
-            _isWriteImmediately = isWriteImmediately;
-        }
-        this.emit('bigviewWrite', html, _isWriteImmediately)
+        let _isWriteImmediately = isWriteImmediately || true;
+        this.emit('bigviewWrite', html, _isWriteImmediately);
     }
 };

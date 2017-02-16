@@ -113,7 +113,7 @@ class BigView extends BigViewBase {
                 if (err) {
                     debug('renderLayout ' + str);
                     console.log(err);
-                    reject(err)
+                    return reject(err)
                 }
                 debug(str);
                 let html = str + Utils.ready(self.debug)
