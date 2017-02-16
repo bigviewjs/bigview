@@ -857,3 +857,4 @@ review
 
 - 子模块的顺序，也可以指定
 - // 日志前缀
+- write layout 和mode
