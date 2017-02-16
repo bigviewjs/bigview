@@ -119,7 +119,7 @@ class Pagelet {
         let tplPath = path.join(self.root + '/' + self.tpl);
 
         return self.compile(tplPath, self.data).then(function (str) {
-            return self.writePagelet(str)
+            return self.write(str)
         }).catch(function (err) {
             console.error('complile' + err)
         })
