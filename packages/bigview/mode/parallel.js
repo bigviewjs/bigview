@@ -28,9 +28,9 @@ module.exports = class ParallelMode {
 
 		bigview.pagelets.forEach(function(_pagelet){
 			_pagelet.isPageletWriteImmediately = self.isPageletWriteImmediately
-			if (_pagelet.immediately === true){
+			// if (_pagelet.immediately === true){
 				q.push(_pagelet._exec())
-			}
+			// }
 		});
 
 		return Promise.all(q).then(function(results) {

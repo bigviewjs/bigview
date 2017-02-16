@@ -29,14 +29,14 @@ module.exports = class ReduceRenderMode {
 
 		return Promise.reduce(bigview.pagelets, (total, _pagelet, index) => {
 			_pagelet.isPageletWriteImmediately = self.isPageletWriteImmediately
-			if (_pagelet.immediately === true) {
+			// if (_pagelet.immediately === true) {
 				return _pagelet._exec().then(function(i) {
 					self.total.push(i)
 					return Promise.resolve()
 				})
-			} else {
-				return Promise.resolve()
-			}
+			// } else {
+			// 	return Promise.resolve()
+			// }
 		}, 0).then(res => {
 			let arr = []
 			self.total.forEach(function(i) {

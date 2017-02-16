@@ -27,9 +27,9 @@ module.exports = class RenderMode {
 		for (var i in bigview.pagelets) {
 			let _pagelet = bigview.pagelets[i]
 			_pagelet.isPageletWriteImmediately = this.isPageletWriteImmediately
-			if (_pagelet.immediately === true) {
+			// if (_pagelet.immediately === true) {
 			    q.push(_pagelet._exec())
-			}
+			// }
 		}
 		// parallel then render
 		return Promise.all(q).then(function(results) {

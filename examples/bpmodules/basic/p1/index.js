@@ -25,24 +25,6 @@ module.exports = class MyPagelet extends Pagelet {
     return this.sleep(this.delay)
   }
   
-  parse() {
-      let pagelet = this;
-      let bigview = pagelet.owner;
-      let parseFile = path.join(pagelet.root, pagelet.parser);
-
-      return new Promise(function (resolve, reject) {
-          fs.open(parseFile, 'r', function (err, fd) {
-              if (err) {
-                  resolve(pagelet.data)
-              } else {
-                  require(parseFile)(pagelet, bigview).then(function (data) {
-                      resolve(pagelet.data = data)
-                  })
-              }
-          });
-      })
-  }
-  
   sleep(time) {
     return new Promise((resolve)=> setTimeout(resolve, time))
   }

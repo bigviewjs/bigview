@@ -44,7 +44,7 @@ class Pagelet {
         //     let err = new Error("pagelet " + this.domid + " execute after bigview.done")
         //     return Promise.reject(err)
         // }
-
+        console.log(this.domid)
         debug('Pagelet fetch');
 
         // 1) this.before
@@ -57,7 +57,7 @@ class Pagelet {
             .then(self.fetch.bind(self))
             .then(self.parse.bind(self))
             .then(self.render.bind(self))
-            .then(self.end.bind(self));
+            .then(self.end.bind(self))
     }
 
     before() {
@@ -108,7 +108,8 @@ class Pagelet {
         let tplPath = path.join(self.root + '/' + self.tpl);
 
         return self.compile(tplPath, self.data).then(function (str) {
-            return self.write(str)
+            self.write(str)
+            return Promise.resolve(true);
         }).catch(function (err) {
             console.error('complile' + err)
         })
@@ -138,11 +139,16 @@ class Pagelet {
             queue.push(subPagelet._exec())
         });
 
+        if (queue.length === 0) {
+            return Promise.resolve(true)
+        }
+
         return Promise.all(queue).then(function (results) {
             // 如果需要可以在bigview处捕获，生成mock的数据
             self.owner.emit('pageletEnd', self)
           
-            return [self.html].concat(results)
+            // [self.html].concat(results)
+            return Promise.resolve(true)
         })
     }
 
@@ -172,7 +178,7 @@ class Pagelet {
         // bigpipe write
         this.owner.emit('pageletWrite', view, this.isPageletWriteImmediately)
         // 不需要return，因为end无参数
-        // return view;
+        return view;
     }
 }
 

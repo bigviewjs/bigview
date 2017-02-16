@@ -29,7 +29,7 @@ class BigView extends BigViewBase {
 
         // 默认是pipeline并行模式，pagelets快的先渲染
         // 如果是动态布局，会有this.data.pagelets
-        // this.isDynamicLayout = true;
+        this.isDynamicLayout = true;
     }
 
     add(Pagelet) {
@@ -157,7 +157,7 @@ class BigView extends BigViewBase {
     renderPagelets() {
         debug("BigView  renderPagelets start");
         let bigview = this;
-        return this.modeInstance.execute(bigview);
+        return this.modeInstance.execute(bigview)
     }
 
     end() {
