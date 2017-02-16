@@ -104,12 +104,11 @@ class Pagelet {
     }
 
     end() {
-        return this.renderChildren()
+        return this.renderChildren();
     }
     
     renderChildren() {
-        let arr = this.children
-
+        let arr = this.children;
         let self = this;
         let queue = [];
 
