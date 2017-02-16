@@ -22,14 +22,7 @@ class Pagelet {
     }
 
     addChild(SubPagelet) {
-        let subPagelet;
-        // TODO: refact
-        if ((SubPagelet.toString()).split('extends').length === 1) {
-            subPagelet = SubPagelet
-        } else {
-            subPagelet = new SubPagelet()
-        }
-
+        let subPagelet = new SubPagelet();
         this.children.push(subPagelet)
     }
 
@@ -39,13 +32,8 @@ class Pagelet {
     // step3: write html to browser
     _exec() {
         let self = this;
-        // TODO ....
-        // if (this.owner && this.owner.done === true) {
-        //     let err = new Error("pagelet " + this.domid + " execute after bigview.done")
-        //     return Promise.reject(err)
-        // }
-        console.log(this.domid)
-        debug('Pagelet fetch');
+
+        debug('Pagelet ' + this.domid + ' fetch');
 
         // 1) this.before
         // 2）fetch，用于获取网络数据，可选

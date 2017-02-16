@@ -33,13 +33,7 @@ class BigView extends BigViewBase {
     }
 
     add(Pagelet) {
-        let pagelet, re = [];
-
-        if ((Pagelet.toString()).split('extends').length === 1) {
-            pagelet = Pagelet
-        } else {
-            pagelet = new Pagelet()
-        }
+        let pagelet = new Pagelet();
 
         pagelet.owner = this;
         pagelet.dataStore = this.dataStore;
@@ -49,14 +43,7 @@ class BigView extends BigViewBase {
 
     // refact
     addErrorPagelet(Pagelet) {
-        let pagelet;
-
-        // TODO
-        if ((Pagelet.toString()).split('extends').length === 1) {
-            pagelet = Pagelet
-        } else {
-            pagelet = new Pagelet()
-        }
+        let pagelet = new Pagelet();
 
         pagelet.owner = this;
         pagelet.dataStore = this.dataStore;
