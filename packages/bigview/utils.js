@@ -14,12 +14,9 @@ exports.ready = function(isDebug) {
 // end
 // 当所有模块都是输出完成的时候触发
 exports.end = function(data) {
-    let _data = {}
-    if (data) {
-        _data = data;
+    if (!data) {
+        return `<script charset=\"utf-8\">bigview.end()</script>`
     }
 
-    _data = JSON.stringify(_data);
-
-    return `<script charset=\"utf-8\">bigview.end(${_data})</script>`
+    return `<script charset=\"utf-8\">bigview.end(${JSON.stringify(data)})</script>`
 }
