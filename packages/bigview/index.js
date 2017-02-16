@@ -103,9 +103,6 @@ class BigView extends BigViewBase {
      */
     compile(tpl, data) {
         let self = this;
-        if (!tpl) {
-            return Promise.resolve(true)
-        }
 
         return new Promise(function(resolve, reject) {
             debug('renderLayout');
@@ -156,7 +153,7 @@ class BigView extends BigViewBase {
             // 如果缓存this.cache里有数据，先写到浏览器，然后再结束
             // true will send right now
             let isWriteImmediately = true;
-            let html = this.cache.join('') + Utils.end()
+            let html = this.cache.join('');
             this.emit('bigviewWrite', html, isWriteImmediately)
         }
 
@@ -166,7 +163,7 @@ class BigView extends BigViewBase {
 
         // lifecycle self.after before res.end
         return self.after().then(function() {
-            self.res.end();
+            self.res.end(Utils.end());
             return self.done = true;
         });
     }

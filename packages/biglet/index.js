@@ -78,7 +78,7 @@ class Pagelet {
                 // str => Rendered HTML string
                 if (err) {
                     console.log(err);
-                    reject(err);
+                    return reject(err);
                 }
 
                 resolve(str);
@@ -89,15 +89,15 @@ class Pagelet {
     render() {
         if (this.owner && this.owner.done === true) {
             console.log('no need to complet');
-            return Promise.resolve(true);
+            return Promise.resolve('');
         }
 
         let self = this;
-        let tplPath = path.join(self.root + '/' + self.tpl);
+        let tplPath = path.join(self.root, self.tpl);
 
         return self.compile(tplPath, self.data).then(function (str) {
             self.write(str)
-            return Promise.resolve(true);
+            return str;
         }).catch(function (err) {
             console.error('complile' + err)
         })
