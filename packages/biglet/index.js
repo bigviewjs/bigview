@@ -104,17 +104,11 @@ class Pagelet {
     }
 
     end() {
-        return this.renderChildren(this.children)
+        return this.renderChildren()
     }
     
-    // refact name && remove pagelet
-    renderChildren(pageletOrPagelets) {
-        let arr = []
-        if (Array.isArray(pageletOrPagelets)) {
-            arr = pageletOrPagelets
-        } else {
-            arr.push(pageletOrPagelets)
-        }
+    renderChildren() {
+        let arr = this.children
 
         let self = this;
         let queue = [];
