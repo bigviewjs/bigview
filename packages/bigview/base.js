@@ -26,8 +26,8 @@ module.exports = class BigViewBase extends EventEmitter {
         
         this.mode = 'pipeline';
 
-        this.on('bigviewWrite', this.bigviewWrite.bind(this));
-        this.on('pageletWrite', this.pageletWrite.bind(this));
+        this.on('bigviewWrite', this.writeDataToBrowser.bind(this));
+        this.on('pageletWrite', this.writeDataToBrowser.bind(this));
     }
     
     set dataStore(obj) {
@@ -56,7 +56,10 @@ module.exports = class BigViewBase extends EventEmitter {
 
     set mode(mode) {
         debug('bigview mode = ' + mode);
-        
+        if (!ModeInstanceMappings[mode]) {
+            console.log("bigview.mode only support [ pipeline | parallel | reduce | reducerender | render ]")
+            return;
+        }
         this._mode = mode;
         this._modeInstance = ModeInstanceMappings[mode];
     }
@@ -76,12 +79,12 @@ module.exports = class BigViewBase extends EventEmitter {
      *
      * @api public;
      */
-    bigviewWrite(text, isWriteImmediately) {
+    writeDataToBrowser(text, isWriteImmediately) {
         if (!text) {
             throw new Error('Write empty data to Browser.')
         }
 
-        debug('Write bigview data to Browser ' + text);
+        debug('Write data to Browser ' + text);
 
         // 是否立即写入，如果不立即写入，放到this.cache里
         if (!isWriteImmediately && this.modeInstance.isLayoutWriteImmediately === false) {
@@ -95,35 +98,6 @@ module.exports = class BigViewBase extends EventEmitter {
         debug('BigView final data = ' + text);
         debug(text);
         
-        if (text && text.length > 0) {
-            // write to Browser;
-            this.res.write(text);
-        }
-    }
-
-    /**
-     * Write pagelet data to Browser.
-     *
-     * @api public
-     */
-    pageletWrite(text, isWriteImmediately) {
-        if (!text) {
-            throw new Error('Write empty data to Browser.')
-        }
-        
-        debug('Write pagelet data to Browser ' + text);
-
-        if (isWriteImmediately === false) {
-            return this.cache.push(text);
-        }
-
-        if (this.done === true) {
-            throw new Error(' Write data to Browser after bigview.dong = true.')
-        }
-
-        debug('BigView final data = ' + text);
-        debug(text);
-
         if (text && text.length > 0) {
             // write to Browser;
             this.res.write(text);
