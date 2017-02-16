@@ -60,9 +60,7 @@ class BigView extends BigViewBase {
     showErrorPagelet(error) {
         debug(error);
         // reset this.pagelets
-        this.pagelets = [];
-        // add error pagelet
-        this.pagelets.push(this.errorPagelet);
+        this.pagelets = [this.errorPagelet];
 
         // start with render error pagelet
         this.renderPagelets()
