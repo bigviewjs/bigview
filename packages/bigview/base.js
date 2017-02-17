@@ -26,6 +26,9 @@ module.exports = class BigViewBase extends EventEmitter {
         
         this.mode = 'pipeline';
 
+        // 用于缓存res.write的内容
+        this.cache = [];
+
         this.on('bigviewWrite', this.writeDataToBrowser.bind(this));
         this.on('pageletWrite', this.writeDataToBrowser.bind(this));
     }

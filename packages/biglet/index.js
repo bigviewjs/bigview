@@ -16,6 +16,9 @@ class Pagelet {
         this.js = []; // js
         this.html = '';// 用来缓存当前pagelet布局模板编译生成的html字符串
         this.error = undefined;
+        
+        // timeout
+        this.timeout = 1000;
 
         // 为mode提供的
         this.isPageletWriteImmediately = true;
@@ -42,10 +45,13 @@ class Pagelet {
         // 5）this.end 通知浏览器，写入完成
 
         return self.before()
-            .then(self.fetch.bind(self))
-            .then(self.parse.bind(self))
-            .then(self.render.bind(self))
-            .then(self.end.bind(self))
+            .then(self.fetch.bind(self)).timeout(this.timeout)
+            .then(self.parse.bind(self)).timeout(this.timeout)
+            .then(self.render.bind(self)).timeout(this.timeout)
+            .then(self.end.bind(self)).timeout(this.timeout)
+            .catch(Promise.TimeoutError, function(e) {
+                console.log(this.domid + "timout within 2000ms");
+            });
     }
 
     before() {
