@@ -2,6 +2,7 @@
 
 const debug = require('debug')('biglet');
 const path = require('path');
+const Promise = require("bluebird");
 
 class Pagelet {
     constructor() {
@@ -22,6 +23,11 @@ class Pagelet {
         
         //if show = true, render
         this.show = true;
+        
+        // custom error function
+        this.catchFn = function (err) {
+            console.log(err)
+        }
 
         // 为mode提供的
         this.isPageletWriteImmediately = true;
@@ -52,9 +58,7 @@ class Pagelet {
             .then(self.parse.bind(self)).timeout(this.timeout)
             .then(self.render.bind(self)).timeout(this.timeout)
             .then(self.end.bind(self)).timeout(this.timeout)
-            .catch(Promise.TimeoutError, function(e) {
-                console.log(this.domid + "timout within 2000ms");
-            });
+            .catch(self.catchFn)
     }
 
     before() {
