@@ -24,8 +24,8 @@ class BigView extends BigViewBase {
         this.done = false;
         this.layoutHtml = '';
         
-        // timeout
-        this.timeout = 5000;
+        // timeout = 30s
+        this.timeout = 30000;
 
         // 默认是pipeline并行模式，pagelets快的先渲染
         // 如果是动态布局，会有this.data.pagelets

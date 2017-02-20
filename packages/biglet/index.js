@@ -18,8 +18,8 @@ class Pagelet {
         this.html = '';// 用来缓存当前pagelet布局模板编译生成的html字符串
         this.error = undefined;
         
-        // timeout
-        this.timeout = 1000;
+        // timeout = 10s
+        this.timeout = 10000;
         
         //if show = true, render
         this.show = true;
