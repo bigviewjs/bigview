@@ -72,6 +72,7 @@ class BigView extends BigViewBase {
 
     start() {
         debug('BigView start');
+        let self = this;
 
         // 1) this.before
         // 2）renderLayout: 渲染布局
@@ -85,12 +86,14 @@ class BigView extends BigViewBase {
             .then(this.afterRenderLayout.bind(this))
             .catch(this.showErrorPagelet.bind(this))
             .then(this.beforeRenderPagelets.bind(this))
-            .then(this.renderPagelets.bind(this)).timeout(this.timeout)
+            .then(this.renderPagelets.bind(this))
             .then(this.afterRenderPagelets.bind(this))
             .then(this.end.bind(this))
+                .timeout(this.timeout)
+                .catch(Promise.TimeoutError, this.renderPageletstimeoutFn.bind(this))
             .catch(this.processError.bind(this))
     }
-
+    
     before() {
         debug('default before');
         return PROMISE_RESOLVE;
@@ -171,6 +174,12 @@ class BigView extends BigViewBase {
     after() {
         debug('default after');
         return PROMISE_RESOLVE;
+    }
+    
+    renderPageletstimeoutFn(err) {
+        console.log('[BIGVIEW] timeout in ' + this.timeout + ' ms')
+        console.log(err)
+        return this.end()
     }
 };
 
