@@ -19,6 +19,9 @@ class Pagelet {
         
         // timeout
         this.timeout = 1000;
+        
+        //if show = true, render
+        this.show = true;
 
         // 为mode提供的
         this.isPageletWriteImmediately = true;
@@ -93,7 +96,7 @@ class Pagelet {
     }
 
     render() {
-        if (this.owner && this.owner.done === true) {
+        if (this.owner && this.owner.done === true && this.show === true) {
             console.log('no need to complet');
             return Promise.resolve('');
         }
