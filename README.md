@@ -858,3 +858,17 @@ review
 - 子模块的顺序，也可以指定
 - // 日志前缀
 - write layout 和mode
+
+
+## 模块是否渲染
+
+当获取数据后，某些模块不必要展示的时候，打破biglet的渲染promise链即可
+
+biglet
+
+- before （reject）
+- fetch （reject）
+- parse （reject）
+- render
+
+or if bigview 1.3.7之后，使用pagelet的show flag来控制，置为false即可
