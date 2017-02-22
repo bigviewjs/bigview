@@ -870,5 +870,4 @@ biglet
 - parse （reject）
 - render
 
-or if bigview 1.3.7之后，使用pagelet的show flag来控制，置为false即可
-
+移除了show属性，没有意义

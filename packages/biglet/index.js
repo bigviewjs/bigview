@@ -20,10 +20,7 @@ class Pagelet {
         
         // timeout = 10s
         this.timeout = 10000;
-        
-        //if show = true, render
-        this.show = true;
-        
+      
         // custom error function
         this.catchFn = function (err) {
             console.log(err)
@@ -100,7 +97,7 @@ class Pagelet {
     }
 
     render() {
-        if (this.owner && this.owner.done === true && this.show === true) {
+        if (this.owner && this.owner.done === true) {
             console.log('no need to complet');
             return Promise.resolve('');
         }
