@@ -23,7 +23,11 @@ class Pagelet {
       
         // custom error function
         this.catchFn = function (err) {
-            console.log(err)
+            if (err) {
+                console.log(err)
+            } else {
+                console.log('you recevie an undefined err from biglet' + this.domid + '!')
+            }
         }
 
         // 为mode提供的

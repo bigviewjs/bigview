@@ -8,12 +8,10 @@
 	- [x] bigview && biglet conosle.log("BIGVIEW" + err) 增加模块标识，便于日志记录（桑世龙）
 	- [x] this.tpl = 'tpl/index';干掉，设为默认值（桑世龙）
 	- [ ] this.root = __dirname;有疑问？暂无解决方案，需要思考（桑世龙）
-	- [ ] biglet // custom error function
+	- [x] biglet // custom error function
 	- [ ] 当没有数据的时候，不显示改模块，目前的做法是 return Promise.reject(); 语义上怪（桑世龙）
-
-	- 子模块的顺序，也可以指定
-	- // 日志前缀
-	- write layout 和mode
+	- [ ] 子模块的顺序，也可以指定
+	- [ ] write layout 和mode
 - v1.2.8 (2017年1月11日，i5ting)
   - bigview支持错误模块显示，仅限于布局之前
   - Pagelet里触发其他模块
