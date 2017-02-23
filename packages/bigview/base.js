@@ -9,6 +9,7 @@ const ParallelMode = require('./mode/parallel.js');
 const ReduceMode = require('./mode/reduce.js');
 const ReducerenderMode = require('./mode/reducerender.js');
 const RenderMode = require('./mode/render.js');
+const Utils = require('./utils');
 
 const PROMISE_RESOLVE = Promise.resolve(true);
 
@@ -60,7 +61,7 @@ module.exports = class BigViewBase extends EventEmitter {
     set mode(mode) {
         debug('bigview mode = ' + mode);
         if (!ModeInstanceMappings[mode]) {
-            console.log("bigview.mode only support [ pipeline | parallel | reduce | reducerender | render ]")
+            Utils.log("bigview.mode only support [ pipeline | parallel | reduce | reducerender | render ]")
             return;
         }
         this._mode = mode;

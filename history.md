@@ -3,8 +3,9 @@
 ## Version
 
 - v1.3.9
+	- [x] 使用bluebird作为global.Promise，避免外部错误
 	- [x] 去掉bigpipe.debug = false;使用环境变量（桑世龙）
-	- [ ] bigview && biglet conosle.log("BIGVIEW" + err) 增加模块标识，便于日志记录（桑世龙）
+	- [x] bigview && biglet conosle.log("BIGVIEW" + err) 增加模块标识，便于日志记录（桑世龙）
 	- [ ] this.tpl = 'tpl/index';干掉，设为默认值（桑世龙）
 	- [ ] this.root = __dirname;有疑问？暂无解决方案，需要思考（桑世龙）
 	- [ ] biglet // custom error function

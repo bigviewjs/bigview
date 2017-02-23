@@ -1,7 +1,9 @@
 'use strict';
 
 const debug = require('debug')('bigview');
-const Promise = require("bluebird");
+
+global.Promise = require("bluebird");
+
 const BigViewBase = require('./base');
 const Utils = require('./utils');
 const PROMISE_RESOLVE = Promise.resolve(true);
@@ -114,7 +116,7 @@ class BigView extends BigViewBase {
             self.res.render(tpl, data, function(err, str) {
                 if (err) {
                     debug('renderLayout ' + str);
-                    console.log(err);
+                    Utils.log(err);
                     return reject(err)
                 }
                 debug(str);
@@ -179,8 +181,8 @@ class BigView extends BigViewBase {
     }
     
     renderPageletstimeoutFn(err) {
-        console.log('[BIGVIEW] timeout in ' + this.timeout + ' ms')
-        console.log(err)
+        Utils.log('timeout in ' + this.timeout + ' ms')
+        Utils.log(err)
         return this.end()
     }
 };

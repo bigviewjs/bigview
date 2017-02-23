@@ -1,5 +1,11 @@
 'use strict';
 
+const MODULE_ID = 'BIGVIEW';
+
+exports.log = function (str) {
+    console.log(' [' + MODULE_ID + ' LOG]: ' + str)
+}
+
 // ready
 // 当布局输出完成的时候，触发
 exports.ready = function(isDebug) {
