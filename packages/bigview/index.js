@@ -11,6 +11,7 @@ class BigView extends BigViewBase {
         super(req, res, layout, data);
         
         this.debug = process.env.BIGVIEW_DEBUG || false;
+
         this.req = req;
         this.res = res;
         this.layout = layout;
