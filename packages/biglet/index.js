@@ -7,7 +7,7 @@ const Promise = require("bluebird");
 class Pagelet {
     constructor() {
         this.data = {};
-        this.tpl = 'index.html';
+        this.tpl = 'tpl/index';
         this.root = '.';
         this.children = [];
         

@@ -17,7 +17,7 @@ module.exports = class MyPagelet extends Pagelet {
       }
       this.domid = 'pagelet1'
       this.location = 'pagelet1'
-      this.tpl = 'p1.html'
+      // this.tpl = 'tpl/p1.html'
       this.delay = 4000
   }
   
@@ -28,22 +28,5 @@ module.exports = class MyPagelet extends Pagelet {
   sleep(time) {
     return new Promise((resolve)=> setTimeout(resolve, time))
   }
-  
-  compile(tpl, data) {
-    const ejs = require('ejs')
-    ejs.cache = require('lru-cache')(1000)
-    let self = this
 
-    return new Promise(function(resolve, reject) {
-      ejs.renderFile(tpl, data, self.options, function(err, str) {
-        // str => Rendered HTML string
-        if (err) {
-          console.log(err)
-          reject(err)
-        }
-
-        resolve(str)
-      })
-    })
-  }
 }
