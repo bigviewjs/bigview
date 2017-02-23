@@ -850,11 +850,6 @@ review
 
 
 <!--  -->
-
-- 子模块的顺序，也可以指定
-- // 日志前缀
-- write layout 和mode
-
 ## Timeout
 
 主流程bigview上5秒超时，biglet里fetch、parse等操作默认1秒超时，如果不满足，请设置timeout（单位是毫秒）
