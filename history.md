@@ -7,11 +7,11 @@
 	- [x] 去掉bigpipe.debug = false;使用环境变量（桑世龙）
 	- [x] bigview && biglet conosle.log("BIGVIEW" + err) 增加模块标识，便于日志记录（桑世龙）
 	- [x] this.tpl = 'tpl/index';干掉，设为默认值（桑世龙）
-	- [ ] this.root = __dirname;有疑问？暂无解决方案，需要思考（桑世龙）
 	- [x] biglet // custom error function
-	- [ ] 当没有数据的时候，不显示改模块，目前的做法是 return Promise.reject(); 语义上怪（桑世龙）
-	- [ ] 子模块的顺序，也可以指定
-	- [ ] write layout 和mode
+	- [x] 子模块的顺序，也可以指定pagelet1.mode = 'render'
+	- [x] 修复之前mode遗留问题，以前的render模式，仍然是先输出布局的，这是不对的，已修改
+	- (待处理)this.root = __dirname;有疑问？暂无解决方案，需要思考（桑世龙）
+	- (待处理)当没有数据的时候，不显示改模块，目前的做法是 return Promise.reject(); 语义上怪（桑世龙）
 - v1.2.8 (2017年1月11日，i5ting)
   - bigview支持错误模块显示，仅限于布局之前
   - Pagelet里触发其他模块
