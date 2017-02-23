@@ -127,7 +127,10 @@ class BigView extends BigViewBase {
                 }
                 debug(str);
                 let html = str + Utils.ready(self.debug)
-                self.emit('bigviewWrite', html, true);
+                
+                // 在pipeline模式下会直接写layout到浏览器
+                self.emit('bigviewWrite', html, self.modeInstance.isLayoutWriteImmediately);
+                
                 resolve(html)
             })
         })
