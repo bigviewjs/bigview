@@ -9,7 +9,8 @@ const PROMISE_RESOLVE = Promise.resolve(true);
 class BigView extends BigViewBase {
     constructor(req, res, layout, data) {
         super(req, res, layout, data);
-
+        
+        this.debug = process.env.BIGVIEW_DEBUG;
         this.req = req;
         this.res = res;
         this.layout = layout;

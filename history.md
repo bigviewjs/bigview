@@ -3,7 +3,7 @@
 ## Version
 
 - v1.3.9
-	- [ ] 去掉bigpipe.debug = false;使用环境变量（桑世龙）
+	- [x] 去掉bigpipe.debug = false;使用环境变量（桑世龙）
 	- [ ] 去掉bigpipe.mode = 'pipeline';因为默认就是这个，可以不用谢（桑世龙）
 	- [ ] bigview && biglet conosle.log("BIGVIEW" + err) 增加模块标识，便于日志记录（桑世龙）
 	- [ ] this.tpl = 'tpl/index';干掉，设为默认值（桑世龙）
