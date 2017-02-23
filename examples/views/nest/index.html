@@ -9,7 +9,7 @@
 
     <ul>
     <% pagelets.forEach(function(p){ %>
-        <li><%= p.name %> | <%= p.selector %>
+        <li><%= p.domid %> | <%= p.selector %>
         <% if (p.children.length) { %>  
             <ul>  
             <% p.children.forEach(function(sub){ %>  
@@ -21,7 +21,7 @@
     </ul>
 
     <% pagelets.forEach(function(p){ %>
-       <div id="<%= p.location %>" class="<%= p.selector %>">loading...<%= p.name %>...</div>
+       <div id="<%= p.domid %>" class="<%= p.selector %>">loading...<%= p.name %>...</div>
     <% }) %>
 
     <script src="/js/jquery.min.js"></script>

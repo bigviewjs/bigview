@@ -37,7 +37,13 @@ class BigView extends BigViewBase {
     }
 
     _getPageletObj(Pagelet) {
-        let pagelet = new Pagelet();
+        let pagelet;
+        
+        if (typeof Pagelet === 'object') {
+            pagelet = Pagelet;
+        } else {
+            pagelet = new Pagelet();
+        }
 
         pagelet.owner = this;
         pagelet.dataStore = this.dataStore;

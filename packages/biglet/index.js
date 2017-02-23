@@ -36,6 +36,7 @@ class Pagelet {
 
     addChild(SubPagelet) {
         let subPagelet = new SubPagelet();
+
         this.children.push(subPagelet)
     }
 
@@ -122,28 +123,30 @@ class Pagelet {
     }
     
     renderChildren() {
-        let arr = this.children;
+        let subPagelets = this.children;
         let self = this;
         let queue = [];
 
-        arr.forEach(function (subPagelet) {
+        subPagelets.forEach(function (subPagelet) {
             subPagelet.owner = self.owner;
             if (!subPagelet._exec) {
                 throw new Error('you should use like this.trigger(new somePagelet()')
             }
-            queue.push(subPagelet._exec())
+            // queue.push(subPagelet._exec())
         });
 
-        if (queue.length === 0) {
+        if (subPagelets.length === 0) {
             return Promise.resolve(true)
         }
 
-        return Promise.all(queue).then(function (results) {
+        let modeInstance = self.owner.getModeInstanceWith(this.mode || 'pipeline');
+        
+        return modeInstance.execute(subPagelets).then(function (results) {
             // 如果需要可以在bigview处捕获，生成mock的数据
             self.owner.emit('pageletEnd', self)
 
             return [self.html].concat(results)
-        })
+        });
     }
 
     get payload() {

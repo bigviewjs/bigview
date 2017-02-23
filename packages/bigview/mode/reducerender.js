@@ -40,9 +40,11 @@ module.exports = class ReduceRenderMode {
 		}, 0).then(res => {
 			let arr = []
 			self.total.forEach(function(i) {
-				i.forEach(function(j) {
-					arr.push(j)
-				})
+                if (typeof i === 'object'){
+    				i.forEach(function(j) {
+    					arr.push(j)
+    				})
+                }
 			})
 			return Promise.resolve(arr)
 		})

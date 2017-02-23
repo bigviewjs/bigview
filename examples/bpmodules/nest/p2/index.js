@@ -8,12 +8,13 @@ module.exports = class MyPagelet extends Pagelet {
         this.root = __dirname
         this.name = 'pagelet2'
         this.data =  {
+            domid : 'pagelet2',
             t: "测试",
             po: {
                 name: this.name
             }
         }
-        this.selector = 'pagelet2'
+        this.domid = 'pagelet2'
         this.location = 'pagelet2'
         this.tpl = 'p2.html'
     }

@@ -9,6 +9,9 @@ module.exports = function (req, res) {
 
   var Pagelet1 = require('./p1')
   var pagelet1 = new Pagelet1()
+    
+    // pipeline | parallel | reduce | reducerender | render
+    pagelet1.mode = 'render'
 
   var Pagelet2 = require('./p2')
   // var pagelet2 = new Pagelet2()
@@ -18,8 +21,8 @@ module.exports = function (req, res) {
   bigpipe.add(pagelet1)
 
   // bigpipe.preview('aaaa.html')
-  bigpipe.isMock = true
-  bigpipe.previewFile = 'aaaa.html'
+  // bigpipe.isMock = true
+  // bigpipe.previewFile = 'aaaa.html'
 
   bigpipe.start()
 }
