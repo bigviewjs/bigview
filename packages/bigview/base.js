@@ -14,11 +14,11 @@ const Utils = require('./utils');
 const PROMISE_RESOLVE = Promise.resolve(true);
 
 const ModeInstanceMappings = {
-    pipeline: new PipelineMode(),
-    parallel: new ParallelMode(),
-    reduce: new ReduceMode(),
-    reducerender: new ReducerenderMode(),
-    render: new RenderMode()
+    pipeline: PipelineMode,
+    parallel: ParallelMode,
+    reduce: ReduceMode,
+    reducerender: ReducerenderMode,
+    render: RenderMode
 }
 
 module.exports = class BigViewBase extends EventEmitter {
@@ -65,7 +65,7 @@ module.exports = class BigViewBase extends EventEmitter {
             return;
         }
         this._mode = mode;
-        this._modeInstance = ModeInstanceMappings[mode];
+        this._modeInstance = new ModeInstanceMappings[mode]();
     }
 
     get mode() {
@@ -76,6 +76,16 @@ module.exports = class BigViewBase extends EventEmitter {
     get modeInstance() {
         debug('modeInstance = ' + this._modeInstance);
         return this._modeInstance;
+    }
+    
+    getModeInstanceWith(mode) {
+        debug('biglet (children) mode = ' + mode);
+        if (!ModeInstanceMappings[mode]) {
+            Utils.log("biglet (children) .mode only support [ pipeline | parallel | reduce | reducerender | render ]")
+            return;
+        }
+        
+        return new ModeInstanceMappings[mode]();
     }
 
     /**
