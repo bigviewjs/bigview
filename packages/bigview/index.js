@@ -147,7 +147,7 @@ class BigView extends BigViewBase {
     renderPagelets() {
         debug("BigView  renderPagelets start");
         let bigview = this;
-        return this.modeInstance.execute(bigview)
+        return this.modeInstance.execute(bigview.pagelets)
     }
 
     end() {

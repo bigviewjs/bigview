@@ -22,10 +22,10 @@ module.exports = class RenderMode {
 	 * @param {any} bigview
 	 * @returns
 	 */
-	execute(bigview) {
+	execute(pagelets) {
 		let q = []
-		for (var i in bigview.pagelets) {
-			let _pagelet = bigview.pagelets[i]
+		for (var i in pagelets) {
+			let _pagelet = pagelets[i]
 			_pagelet.isPageletWriteImmediately = this.isPageletWriteImmediately
 			// if (_pagelet.immediately === true) {
 			    q.push(_pagelet._exec())

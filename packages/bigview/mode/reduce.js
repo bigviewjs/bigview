@@ -22,10 +22,8 @@ module.exports = class ReduceMode {
 	 * @param {any} bigview
 	 * @returns
 	 */
-	execute(bigview) {
-		let self = bigview
-
-		return Promise.reduce(self.pagelets, (total, _pagelet, index) => {
+	execute(pagelets) {
+		return Promise.reduce(pagelets, (total, _pagelet, index) => {
 			// if (_pagelet.immediately === true) {
 			  return _pagelet._exec()
 			// }

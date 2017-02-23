@@ -22,11 +22,11 @@ module.exports = class PiplineMode {
 	 * @param {any} bigview
 	 * @returns
 	 */
-	execute(bigview) {
+	execute(pagelets) {
 		let q = []
         let self = this
 
-		bigview.pagelets.forEach(function (_pagelet) {
+		pagelets.forEach(function (_pagelet) {
 			_pagelet.isPageletWriteImmediately = self.isPageletWriteImmediately
 			// if (_pagelet.immediately === true) {
 				q.push(_pagelet._exec())

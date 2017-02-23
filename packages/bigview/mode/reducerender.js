@@ -24,10 +24,10 @@ module.exports = class ReduceRenderMode {
 	 * @param {any} bigview
 	 * @returns
 	 */
-	execute(bigview) {
+	execute(pagelets) {
 		let self = this
 
-		return Promise.reduce(bigview.pagelets, (total, _pagelet, index) => {
+		return Promise.reduce(pagelets, (total, _pagelet, index) => {
 			_pagelet.isPageletWriteImmediately = self.isPageletWriteImmediately
 			// if (_pagelet.immediately === true) {
 				return _pagelet._exec().then(function(i) {
