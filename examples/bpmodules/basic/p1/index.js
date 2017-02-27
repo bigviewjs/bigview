@@ -1,7 +1,5 @@
 'use strict'
 
-const fs = require('fs')
-const path = require('path')
 const Pagelet = require('../../../../packages/biglet')
 
 module.exports = class MyPagelet extends Pagelet {
