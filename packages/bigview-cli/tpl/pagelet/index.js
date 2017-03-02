@@ -2,28 +2,18 @@
 
 const Pagelet = require('biglet')
 
-module.exports = class MyPagelet extends Pagelet {
+module.exports = class QPagelet extends Pagelet {
   constructor() {
     super()
     this.root = __dirname
-    this.name = '{{name}}'
-    this.data =  {t: "测试" }
-    this.selector = '{{name}}'
-    this.location = '{{name}}'
-    this.tpl = 'index.html'
-    this.delay = 0
+    this.domid = '{{name}}'
   }
 
   fetch() {
-    let self = this
-    return new Promise(function(resolve, reject){
-      setTimeout(function() {
-        resolve(self.data)
-      }, self.delay)
-    })
+    return Promise.resolve()
   }
   
   parse() {
-      return Promise.resolve(this.data = {})
+      return Promise.resolve()
   }
 }
