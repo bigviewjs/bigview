@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+const fse = require('fs-extra')
 var fs = require("fs")
 var argv = process.argv;
 argv.shift();
@@ -16,12 +16,23 @@ for (var i = 1; i < argv.length; i++) {
 }
 
 //
-function generatePageletModule (moduleName) {
-  var files = fs.readdirSync(file_path + "/tpl/pagelet")
-  // console.log(files)
+function generatePageletModule (moduleName) { 
+  var p = file_path + "/tpl/pagelet"
+  var files = fs.readdirSync(p)
+
   for(var i in files){
     var file = files[i]
-    gOne(file, moduleName)
+    var stat = fs.statSync(p + '/' + file)
+
+    if (stat.isDirectory()){
+      console.log('copy tpl ' + current_path + '/' + moduleName + '/tpl')
+      fse.copy(p + '/' + file , current_path + '/' + moduleName + '/tpl', err => {
+        if (err) return console.error(err)
+        // console.log("success!")
+      });
+    } else {
+      gOne(file, moduleName)
+    }
   }
 }
 
