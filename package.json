@@ -31,10 +31,5 @@
   },
   "keywords": [],
   "author": "i5ting",
-  "license": "MIT",
-  "config": {
-    "ghooks": {
-      "pre-commit": ""
-    }
-  }
+  "license": "MIT"
 }

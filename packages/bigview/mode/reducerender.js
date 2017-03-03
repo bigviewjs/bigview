@@ -12,7 +12,7 @@ const Promise = require("bluebird");
 
 module.exports = class ReduceRenderMode {
 	constructor() {
-		this.isLayoutWriteImmediately = true
+		this.isLayoutWriteImmediately = false
 		this.isPageletWriteImmediately = false
 
 		this.total = []
