@@ -112,6 +112,7 @@ class Pagelet {
 
         return self.compile(tplPath, self.data).then(function (str) {
             self.write(str)
+            // if not return 
             return str;
         }).catch(function (err) {
             console.error('complile' + err)
@@ -125,14 +126,12 @@ class Pagelet {
     renderChildren() {
         let subPagelets = this.children;
         let self = this;
-        let queue = [];
 
         subPagelets.forEach(function (subPagelet) {
             subPagelet.owner = self.owner;
             if (!subPagelet._exec) {
                 throw new Error('you should use like this.trigger(new somePagelet()')
             }
-            // queue.push(subPagelet._exec())
         });
 
         if (subPagelets.length === 0) {
@@ -167,6 +166,7 @@ class Pagelet {
 
     //event wrapper
     write(html) {
+        // 此处赋值有点绕
         this.html = html;
         
         // wrap html to script tag

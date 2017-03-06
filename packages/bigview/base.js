@@ -26,6 +26,10 @@ module.exports = class BigViewBase extends EventEmitter {
         super();
         
         this.mode = 'pipeline';
+        
+        // 缓存express的req和res
+        this.req = req;
+        this.res = res;
 
         // 用于缓存res.write的内容
         this.cache = [];
@@ -77,7 +81,7 @@ module.exports = class BigViewBase extends EventEmitter {
         debug('modeInstance = ' + this._modeInstance);
         return this._modeInstance;
     }
-    
+    // refact
     getModeInstanceWith(mode) {
         debug('biglet (children) mode = ' + mode);
         if (!ModeInstanceMappings[mode]) {
@@ -144,6 +148,7 @@ module.exports = class BigViewBase extends EventEmitter {
     
     // event wrapper
     write(html, isWriteImmediately) {
+        // 不生效，某种模式下会有问题
         let _isWriteImmediately = isWriteImmediately || true;
         this.emit('bigviewWrite', html, _isWriteImmediately);
     }

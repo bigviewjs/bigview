@@ -13,9 +13,8 @@ class BigView extends BigViewBase {
         super(req, res, layout, data);
         
         this.debug = process.env.BIGVIEW_DEBUG || false;
-
-        this.req = req;
-        this.res = res;
+        
+        // 布局文件，在渲染布局前是可以改的
         this.layout = layout;
 
         // 用于为页面模板提供数据
@@ -26,6 +25,8 @@ class BigView extends BigViewBase {
         this.pagelets = [];
 
         this.done = false;
+        
+        //无用
         this.layoutHtml = '';
         
         // timeout = 30s
@@ -38,7 +39,7 @@ class BigView extends BigViewBase {
 
     _getPageletObj(Pagelet) {
         let pagelet;
-        
+        //duck type
         if (typeof Pagelet === 'object') {
             pagelet = Pagelet;
         } else {
@@ -130,7 +131,7 @@ class BigView extends BigViewBase {
                 
                 // 在pipeline模式下会直接写layout到浏览器
                 self.emit('bigviewWrite', html, self.modeInstance.isLayoutWriteImmediately);
-                
+                //html没用到
                 resolve(html)
             })
         })

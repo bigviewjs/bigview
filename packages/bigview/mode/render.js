@@ -31,7 +31,8 @@ module.exports = class RenderMode {
 			    q.push(_pagelet._exec())
 			// }
 		}
-		// parallel then render
+		// parallel then render 
+    // 移除无用代码，why typeof
 		return Promise.all(q).then(function(results) {
 			let arr = []
 			results.forEach(function(i) {
