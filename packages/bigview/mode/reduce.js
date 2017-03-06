@@ -24,15 +24,7 @@ module.exports = class ReduceMode {
 	 */
 	execute(pagelets) {
 		return Promise.reduce(pagelets, (total, _pagelet, index) => {
-			// if (_pagelet.immediately === true) {
-			  return _pagelet._exec()
-			// }
-			// else return Promise.resolve()
+			return _pagelet._exec()
 		}, 0)
-		
-		// .then(res => {
-      	// 	debug(res)
-		// 	return Promise.resolve(res)
-		// })
 	}
 }

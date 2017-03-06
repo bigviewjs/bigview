@@ -28,23 +28,9 @@ module.exports = class ParallelMode {
 
 		pagelets.forEach(function(_pagelet){
 			_pagelet.isPageletWriteImmediately = self.isPageletWriteImmediately
-			// if (_pagelet.immediately === true){
-				q.push(_pagelet._exec())
-			// }
+			q.push(_pagelet._exec())
 		});
 
 		return Promise.all(q)
-		
-		// .then(function(results) {
-		// 	let arr = []
-		// 	results.forEach(function(i) {
-        //         if (typeof i === 'object'){
-    	// 			i.forEach(function(j) {
-    	// 				arr.push(j)
-    	// 			})
-        //         }
-		// 	})
-		// 	return Promise.resolve(arr)
-		// })
 	}
 }

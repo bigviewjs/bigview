@@ -27,24 +27,9 @@ module.exports = class RenderMode {
 		for (var i in pagelets) {
 			let _pagelet = pagelets[i]
 			_pagelet.isPageletWriteImmediately = this.isPageletWriteImmediately
-			// if (_pagelet.immediately === true) {
-			    q.push(_pagelet._exec())
-			// }
+
+			q.push(_pagelet._exec())
 		}
-		// parallel then render 
-    // 移除无用代码，why typeof
 		return Promise.all(q)
-		
-		.then(function(results) {
-			let arr = []
-			results.forEach(function(i) {
-                if (typeof i === 'object'){
-    				i.forEach(function(j) {
-    					arr.push(j)
-    				})
-                }
-			})
-			return Promise.resolve(arr)
-		})
 	}
 }
