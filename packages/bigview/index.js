@@ -163,6 +163,10 @@ class BigView extends BigViewBase {
             // true will send right now
             let isWriteImmediately = true;
             let html = this.cache.join('');
+            
+            // 在end时，无论如何都要输出布局
+            this.modeInstance.isLayoutWriteImmediately = true
+
             this.write(html, isWriteImmediately)
         }
 

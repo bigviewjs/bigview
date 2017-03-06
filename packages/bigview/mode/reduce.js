@@ -28,9 +28,11 @@ module.exports = class ReduceMode {
 			  return _pagelet._exec()
 			// }
 			// else return Promise.resolve()
-		}, 0).then(res => {
-      		debug(res)
-			return Promise.resolve(res)
-		})
+		}, 0)
+		
+		// .then(res => {
+      	// 	debug(res)
+		// 	return Promise.resolve(res)
+		// })
 	}
 }

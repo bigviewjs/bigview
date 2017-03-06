@@ -15,7 +15,7 @@ module.exports = class ReduceRenderMode {
 		this.isLayoutWriteImmediately = false
 		this.isPageletWriteImmediately = false
 
-		this.total = []
+		// this.total = []
 	}
 
 	/**
@@ -31,22 +31,23 @@ module.exports = class ReduceRenderMode {
 			_pagelet.isPageletWriteImmediately = self.isPageletWriteImmediately
 			// if (_pagelet.immediately === true) {
 				return _pagelet._exec().then(function(i) {
-					self.total.push(i)
+					// self.total.push(i)
 					return Promise.resolve()
 				})
 			// } else {
 			// 	return Promise.resolve()
 			// }
-		}, 0).then(res => {
-			let arr = []
-			self.total.forEach(function(i) {
-                if (typeof i === 'object'){
-    				i.forEach(function(j) {
-    					arr.push(j)
-    				})
-                }
-			})
-			return Promise.resolve(arr)
-		})
+		}, 0)
+		// .then(res => {
+		// 	let arr = []
+		// 	self.total.forEach(function(i) {
+        //         if (typeof i === 'object'){
+    	// 			i.forEach(function(j) {
+    	// 				arr.push(j)
+    	// 			})
+        //         }
+		// 	})
+		// 	return Promise.resolve(arr)
+		// })
 	}
 }

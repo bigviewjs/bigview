@@ -33,7 +33,9 @@ module.exports = class RenderMode {
 		}
 		// parallel then render 
     // 移除无用代码，why typeof
-		return Promise.all(q).then(function(results) {
+		return Promise.all(q)
+		
+		.then(function(results) {
 			let arr = []
 			results.forEach(function(i) {
                 if (typeof i === 'object'){
