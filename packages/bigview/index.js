@@ -153,7 +153,7 @@ class BigView extends BigViewBase {
     }
 
     end() {
-        if (this.done === true) {
+        if (this.done) {
             let err = new Error("bigview.done = true");
             return Promise.reject(err);
         }

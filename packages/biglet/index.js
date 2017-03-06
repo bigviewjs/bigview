@@ -102,7 +102,7 @@ class Pagelet {
     }
 
     render() {
-        if (this.owner && this.owner.done === true) {
+        if (this.owner && this.owner.done) {
             console.log('no need to complet');
             return Promise.resolve('');
         }

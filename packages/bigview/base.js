@@ -97,7 +97,7 @@ module.exports = class BigViewBase extends EventEmitter {
             return this.cache.push(text);
         }
 
-        if (this.done === true) {
+        if (this.done) {
             throw new Error(' Write data to Browser after bigview.dong = true.')
         }
 
