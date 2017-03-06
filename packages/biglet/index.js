@@ -24,7 +24,7 @@ class Pagelet {
         // custom error function
         this.catchFn = function (err) {
             if (err) {
-                console.log(err)
+                console.log("[BIGLET]: " + err)
             } else {
                 console.log('you recevie an undefined err from biglet' + this.domid + '!')
             }
