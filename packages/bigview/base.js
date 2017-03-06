@@ -93,7 +93,7 @@ module.exports = class BigViewBase extends EventEmitter {
         debug('Write data to Browser ' + text);
 
         // 是否立即写入，如果不立即写入，放到this.cache里
-        if (!isWriteImmediately && this.modeInstance.isLayoutWriteImmediately === false) {
+        if (!isWriteImmediately || this.modeInstance.isLayoutWriteImmediately === false) {
             return this.cache.push(text);
         }
 

@@ -22,6 +22,8 @@ module.exports = function (req, res) {
         bigpipe.mode = req.cookies.bigview_mode
     }
 
+    console.log( bigpipe.mode)
+
     // bigpipe.preview('aaaa.html')
     // bigpipe.isMock = true
     //  bigpipe.previewFile = 'aaaa.html'
