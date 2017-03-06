@@ -149,7 +149,6 @@ module.exports = class BigViewBase extends EventEmitter {
     // event wrapper
     write(html, isWriteImmediately) {
         // 不生效，某种模式下会有问题
-        let _isWriteImmediately = isWriteImmediately || true;
-        this.emit('bigviewWrite', html, _isWriteImmediately);
+        this.emit('bigviewWrite', html, isWriteImmediately);
     }
 };
