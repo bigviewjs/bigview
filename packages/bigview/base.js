@@ -4,22 +4,10 @@ const debug = require('debug')('bigview');
 const Promise = require("bluebird");
 const EventEmitter = require('events');
 
-const PipelineMode = require('./mode/pipeline.js');
-const ParallelMode = require('./mode/parallel.js');
-const ReduceMode = require('./mode/reduce.js');
-const ReducerenderMode = require('./mode/reducerender.js');
-const RenderMode = require('./mode/render.js');
+const ModeInstanceMappings = require('./mode')
 const Utils = require('./utils');
 
 const PROMISE_RESOLVE = Promise.resolve(true);
-
-const ModeInstanceMappings = {
-    pipeline: PipelineMode,
-    parallel: ParallelMode,
-    reduce: ReduceMode,
-    reducerender: ReducerenderMode,
-    render: RenderMode
-}
 
 module.exports = class BigViewBase extends EventEmitter {
     constructor(req, res, layout, data) {
