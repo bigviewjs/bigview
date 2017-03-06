@@ -148,29 +148,26 @@ class Pagelet {
         });
     }
 
-    get payload() {
+    payload(html) {
         let _payload = {
             domid: this.domid,
             js: this.js,
             css: this.css,
-            html: this.html, // fix by dimu.feng
+            html: html, // fix by dimu.feng
             error: this.error
         }
 
         return JSON.stringify(_payload)
     }
 
-    get view() {
-        return `<script charset=\"utf-8\">bigview.view(${this.payload})</script>`
+    view(html) {
+        return `<script charset=\"utf-8\">bigview.view(${this.payload(html)})</script>`
     }
 
     //event wrapper
-    write(html) {
-        // 此处赋值有点绕
-        this.html = html;
-        
+    write(html) {        
         // wrap html to script tag
-        let view = this.view;
+        let view = this.view(html);
         
         // bigpipe write
         this.owner.emit('pageletWrite', view, this.isPageletWriteImmediately)
