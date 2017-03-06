@@ -126,7 +126,7 @@ class BigView extends BigViewBase {
                 let html = str + Utils.ready(self.debug)
                 
                 // 在pipeline模式下会直接写layout到浏览器
-                self.emit('bigviewWrite', html, self.modeInstance.isLayoutWriteImmediately);
+                self.write(html, self.modeInstance.isLayoutWriteImmediately);
                 //html没用到
                 resolve(html)
             })
@@ -164,7 +164,7 @@ class BigView extends BigViewBase {
             // true will send right now
             let isWriteImmediately = true;
             let html = this.cache.join('');
-            this.emit('bigviewWrite', html, isWriteImmediately)
+            this.write(html, isWriteImmediately)
         }
 
         debug("BigView end");
