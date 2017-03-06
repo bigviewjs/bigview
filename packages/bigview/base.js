@@ -53,7 +53,7 @@ module.exports = class BigViewBase extends EventEmitter {
     set mode(mode) {
         debug('bigview mode = ' + mode);
         if (!ModeInstanceMappings[mode]) {
-            Utils.log("bigview.mode only support [ pipeline | parallel | reduce | reducerender | render ]")
+            Utils.error("bigview.mode only support [ pipeline | parallel | reduce | reducerender | render ]")
             return;
         }
         this._mode = mode;
