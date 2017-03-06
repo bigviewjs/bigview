@@ -33,8 +33,7 @@ class BigView extends BigViewBase {
         this.timeout = 30000;
 
         // 默认是pipeline并行模式，pagelets快的先渲染
-        // 如果是动态布局，会有this.data.pagelets
-        this.isDynamicLayout = true;
+        // 页面render的梳理里会有this.data.pagelets
     }
 
     _getPageletObj(Pagelet) {
@@ -140,11 +139,9 @@ class BigView extends BigViewBase {
     renderLayout() {
         debug("BigView renderLayout");
 
-        // 动态布局
-        if (this.isDynamicLayout) {
-            this.data.pagelets = this.pagelets;
-            this.data.errorPagelet = this.errorPagelet;
-        }
+        // 默认注入pagelets和errorPagelet信息
+        this.data.pagelets = this.pagelets;
+        this.data.errorPagelet = this.errorPagelet;
 
         let self = this;
 
