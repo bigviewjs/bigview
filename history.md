@@ -2,6 +2,18 @@
 
 ## Version
 
+- v.1.3.10
+	- 重构mode部分，讲引用移到mode/index.js里，内敛
+	- for sonar
+	- refact bigview write api
+	- 移除无用的this.layoutHtml
+	- 移除动态布局
+	- 将req和res移除到base里
+	- 重构biglet赋值比较绕的问题
+	- 修复，之前的parallel模式渲染问题，已测试
+	- 移除显式的比较true
+	- 修复render模式输出
+	- add pipeline mode test
 - v1.3.9
 	- [x] 使用bluebird作为global.Promise，避免外部错误
 	- [x] 去掉bigpipe.debug = false;使用环境变量BIGVIEW_DEBUG
