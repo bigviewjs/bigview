@@ -79,7 +79,6 @@ class BigView extends BigViewBase {
 
     start() {
         debug('BigView start');
-        let self = this;
 
         // 1) this.before
         // 2）renderLayout: 渲染布局

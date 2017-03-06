@@ -27,7 +27,9 @@ function generatePageletModule (moduleName) {
     if (stat.isDirectory()){
       console.log('copy tpl ' + current_path + '/' + moduleName + '/tpl')
       fse.copy(p + '/' + file , current_path + '/' + moduleName + '/tpl', err => {
-        if (err) return console.error(err)
+        if (err) {
+          return console.error(err)
+        }
         // console.log("success!")
       });
     } else {
