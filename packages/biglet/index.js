@@ -141,13 +141,6 @@ class Pagelet {
         let modeInstance = self.owner.getModeInstanceWith(this.mode || 'pipeline');
         
         return modeInstance.execute(subPagelets)
-        
-        // .then(function (results) {
-        //     // 如果需要可以在bigview处捕获，生成mock的数据
-        //     self.owner.emit('pageletEnd', self)
-
-        //     return [self.html].concat(results)
-        // });
     }
 
     payload(html) {
