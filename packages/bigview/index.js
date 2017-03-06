@@ -26,9 +26,6 @@ class BigView extends BigViewBase {
 
         this.done = false;
         
-        //无用
-        this.layoutHtml = '';
-        
         // timeout = 30s
         this.timeout = 30000;
 
@@ -146,7 +143,6 @@ class BigView extends BigViewBase {
         let self = this;
 
         return self.compile(self.layout, self.data).then(function(str) {
-            self.layoutHtml = str;
             return str;
         })
     }
