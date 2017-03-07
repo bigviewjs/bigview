@@ -3,6 +3,7 @@
 const debug = require('debug')('bigview')
 const fs = require('fs')
 const MyBigView = require('./MyBigView')
+const Biglet = require('../../../packages/biglet')
 
 module.exports = function (req, res) {
   var bigpipe = new MyBigView(req, res, 'nest/index', { title: "测试" })
@@ -18,7 +19,10 @@ module.exports = function (req, res) {
 
   pagelet1.addChild(Pagelet2)
 
-  bigpipe.add(pagelet1)
+console.dir("pagelet1 instanceof Biglet = ")
+// console.log(pagelet1.toString())
+  
+  bigpipe.add(pagelet1,Biglet)
 
   // bigpipe.preview('aaaa.html')
   // bigpipe.isMock = true

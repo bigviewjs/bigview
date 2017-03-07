@@ -4,6 +4,7 @@ const debug = require('debug')('bigview');
 
 global.Promise = require("bluebird");
 
+const Biglet = require('biglet')
 const BigViewBase = require('./base');
 const Utils = require('./utils');
 const PROMISE_RESOLVE = Promise.resolve(true);
@@ -35,8 +36,8 @@ class BigView extends BigViewBase {
 
     _getPageletObj(Pagelet) {
         let pagelet;
-        //duck type
-        if (typeof Pagelet === 'object') {
+
+        if (Pagelet.domid && Pagelet.root) {
             pagelet = Pagelet;
         } else {
             pagelet = new Pagelet();
