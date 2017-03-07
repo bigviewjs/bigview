@@ -10,7 +10,7 @@ class Pagelet {
         this.tpl = 'tpl/index';
         this.root = '.';
         this.children = [];
-        
+        this.payload = {};
         // payload for write to bigview.view(...)
         this.domid = 'you should add a domid'; //location
         this.css = []; // css
@@ -109,9 +109,8 @@ class Pagelet {
         let tplPath = path.join(self.root, self.tpl);
 
         return self.compile(tplPath, self.data).then(function (str) {
+            self.html = str
             self.write(str)
-            // if not return 
-            return str;
         }).catch(function (err) {
             console.error('complile' + err)
         })
@@ -141,26 +140,24 @@ class Pagelet {
         return modeInstance.execute(subPagelets)
     }
 
-    payload(html) {
-        let _payload = {
-            domid: this.domid,
-            js: this.js,
-            css: this.css,
-            html: html, // fix by dimu.feng
-            error: this.error
-        }
+    get _payload() {
+        let self = this;
+        
+        ['domid', 'js', 'css', 'html', 'error'].forEach(function(item){
+            self.payload[item] = self[item]
+        })
 
-        return JSON.stringify(_payload)
+        return JSON.stringify(self.payload)
     }
 
-    view(html) {
-        return `<script charset=\"utf-8\">bigview.view(${this.payload(html)})</script>`
+    get view() {
+        return `<script charset=\"utf-8\">bigview.view(${this._payload})</script>`
     }
 
     //event wrapper
     write(html) {        
         // wrap html to script tag
-        let view = this.view(html);
+        let view = this.view;
         
         // bigpipe write
         this.owner.emit('pageletWrite', view, this.isPageletWriteImmediately)

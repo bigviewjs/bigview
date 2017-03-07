@@ -19,9 +19,6 @@ module.exports = function (req, res) {
 
   pagelet1.addChild(Pagelet2)
 
-console.dir("pagelet1 instanceof Biglet = ")
-// console.log(pagelet1.toString())
-  
   bigpipe.add(pagelet1,Biglet)
 
   // bigpipe.preview('aaaa.html')
