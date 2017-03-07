@@ -5,7 +5,7 @@ const Bigview = require("../../packages/bigview")
 const Biglet = require("../../packages/biglet")
 const ModeInstanceMappings = require('../../packages/bigview/mode')
 
-test.cb('GET /', t => {
+test.cb('MODE pipeline', t => {
     let req = {}
     let res = {
       render:function(tpl, data){
