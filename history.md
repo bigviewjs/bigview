@@ -1,7 +1,10 @@
 # History
 
 ## Version
-
+- v1.3.12
+	- 修正payload问题，支持自定义属性
+	- duck type
+	- 修改catchFn阻塞问题
 - v.1.3.10
 	- 重构mode部分，讲引用移到mode/index.js里，内敛
 	- for sonar
