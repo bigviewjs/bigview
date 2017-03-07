@@ -23,11 +23,9 @@ class Pagelet {
       
         // custom error function
         this.catchFn = function (err) {
-            if (err) {
-                console.log("[BIGLET]: " + err)
-            } else {
-                console.log('you recevie an undefined err from biglet' + this.domid + '!')
-            }
+            console.log("[BIGLET domid=" + this.domid + '] : ' + '\n' + err.stack)
+    
+            return Promise.resolve()
         }
 
         // 为mode提供的
@@ -60,7 +58,7 @@ class Pagelet {
             .then(self.parse.bind(self)).timeout(this.timeout)
             .then(self.render.bind(self)).timeout(this.timeout)
             .then(self.end.bind(self)).timeout(this.timeout)
-            .catch(self.catchFn)
+            .catch(self.catchFn.bind(self))
     }
 
     before() {
