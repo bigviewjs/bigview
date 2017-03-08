@@ -85,3 +85,18 @@ test.only('.compile(tpl, data) return promise', t => {
     })
 })
 
+test.only('.compile(tpl, data) with reject error', t => {
+    var p1 = new Biglet()
+    p1.owner = {
+        res : {
+            render: function (tpl, data, cb) {
+                cb(new Error('i am an error!'), tpl + data)
+            }
+        }
+    }
+    
+    return p1.compile('index.jade', 'data').catch(function(){
+        t.pass()
+    })
+})
+
