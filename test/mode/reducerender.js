@@ -6,7 +6,7 @@ const Biglet = require("../../packages/biglet")
 const ModeInstanceMappings = require('../../packages/bigview/mode')
 
 /**
- * 随机，all完成之后，立即写入，即parallel模式
+ * 即连续渲染模式reducerender，不写入布局，所有pagelet顺序执行完成，一次写入到浏览器。(当前)
  * 
  * 检查点：
  * 
@@ -14,7 +14,7 @@ const ModeInstanceMappings = require('../../packages/bigview/mode')
  *  - 2）检查p1和p2的顺序
  */ 
 
-test('MODE parallel', t => {
+test('MODE reducerender', t => {
     let req = {}
     let res = {
       render:function(tpl, data){
@@ -60,16 +60,16 @@ test('MODE parallel', t => {
 
     let startTime = new Date()
     
-    return bigview.getModeInstanceWith('parallel').execute(pagelets).then(function(){
+    return bigview.getModeInstanceWith('reducerender').execute(pagelets).then(function(){
       let endTime = new Date()
       
       let cost = endTime.getTime() - startTime.getTime()
-
-      t.true(cost > 3000 && cost < 4000)
         
-      // 按照push顺序算的
-      t.is(result[0], 'p2')
-      t.is(result[1], 'p1')
+      t.true(cost > 4000)
+        
+      // 按照执行顺序算的
+      t.is(result[0], 'p1')
+      t.is(result[1], 'p2')
     })
 })
 

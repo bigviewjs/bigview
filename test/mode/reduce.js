@@ -6,15 +6,15 @@ const Biglet = require("../../packages/biglet")
 const ModeInstanceMappings = require('../../packages/bigview/mode')
 
 /**
- * 随机，all完成之后，立即写入，即parallel模式
+ * 连续模式reduce：依次连续写入(当前)
  * 
  * 检查点：
  * 
  *  - 1) 写入模块，检查cache为空
- *  - 2）检查p1和p2的顺序
+ *  - 2）检查p1和p2的顺序，p1先显示
  */ 
 
-test('MODE parallel', t => {
+test('MODE reduce', t => {
     let req = {}
     let res = {
       render:function(tpl, data){
@@ -22,6 +22,7 @@ test('MODE parallel', t => {
       }
     }
     let bigview = new Bigview(req, res, 'tpl', {})
+  
 
     let result = []
 
@@ -60,16 +61,16 @@ test('MODE parallel', t => {
 
     let startTime = new Date()
     
-    return bigview.getModeInstanceWith('parallel').execute(pagelets).then(function(){
+    return bigview.getModeInstanceWith('reduce').execute(pagelets).then(function(){
       let endTime = new Date()
       
       let cost = endTime.getTime() - startTime.getTime()
-
-      t.true(cost > 3000 && cost < 4000)
+        
+      t.true(cost > 4000)
         
       // 按照push顺序算的
-      t.is(result[0], 'p2')
-      t.is(result[1], 'p1')
+      t.is(result[0], 'p1')
+      t.is(result[1], 'p2')
     })
 })
 
