@@ -33,8 +33,7 @@ test('biglet custom payload', t => {
     }
     
     p1.end = function () {
-    t.regex(p1.view, /bigview.view\({\"a\":1,\"b\":2,/)
-        
+        t.regex(p1.view, /bigview.view\({\"a\":1,\"b\":2,/)
     }
     
     return p1._exec()

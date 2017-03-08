@@ -19,4 +19,56 @@ test('.addChild(SubPagelet)', t => {
     t.is(p1.children.length, 1)
 })
 
+test('._exec() return promise', t => {
+    var p1 = new Biglet()
+    p1.owner = {
+        res : {
+            render: function(tpl, data){
+                console.log(tpl)
+                console.log(data)
+            }
+        }
+    }
+    
+    p1.compile = (tpl, data) => {
+        return Promise.resolve()
+    }
+    
+    p1.render = function () {
+        return Promise.resolve()
+    }
+   
+    return p1._exec().then(()=>{
+        t.pass()
+    })
+})
+
+test('.before() return promise', t => {
+    var p1 = new Biglet()
+    
+    
+    return p1.before().then(()=>{
+        t.pass()
+    })
+})
+
+test('.fetch() return promise', t => {
+    var p1 = new Biglet()
+    
+    
+    return p1.fetch().then(()=>{
+        t.pass()
+    })
+})
+
+
+test('.parse() return promise', t => {
+    var p1 = new Biglet()
+    
+    
+    return p1.parse().then(()=>{
+        t.pass()
+    })
+})
+
 

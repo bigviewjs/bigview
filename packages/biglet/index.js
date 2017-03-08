@@ -81,7 +81,9 @@ class Pagelet {
     }
 
     /**
-     * compile
+     * Compile tpl + data to html
+     * 
+     * @private
      */
     compile(tpl, data) {
         let self = this;
@@ -99,6 +101,11 @@ class Pagelet {
         })
     }
 
+    /**
+     * Compile && Write html to bigview
+     * 
+     * @private
+     */
     render() {
         if (this.owner && this.owner.done) {
             console.log('no need to complet');
