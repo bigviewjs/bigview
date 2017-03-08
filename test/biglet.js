@@ -70,7 +70,7 @@ test('.parse() return promise', t => {
     })
 })
 
-test.only('.compile(tpl, data) return promise', t => {
+test('.compile(tpl, data) return promise', t => {
     var p1 = new Biglet()
     p1.owner = {
         res : {
@@ -85,7 +85,7 @@ test.only('.compile(tpl, data) return promise', t => {
     })
 })
 
-test.only('.compile(tpl, data) with reject error', t => {
+test('.compile(tpl, data) with reject error', t => {
     var p1 = new Biglet()
     p1.owner = {
         res : {

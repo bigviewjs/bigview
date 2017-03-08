@@ -109,7 +109,7 @@ class Pagelet {
     render() {
         if (this.owner && this.owner.done) {
             console.log('no need to complet');
-            return Promise.resolve('');
+            return Promise.resolve();
         }
 
         let self = this;
