@@ -108,7 +108,7 @@ class Pagelet {
      */
     render() {
         if (this.owner && this.owner.done) {
-            console.log('no need to complet');
+            console.log('[BIGLET WARNING] bigview is alread done, there is no need to render biglet module!');
             return Promise.resolve();
         }
 
