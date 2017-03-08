@@ -61,7 +61,6 @@ test('.fetch() return promise', t => {
     })
 })
 
-
 test('.parse() return promise', t => {
     var p1 = new Biglet()
     
@@ -70,5 +69,23 @@ test('.parse() return promise', t => {
         t.pass()
     })
 })
+
+test.only('.compile(tpl, data) return promise', t => {
+    var p1 = new Biglet()
+    p1.owner = {
+        res : {
+            render: function (tpl, data, cb) {
+                cb(null, tpl + data)
+            }
+        }
+    }
+    
+    return p1.compile('index.jade', 'data').then((html)=>{
+        t.is(html, 'index.jade' + 'data')
+    })
+})
+
+
+
 
 
