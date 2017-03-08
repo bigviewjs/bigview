@@ -5,7 +5,16 @@ const Bigview = require("../../packages/bigview")
 const Biglet = require("../../packages/biglet")
 const ModeInstanceMappings = require('../../packages/bigview/mode')
 
-test.cb('MODE pipeline', t => {
+/**
+ * 随机，先完成的先写入，即pipeline模式(当前)
+ * 
+ * 检查点：
+ * 
+ *  - 1) 写入模块，检查cache为空
+ *  - 2）检查p1和p2的顺序
+ */ 
+
+test('MODE pipeline', t => {
     let req = {}
     let res = {
       render:function(tpl, data){
@@ -45,12 +54,10 @@ test.cb('MODE pipeline', t => {
 
     let pagelets = [p1, p2]
 
-    bigview.getModeInstanceWith('pipeline').execute(pagelets).then(function(){
+    return bigview.getModeInstanceWith('pipeline').execute(pagelets).then(function(){
       // console.log(result)
       t.is(result[0], 'p2')
       t.is(result[1], 'p1')
-
-      t.end()
     })
 })
 
