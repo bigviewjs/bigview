@@ -85,7 +85,3 @@ test.only('.compile(tpl, data) return promise', t => {
     })
 })
 
-
-
-
-

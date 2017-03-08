@@ -118,8 +118,6 @@ class Pagelet {
         return self.compile(tplPath, self.data).then(function (str) {
             self.html = str
             self.write(str)
-        }).catch(function (err) {
-            console.error('complile' + err)
         })
     }
 
