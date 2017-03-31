@@ -16,6 +16,8 @@ app.set('view engine', 'html');
 
 app.get('/', require('./bpmodules/basic'));
 
+app.get('/payload', require('./bpmodules/payload'));
+
 app.get('/data', require('./bpmodules/dataStore'));
 
 app.get('/if', require('./bpmodules/if'));
