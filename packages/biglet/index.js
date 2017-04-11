@@ -23,7 +23,7 @@ class Pagelet {
       
         // custom error function
         this.catchFn = function (err) {
-            console.log("[BIGLET domid=" + this.domid + '] : ' + '\n' + err.stack)
+            console.warn("[BIGLET domid=" + this.domid + '] : ' + err.message)
     
             return Promise.resolve()
         }
