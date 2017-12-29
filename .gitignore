@@ -46,3 +46,4 @@ jspm_packages
 # Optional REPL hist
 .vscode
 *DS_Store
+package-lock.json
