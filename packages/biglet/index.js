@@ -4,13 +4,14 @@ const Promise = require('bluebird')
 
 class Pagelet {
   constructor () {
+    this.main = null
     this.data = {}
     this.tpl = 'tpl/index'
     this.root = '.'
     this.children = []
     this.payload = {}
     // payload for write to bigview.view(...)
-    this.domid = 'you should add a domid'
+    this.domid = 'you should add a domid' // location
     this.css = [] // css
     this.js = [] // js
     this.html = ''// 用来缓存当前pagelet布局模板编译生成的html字符串
@@ -21,7 +22,8 @@ class Pagelet {
 
     // custom error function
     this.catchFn = function (err) {
-      console.warn("[BIGLET domid=" + this.domid + '] : ' + err.message)
+      console.warn('[BIGLET domid=' + this.domid + '] : ' + err.message)
+
       return Promise.resolve()
     }
 
@@ -30,7 +32,7 @@ class Pagelet {
   }
 
   addChild (SubPagelet) {
-    const subPagelet = new SubPagelet()
+    let subPagelet = new SubPagelet()
 
     this.children.push(subPagelet)
   }
@@ -41,7 +43,6 @@ class Pagelet {
   // step3: write html to browser
   _exec () {
     let self = this
-
     debug('Pagelet ' + this.domid + ' fetch')
 
     // 1) this.before
@@ -49,13 +50,12 @@ class Pagelet {
     // 3) parse，用于处理fetch获取的数据
     // 4）render，用与编译模板为html
     // 5）this.end 通知浏览器，写入完成
-
     return self.before()
-        .then(self.fetch.bind(self)).timeout(this.timeout)
-        .then(self.parse.bind(self)).timeout(this.timeout)
-        .then(self.render.bind(self)).timeout(this.timeout)
-        .then(self.end.bind(self)).timeout(this.timeout)
-        .catch(self.catchFn.bind(self))
+            .then(self.fetch.bind(self)).timeout(this.timeout)
+            .then(self.parse.bind(self)).timeout(this.timeout)
+            .then(self.render.bind(self)).timeout(this.timeout)
+            .then(self.end.bind(self)).timeout(this.timeout)
+            .catch(self.catchFn.bind(self))
   }
 
   before () {
@@ -83,16 +83,12 @@ class Pagelet {
    * @private
    */
   compile (tpl, data) {
-    const self = this
-
-    return new Promise(function (resolve, reject) {
-      self.owner.res.render(tpl, data, function (err, str) {
+    return new Promise((resolve, reject) => {
+      this.owner.render(tpl, data, function (err, str) {
         // str => Rendered HTML string
         if (err) {
-          console.log(err)
           return reject(err)
         }
-
         resolve(str)
       })
     })
@@ -105,11 +101,10 @@ class Pagelet {
    */
   render () {
     if (this.owner && this.owner.done) {
-      console.log('[BIGLET WARNING] bigview is alread done, there is no need to render biglet module!');
-      return Promise.resolve();
+      console.log('[BIGLET WARNING] bigview is alread done, there is no need to render biglet module!')
+      return Promise.resolve()
     }
-
-    const self = this
+    let self = this
     let tplPath = path.join(self.root, self.tpl)
 
     return self.compile(tplPath, self.data).then(function (str) {
@@ -119,14 +114,34 @@ class Pagelet {
   }
 
   end () {
-    return this.renderChildren()
+    return this.renderMain()
+    .then(() => {
+      return this.renderChildren()
+    })
+  }
+
+  renderMain () {
+    let self = this
+
+    if (self.main) {
+      let mainPagelet = new self.main()
+      mainPagelet.owner = self.owner
+      if (!mainPagelet._exec) {
+        return Promise.reject(new Error('you should use like this.trigger(new somePagelet()'))
+      }
+      let modeInstance = self.owner.getModeInstanceWith('pipeline')
+      return modeInstance.execute([mainPagelet])
+    } else {
+      return Promise.resolve(true)
+    }
   }
 
   renderChildren () {
     let subPagelets = this.children
+    let self = this
 
-    subPagelets.forEach((subPagelet) => {
-      subPagelet.owner = this.owner
+    subPagelets.forEach(function (subPagelet) {
+      subPagelet.owner = self.owner
       if (!subPagelet._exec) {
         throw new Error('you should use like this.trigger(new somePagelet()')
       }
