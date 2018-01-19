@@ -26,4 +26,4 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
       # run tests!
-      - run: yarn test && yarn run report-coverage
+      - run: yarn test
