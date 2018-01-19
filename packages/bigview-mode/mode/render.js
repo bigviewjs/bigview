@@ -1,7 +1,7 @@
 'use strict'
 
-const debug = require('debug')('bigview');
-const Promise = require("bluebird");
+// const debug = require('debug')('bigview');
+const Promise = require('bluebird')
 
 // pagelets 5种情况
 // 情况1： 随机，先完成的先写入，即pipeline模式
@@ -11,25 +11,25 @@ const Promise = require("bluebird");
 // 情况5： 一次渲染模式render：即普通模式，不写入布局，所有pagelet执行完成，一次写入到浏览器。支持搜索引擎，用来支持那些不支持JS的客户端。(当前)
 
 module.exports = class RenderMode {
-	constructor() {
-		this.isLayoutWriteImmediately = false
-		this.isPageletWriteImmediately = false
-	}
+  constructor () {
+    this.mode = 'render'
+    this.isLayoutWriteImmediately = false
+    this.isPageletWriteImmediately = false
+  }
 
-	/**
-	 * execute pagelets'action
-	 * 
-	 * @param {any} bigview
-	 * @returns
-	 */
-	execute(pagelets) {
-		let q = []
-		for (var i in pagelets) {
-			let _pagelet = pagelets[i]
-			_pagelet.isPageletWriteImmediately = this.isPageletWriteImmediately
-
-			q.push(_pagelet._exec())
-		}
-		return Promise.all(q)
-	}
+  /**
+   * execute pagelets'action
+   *
+   * @param {any} bigview
+   * @returns
+   */
+  execute (pagelets) {
+    let q = []
+    for (var i in pagelets) {
+      let _pagelet = pagelets[i]
+      _pagelet.isPageletWriteImmediately = this.isPageletWriteImmediately
+      q.push(_pagelet._exec())
+    }
+    return Promise.all(q)
+  }
 }

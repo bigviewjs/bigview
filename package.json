@@ -31,5 +31,12 @@
   },
   "keywords": [],
   "author": "i5ting",
-  "license": "MIT"
+  "license": "MIT",
+  "nyc": {
+    "exclude": [
+      "examples",
+      "test",
+      "**/*.test.js"
+    ]
+  }
 }

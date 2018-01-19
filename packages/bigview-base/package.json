@@ -1,0 +1,16 @@
+{
+  "name": "bigview-base",
+  "version": "1.0.1",
+  "description": "",
+  "main": "bigview-base.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "debug": "^3.1.0",
+    "events": "^1.1.1"
+  }
+}

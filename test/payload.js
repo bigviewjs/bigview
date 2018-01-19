@@ -5,7 +5,7 @@ const app = require('../examples/app')
 const sinon = require('sinon')
 const Bigview = require("../packages/bigview")
 const Biglet = require("../packages/biglet")
-const ModeInstanceMappings = require('../packages/bigview/mode')
+const ModeInstanceMappings = require('../packages/bigview-mode')
 
 test('biglet custom payload', t => {
     
