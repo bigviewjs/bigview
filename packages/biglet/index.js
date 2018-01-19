@@ -42,7 +42,7 @@ class Pagelet {
   // step2: compile(tpl + data) => html
   // step3: write html to browser
   _exec () {
-    let self = this
+    const self = this
     debug('Pagelet ' + this.domid + ' fetch')
 
     // 1) this.before
@@ -106,7 +106,6 @@ class Pagelet {
     }
     let self = this
     let tplPath = path.join(self.root, self.tpl)
-
     return self.compile(tplPath, self.data).then(function (str) {
       self.html = str
       self.write(str)
