@@ -50,7 +50,7 @@ class BigView extends BigViewBase {
   _getPageletObj (Pagelet) {
     let pagelet
 
-    if (Pagelet.domid && Pagelet.root) {
+    if (Pagelet.domid && Pagelet.tpl) {
       pagelet = Pagelet
     } else {
       pagelet = new Pagelet(this)

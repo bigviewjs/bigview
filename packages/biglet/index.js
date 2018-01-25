@@ -1,9 +1,10 @@
 const debug = require('debug')('biglet')
 const Promise = require('bluebird')
+const path = require('path')
 
 class Pagelet {
   constructor () {
-    this.root = '.'
+    this.root = ''
     this.main = null
     this.data = {}
     this.tpl = 'tpl/index'
@@ -104,6 +105,9 @@ class Pagelet {
       return Promise.resolve()
     }
     let tplPath = this.tpl
+    if (/^\.\//.test(tplPath)) {
+      tplPath = path.join(__dirname, tplPath)
+    }
     return this.compile(tplPath, this.data).then((str) => {
       this.html = str
       this.write(str)
