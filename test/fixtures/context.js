@@ -19,7 +19,7 @@ module.exports = {
     }
   },
   render: function (tpl, data, fn) {
-    return fn(false, tpl)
+    return fn(false, '')
   },
   on (event, fn) {
     if (!_map[event]) {

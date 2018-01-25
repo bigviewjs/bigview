@@ -105,8 +105,11 @@ class Pagelet {
       return Promise.resolve()
     }
     let tplPath = this.tpl
-    if (/^\.\//.test(tplPath)) {
-      tplPath = path.join(__dirname, tplPath)
+    // 校验 tpl 路径是否为绝对路径
+    const isObs = path.isAbsolute(tplPath)
+
+    if (!isObs) {
+      tplPath = path.join(this.root || __dirname, tplPath)
     }
     return this.compile(tplPath, this.data).then((str) => {
       this.html = str
