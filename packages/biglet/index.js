@@ -161,15 +161,15 @@ class Pagelet {
   }
 
   get _payload () {
-    ['domid', 'js', 'css', 'html', 'error'].forEach((item) => {
+    const attr = ['domid', 'js', 'css', 'html', 'error']
+    attr.forEach((item) => {
       this.payload[item] = this[item]
     })
-
-    return JSON.stringify(this.payload)
+    return JSON.stringify(this.payload).replace(/\/script/g, '\\/script')
   }
 
   get view () {
-    return `<script charset=\"utf-8\">bigview.view(${this._payload})</script>`
+    return `<script type="text/javascript">bigview.view(${this._payload})</script>`
   }
 
   // event wrapper
