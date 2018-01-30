@@ -1,0 +1,11 @@
+{
+  "name": "bigview-runtime",
+  "version": "0.1.1",
+  "description": "",
+  "main": "bigview.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
