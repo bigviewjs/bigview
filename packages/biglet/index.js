@@ -165,11 +165,13 @@ class Pagelet {
     attr.forEach((item) => {
       this.payload[item] = this[item]
     })
+    // fixed html script parse error
     return JSON.stringify(this.payload).replace(/\/script/g, '\\/script')
   }
 
   get view () {
-    return `<script type="text/javascript">bigview.view(${this._payload})</script>`
+    return `<script type="text/javascript">bigview.beforePageletArrive("${this.domid}")</script>\n
+<script type="text/javascript">bigview.view(${this._payload})</script>\n`
   }
 
   // event wrapper
