@@ -48,4 +48,14 @@ bigview 处于ready状态，即完成布局，开始执行页面 JS；
 
 页面所有 pagelet 渲染完成后触发；
 
+## debug
+
+你可以在浏览器控制台输入：
+
+``` js
+localStorage._bigview = true
+```
+
+开启调试模式, 在浏览器控制台查看每个 pagelet 的渲染信息；
+
 

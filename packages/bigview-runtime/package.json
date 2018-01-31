@@ -1,11 +1,11 @@
 {
   "name": "bigview-runtime",
   "version": "0.1.1",
-  "description": "",
+  "description": "a JS framework to render pagelet in web browser",
   "main": "bigview.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "jack_pu",
+  "license": "MIT"
 }
