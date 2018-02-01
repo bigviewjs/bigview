@@ -1,7 +1,4 @@
-/**
- * a front-end framework to render biglet string from server
- */
-
+/* global localStorage */
 // debug bigview
 var _bigviewDebug = (function (id, string) {
   var _startTime = new Date().getTime()
@@ -9,8 +6,14 @@ var _bigviewDebug = (function (id, string) {
     var time = new Date().getTime()
     return '[+' + (time - _startTime) + 'ms];'
   }
+  var isDebugOpen = false
+  if (typeof process !== 'undefined') {
+    isDebugOpen = process.env._bigview
+  } else if (typeof window !== 'undefined') {
+    isDebugOpen = window.localStorage && localStorage._bigview
+  }
   return function (id, string) {
-    if (window.localStorage && localStorage._bigview) {
+    if (isDebugOpen) {
       id = id || 'bigview'
       string = string || ''
       console.log('Module: ' + id + '  ' + string + '%c ' + getTimeDiffStr(), 'color: blue')
@@ -18,7 +21,8 @@ var _bigviewDebug = (function (id, string) {
   }
 }())
 
-var BigEvent = function () {}
+var BigEvent = function () {
+}
 
 BigEvent.prototype.on = function (eventName, func) {
   this._listeners = this._listeners || {}
@@ -119,13 +123,12 @@ var Bigview = function () {
     }
   })
 
-    // http://blog.stevenlevithan.com/archives/faster-than-innerhtml
   this.replaceHtml = function (el, html) {
     var oldEl = typeof el === 'string' ? document.getElementById(el) : el
     /* @cc_on // Pure innerHTML is slightly faster in IE
-      * oldEl.innerHTML = html;
-      * return oldEl;
-      */
+     * oldEl.innerHTML = html;
+     * return oldEl;
+     */
     if (!oldEl) {
       return
     }
@@ -168,10 +171,14 @@ var Bigview = function () {
 
 BigEvent.extend(Bigview)
 
-window.bigview = new Bigview()
+var _bigview = new Bigview()
 
-if (typeof window.define === 'function' && window.define.amd) {
-  window.define('bigview', [], function () {
-    return window.bigview
+if (typeof define === 'function' && define.amd) {
+  define('bigview', [], function () {
+    return _bigview
   })
+} else if (typeof exports === 'object') {
+  module.exports = _bigview
+} else {
+  window.bigview = _bigview
 }

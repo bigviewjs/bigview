@@ -3,7 +3,7 @@
 进行 pagelet 渲染的时候，需要在页面引入该类库，从而确保吐出的数据能够进行正常的渲染
 
 ``` html
-<script src="./node_modules/bigview-runtime/bigview.min.js"></script>
+<script src="./node_modules/bigview-runtime/bigview.runtime.min.js"></script>
 ```
 
 pagelet 在回吐浏览器的时候，会持续写入
