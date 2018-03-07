@@ -334,7 +334,7 @@ module.exports = function (req, res) {
 
 ## 出错模块
 
-- bigview出错，即在所有pagelets渲染之前，显示错误模块，终端其他模块渲染
+- bigview出错，即在所有pagelets渲染之前，显示错误模块，中断其他模块渲染
 - 如果是pagelets里的某一个出错，可以自己根据模板去，模块内的错误就模块自己处理就好了
 
 ```js
