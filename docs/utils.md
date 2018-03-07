@@ -1,10 +1,5 @@
 ## 工具方法
 
-参见http://gitlab.corp.qunar.com/fed/qatom
-
-
-或者自己使用
-
 ```
 'use strict'
 

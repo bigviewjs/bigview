@@ -1,4 +1,3 @@
-
 # 存放所有的pagelets，无父子级别的
 
 存放所有的pagelets，无父子级别的
@@ -23,7 +22,6 @@ this.allPagelets = [];
 getPagelets(pagelet);
 
 this.allPagelets = this.allPagelets.concat(re);
-
 
 ## run
 

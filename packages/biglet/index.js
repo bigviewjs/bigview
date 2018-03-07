@@ -167,7 +167,7 @@ class Pagelet {
     return `<script charset=\"utf-8\">bigview.view(${this._payload})</script>`
   }
 
-  //event wrapper
+  // event wrapper
   write (html) {
     // wrap html to script tag
     const view = this.view

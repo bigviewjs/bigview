@@ -80,7 +80,7 @@ class BigView extends BigViewBase {
   showErrorPagelet (error) {
     debug(error)
     // reset this.pagelets
-    this.pagelets = [this.errorPagelet]
+    this.pagelets = this.errorPagelet ? [this.errorPagelet] : []
 
     // start with render error pagelet
     this.renderPagelets()
@@ -99,8 +99,7 @@ class BigView extends BigViewBase {
     // 4）this.end 通知浏览器，写入完成
     // 5) processError
 
-    return this.before()
-            .then(this.beforeRenderLayout.bind(this))
+    return this.before().then(this.beforeRenderLayout.bind(this))
             .then(this.renderLayout.bind(this))
             .then(this.renderMain.bind(this))
             .then(this.afterRenderLayout.bind(this))
@@ -109,8 +108,8 @@ class BigView extends BigViewBase {
             .then(this.renderPagelets.bind(this))
             .then(this.afterRenderPagelets.bind(this))
             .then(this.end.bind(this))
-                .timeout(this.timeout)
-                .catch(Promise.TimeoutError, this.renderPageletstimeoutFn.bind(this))
+            .timeout(this.timeout)
+            .catch(Promise.TimeoutError, this.renderPageletstimeoutFn.bind(this))
             .catch(this.processError.bind(this))
   }
 
@@ -162,7 +161,8 @@ class BigView extends BigViewBase {
 
   renderLayout () {
     const self = this
-    const layoutPagelet = this._getPageletObj(this.layout)
+    const layoutPagelet = self._getPageletObj(self.layout)
+    console.log(layoutPagelet)
     return new Promise(function (resolve, reject) {
       self.ctx.render(layoutPagelet.tpl, layoutPagelet.data, function (err, html) {
         self.write(html, self.modeInstance.isLayoutWriteImmediately)
