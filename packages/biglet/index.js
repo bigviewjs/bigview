@@ -14,7 +14,10 @@ class Pagelet {
     this.domid = 'you should add a domid' // location
     this.css = [] // css
     this.js = [] // js
-    this.html = ''// 用来缓存当前pagelet布局模板编译生成的html字符串
+    // 用来缓存当前pagelet布局模板编译生成的html字符串
+    this.html = ''
+    // 写入模式  script 形式 或者 json 形式
+    this.type = 'script'
     this.error = undefined
 
     // timeout = 10s
@@ -33,29 +36,34 @@ class Pagelet {
 
   addChild (SubPagelet) {
     let subPagelet = new SubPagelet()
-
+    subPagelet.owner = this.owner
     this.children.push(subPagelet)
   }
 
-  // private only call by bigview
-  // step1: fetch data
-  // step2: compile(tpl + data) => html
-  // step3: write html to browser
-  _exec () {
+  /*
+   * execute the render
+   * @param {boolean} isWrite  write data to the browsers
+   * @param {string} type json | script
+   * main flow: before -> fetch data -> parse data -> render template
+   *  -> render children
+   */
+  _exec (isWrite = true, type) {
     const self = this
     debug('Pagelet ' + this.domid + ' fetch')
-
-    // 1) this.before
-    // 2）fetch，用于获取网络数据，可选
-    // 3) parse，用于处理fetch获取的数据
-    // 4）render，用与编译模板为html
-    // 5）this.end 通知浏览器，写入完成
-    return self.before()
+    self.type = type
+    if (isWrite) {
+      return self.before()
             .then(self.fetch.bind(self)).timeout(this.timeout)
             .then(self.parse.bind(self)).timeout(this.timeout)
             .then(self.render.bind(self)).timeout(this.timeout)
             .then(self.end.bind(self)).timeout(this.timeout)
             .catch(self.catchFn.bind(self))
+    } else {
+      return self.before()
+            .then(self.fetch.bind(self)).timeout(this.timeout)
+            .then(self.parse.bind(self)).timeout(this.timeout)
+            .catch(self.catchFn.bind(self))
+    }
   }
 
   before () {
@@ -170,6 +178,9 @@ class Pagelet {
   }
 
   get view () {
+    if (this.type === 'json') {
+      return this._payload
+    }
     return `<script type="text/javascript">bigview.beforePageletArrive("${this.domid}")</script>\n
 <script type="text/javascript">bigview.view(${this._payload})</script>\n`
   }
