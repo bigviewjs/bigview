@@ -1,5 +1,3 @@
-'use strict'
-
 const debug = require('debug')('bigview')
 
 const Promise = require('bluebird')
@@ -50,7 +48,7 @@ class BigView extends BigViewBase {
   _getPageletObj (Pagelet) {
     let pagelet
 
-    if (Pagelet.domid && Pagelet.root) {
+    if (Pagelet.domid && Pagelet.tpl) {
       pagelet = Pagelet
     } else {
       pagelet = new Pagelet(this)
@@ -164,7 +162,7 @@ class BigView extends BigViewBase {
     const layoutPagelet = self._getPageletObj(self.layout)
     console.log(layoutPagelet)
     return new Promise(function (resolve, reject) {
-      self.ctx.render(layoutPagelet.tpl, layoutPagelet.data, function (err, html) {
+      self.ctx.res.render(layoutPagelet.tpl, layoutPagelet.data, function (err, html) {
         self.write(html, self.modeInstance.isLayoutWriteImmediately)
         if (err) {
           reject(err)

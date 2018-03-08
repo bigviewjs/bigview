@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
     "changeStatus" : {
         'CHANGING': 40,

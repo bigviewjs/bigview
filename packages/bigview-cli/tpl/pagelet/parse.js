@@ -1,5 +1,3 @@
-'use strict';
-
 const { changeStatus } = require('./const');
 const { CHANGING, CHANGE_DONE} = changeStatus;
 

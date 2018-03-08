@@ -1,5 +1,3 @@
-'use strict'
-
 const Pagelet = require('biglet')
 
 module.exports = class QPagelet extends Pagelet {

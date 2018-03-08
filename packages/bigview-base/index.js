@@ -1,5 +1,3 @@
-'use strict'
-
 const debug = require('debug')('bigview')
 const Promise = require('bluebird')
 const EventEmitter = require('events')

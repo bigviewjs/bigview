@@ -4,7 +4,6 @@ import Biglet from '../../biglet'
 import ctx from '../../../test/fixtures/context'
 
 test('test BigView', async t => {
-
   const bigView = new BigView(ctx)
 
   t.is(bigView.debug, false)
@@ -36,7 +35,6 @@ test('test BigView', async t => {
   await bigView.start()
 
   bigView.showErrorPagelet('error').catch(() => {
-
     t.is(bigView.pagelets.length, 1)
   })
 
@@ -57,5 +55,4 @@ test('test BigView', async t => {
   bigView.renderMain().then(val => {
     t.is(val, true)
   })
-
 })

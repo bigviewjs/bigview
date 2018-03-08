@@ -1,6 +1,7 @@
 'use strict'
 
 const BigView = require('../../../packages/bigview')
+const Promise = require('bluebird')
 
 module.exports = class MyBigView extends BigView {
   before () {

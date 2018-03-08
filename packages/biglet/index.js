@@ -1,13 +1,13 @@
 const debug = require('debug')('biglet')
-const path = require('path')
 const Promise = require('bluebird')
+const path = require('path')
 
 class Pagelet {
   constructor () {
+    this.root = ''
     this.main = null
     this.data = {}
     this.tpl = 'tpl/index'
-    this.root = '.'
     this.children = []
     this.payload = {}
     // payload for write to bigview.view(...)
@@ -22,8 +22,8 @@ class Pagelet {
 
     // custom error function
     this.catchFn = function (err) {
+      debug(err)
       console.warn('[BIGLET domid=' + this.domid + '] : ' + err.message)
-
       return Promise.resolve()
     }
 
@@ -84,7 +84,7 @@ class Pagelet {
    */
   compile (tpl, data) {
     return new Promise((resolve, reject) => {
-      this.owner.render(tpl, data, function (err, str) {
+      this.owner.res.render(tpl, data, function (err, str) {
         // str => Rendered HTML string
         if (err) {
           return reject(err)
@@ -104,11 +104,16 @@ class Pagelet {
       console.log('[BIGLET WARNING] bigview is alread done, there is no need to render biglet module!')
       return Promise.resolve()
     }
-    let self = this
-    let tplPath = path.join(self.root, self.tpl)
-    return self.compile(tplPath, self.data).then(function (str) {
-      self.html = str
-      self.write(str)
+    let tplPath = this.tpl
+    // 校验 tpl 路径是否为绝对路径
+    const isObs = path.isAbsolute(tplPath)
+
+    if (!isObs) {
+      tplPath = path.join(this.root || __dirname, tplPath)
+    }
+    return this.compile(tplPath, this.data).then((str) => {
+      this.html = str
+      this.write(str)
     })
   }
 
@@ -156,15 +161,17 @@ class Pagelet {
   }
 
   get _payload () {
-    ['domid', 'js', 'css', 'html', 'error'].forEach((item) => {
+    const attr = ['domid', 'js', 'css', 'html', 'error']
+    attr.forEach((item) => {
       this.payload[item] = this[item]
     })
-
-    return JSON.stringify(this.payload)
+    // fixed html script parse error
+    return JSON.stringify(this.payload).replace(/\/script/g, '\\/script')
   }
 
   get view () {
-    return `<script charset=\"utf-8\">bigview.view(${this._payload})</script>`
+    return `<script type="text/javascript">bigview.beforePageletArrive("${this.domid}")</script>\n
+<script type="text/javascript">bigview.view(${this._payload})</script>\n`
   }
 
   // event wrapper
