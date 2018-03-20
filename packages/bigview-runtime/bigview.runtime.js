@@ -1,4 +1,4 @@
-/* global localStorage */
+/* global localStorage, location, XMLHttpRequest */
 // debug bigview
 var _bigviewDebug = (function (id, string) {
   var _startTime = new Date().getTime()
@@ -20,6 +20,11 @@ var _bigviewDebug = (function (id, string) {
     }
   }
 }())
+
+var _errorTemplate = '<div class="bigview-error-template" style="position:relative;height:100%; text-align:center;padding-top:10px;">';
+_errorTemplate += '<img style="display:inline-block;height:50px;" src="https://gw.alicdn.com/tfs/TB1iNyybgmTBuNjy1XbXXaMrVXa-100-100.png" />';
+_errorTemplate += '<p>Some Errors ~</p>';
+_errorTemplate += '<p><a href="javascript:;" class="js-bigview-retry" style="display:inline-block; padding:4px 12px;line-height:32px; text-decoration:none; color: blue;">Retry </a>';
 
 var BigEvent = function () {
 }
@@ -70,6 +75,12 @@ BigEvent.extend = function (obj) {
 
 var Bigview = function () {
   var self = this
+  this.endPagelets = []
+  this.on('end', function () {
+    this.endPagelets.forEach(function (item) {
+      self.handlePayload(item)
+    })
+  })
 
   this.log = function (id, str) {
     _bigviewDebug(id, str)
@@ -90,12 +101,18 @@ var Bigview = function () {
 
   this.end = function (data) {
     this.log('end')
-    self.trigger('end', data)
+    this.trigger('end', data)
   }
 
   this.error = function (payload) {
-    this.log(payload.domid, 'error')
-    self.trigger('error', payload)
+    this.trigger('error', payload)
+    var el = this.replaceHtml(payload.domid, this.errorTemplate)
+    var btn = el.querySelector('.js-bigview-retry');
+    if (btn) {
+      btn.addEventListener('click', function () {
+        self._request(payload)
+      })
+    }
   }
 
   this.beforePageletArrive = function (string) {
@@ -103,17 +120,25 @@ var Bigview = function () {
   }
 
   this.on('pageletArrive', function (payload) {
+    if (payload.lifecycle === 'end') {
+      return this.endPagelets.push(payload)
+    }
+    this.handlePayload(payload)
+  })
+
+  this.handlePayload = function(payload) {
     if (payload.error) {
-      self.trigger('error', payload)
+      self.error(payload)
     }
-    if (payload.domid && payload.html) {
-      self.replaceHtml(payload.domid, payload.html)
-    }
+    // css -> html -> js
     if (payload.css) {
       var css = Array.isArray(payload.css) ? payload.css : [payload.css]
       css.forEach(function (item) {
         self.insertCss(item)
       })
+    }
+    if (payload.domid && payload.html && !payload.error) {
+      self.replaceHtml(payload.domid, payload.html, payload.attr)
     }
     if (payload.js) {
       var js = Array.isArray(payload.js) ? payload.js : [payload.js]
@@ -121,9 +146,9 @@ var Bigview = function () {
         self.insertScript(item)
       })
     }
-  })
+  }
 
-  this.replaceHtml = function (el, html) {
+  this.replaceHtml = function (el, html, attrs) {
     var oldEl = typeof el === 'string' ? document.getElementById(el) : el
     /* @cc_on // Pure innerHTML is slightly faster in IE
      * oldEl.innerHTML = html;
@@ -133,6 +158,13 @@ var Bigview = function () {
       return
     }
     var newEl = oldEl.cloneNode(false)
+    if (attrs && typeof attrs === 'object') {
+      for (var key in attrs) {
+        console.log(key)
+        newEl.setAttribute(key, attrs[key])
+      }
+      newEl.setAttribute('modshow', 1)
+    }
     newEl.innerHTML = html.replace(/~~~~~~~/g, '<').replace(/=========/g, '>')
     oldEl.parentNode.replaceChild(newEl, oldEl)
     // excute script intime
@@ -150,8 +182,6 @@ var Bigview = function () {
         item.parentNode.replaceChild(node, item)
       }
     }
-    /* Since we just removed the old element from the DOM, return a reference
-    to the new element, which can be used to restore variable references. */
     return newEl
   }
 
@@ -167,12 +197,44 @@ var Bigview = function () {
     node.src = src
     document.body.appendChild(node)
   }
+
+  // requert an signle pagelet via ajax
+  this._request = function (payload) {
+    var url = location.href
+    if (location.search) {
+      url += ('&_pagelet_id=' + payload.domid)
+    } else {
+      url += ('?_pagelet_id=' + payload.domid)
+    }
+    var xhr = new XMLHttpRequest()
+    // TODO jaso or html ?
+    xhr.onload = function (response) {
+      var data = xhr.response
+      var json = {}
+      try {
+        json = JSON.parse(data)
+      } catch (_e) {
+        if (xhr.status === 401) {
+          _bigviewDebug('access_denied', xhr.statusText)
+        }
+      }
+      json.error = false
+      self.view(json)
+    }
+    xhr.onerror = function (err) {
+      self.error(payload)
+      console.error(err)
+    }
+    xhr.open('GET', url, true)
+    xhr.setRequestHeader('bigview_error_time', Date.now())
+    xhr.send()
+  }
 }
 
 BigEvent.extend(Bigview)
 
 var _bigview = new Bigview()
-
+_bigview.errorTemplate = _errorTemplate
 if (typeof define === 'function' && define.amd) {
   define('bigview', [], function () {
     return _bigview

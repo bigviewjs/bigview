@@ -169,7 +169,7 @@ class Pagelet {
   }
 
   get _payload () {
-    const attr = ['domid', 'js', 'css', 'html', 'error']
+    const attr = ['domid', 'js', 'css', 'html', 'error', 'attr', 'lifecycle']
     attr.forEach((item) => {
       this.payload[item] = this[item]
     })

@@ -59,3 +59,14 @@ localStorage._bigview = true
 开启调试模式, 在浏览器控制台查看每个 pagelet 的渲染信息；
 
 
+## Updates Log
+
+### 0.1.3
+
+支持 lifecycle 的判断，决定什么时候触发渲染；
+
+### 0.1.2
+
+支持 pagelet 的 attr 属性，对当前 domID 的元素进行 attr 的绑定；
+
+
