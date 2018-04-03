@@ -1,4 +1,4 @@
-/* global localStorage */
+/* global localStorage, location, XMLHttpRequest */
 // debug bigview
 var _bigviewDebug = (function (id, string) {
   var _startTime = new Date().getTime()
@@ -20,6 +20,19 @@ var _bigviewDebug = (function (id, string) {
     }
   }
 }())
+
+var _isIE8 = function () {
+  var msie = document.documentMode;
+  if (msie < 9) {
+    return true
+  }
+  return false
+}
+
+var _errorTemplate = '<div class="bigview-error-template" style="position:relative;height:100%; text-align:center;padding-top:10px;">';
+_errorTemplate += '<img style="display:inline-block;height:50px;" src="https://gw.alicdn.com/tfs/TB1iNyybgmTBuNjy1XbXXaMrVXa-100-100.png" />';
+_errorTemplate += '<p>Some Errors ~</p>';
+_errorTemplate += '<p><a href="javascript:;" class="js-bigview-retry" style="display:inline-block; padding:4px 12px;line-height:32px; text-decoration:none; color: blue;">Retry </a>';
 
 var BigEvent = function () {
 }
@@ -70,6 +83,17 @@ BigEvent.extend = function (obj) {
 
 var Bigview = function () {
   var self = this
+  this.endPagelets = []
+  this.endScripts = []
+  this.errorRetry = false
+  this.on('end', function () {
+    this.endPagelets.forEach(function (item) {
+      self.handlePayload(item)
+    })
+    this.endScripts.forEach(function (item) {
+      self.insertScript(item)
+    })
+  })
 
   this.log = function (id, str) {
     _bigviewDebug(id, str)
@@ -77,7 +101,6 @@ var Bigview = function () {
     // payload={domid, html='',}
   this.view = function (payload) {
     self.trigger('pageletArrive', payload)
-    self.log(payload.domid, 'pageletArrive')
     if (payload.domid) {
       self.trigger(payload.domid, payload)
     }
@@ -90,12 +113,23 @@ var Bigview = function () {
 
   this.end = function (data) {
     this.log('end')
-    self.trigger('end', data)
+    this.trigger('end', data)
   }
 
   this.error = function (payload) {
-    this.log(payload.domid, 'error')
-    self.trigger('error', payload)
+    this.trigger('error', payload)
+    this.log(payload.domid, ' occurs some error!')
+    // need show error template
+    if (!this.errorRetry) {
+      return
+    }
+    var el = this.replaceHtml(payload.domid, this.errorTemplate)
+    var btn = el.querySelector('.js-bigview-retry')
+    if (btn) {
+      btn.addEventListener('click', function () {
+        self._request(payload)
+      })
+    }
   }
 
   this.beforePageletArrive = function (string) {
@@ -103,27 +137,39 @@ var Bigview = function () {
   }
 
   this.on('pageletArrive', function (payload) {
+    if (payload.lifecycle === 'end') {
+      return this.endPagelets.push(payload)
+    }
+    this.handlePayload(payload)
+  })
+
+  this.handlePayload = function (payload) {
     if (payload.error) {
-      self.trigger('error', payload)
+      return self.error(payload)
     }
-    if (payload.domid && payload.html) {
-      self.replaceHtml(payload.domid, payload.html)
-    }
+    self.log(payload.domid, 'pageletArrive')
+    // css -> html -> js
     if (payload.css) {
       var css = Array.isArray(payload.css) ? payload.css : [payload.css]
       css.forEach(function (item) {
         self.insertCss(item)
       })
     }
+    if (payload.domid && payload.html && !payload.error) {
+      self.replaceHtml(payload.domid, payload.html, payload.attr)
+    }
     if (payload.js) {
       var js = Array.isArray(payload.js) ? payload.js : [payload.js]
       js.forEach(function (item) {
+        if (_isIE8()) {
+          return self.endScripts.push(item)
+        }
         self.insertScript(item)
       })
     }
-  })
+  }
 
-  this.replaceHtml = function (el, html) {
+  this.replaceHtml = function (el, html, attrs) {
     var oldEl = typeof el === 'string' ? document.getElementById(el) : el
     /* @cc_on // Pure innerHTML is slightly faster in IE
      * oldEl.innerHTML = html;
@@ -133,11 +179,26 @@ var Bigview = function () {
       return
     }
     var newEl = oldEl.cloneNode(false)
-    newEl.innerHTML = html.replace(/~~~~~~~/g, '<').replace(/=========/g, '>')
+    if (attrs && typeof attrs === 'object') {
+      for (var key in attrs) {
+        newEl.setAttribute(key, attrs[key])
+      }
+      newEl.setAttribute('modshow', 1)
+    }
+    newEl.innerHTML = html
     oldEl.parentNode.replaceChild(newEl, oldEl)
     // excute script intime
+    if (_isIE8()) {
+      var re = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
+      var scriptMatch = re.exec(html)
+      if (scriptMatch && scriptMatch[1]) {
+        var scriptNode = document.createElement('SCRIPT')
+        scriptNode.text = scriptMatch[1]
+        newEl.appendChild(scriptNode)
+      }
+      return newEl
+    }
     var scripts = newEl.getElementsByTagName('script')
-    scripts = Array.prototype.slice.call(scripts)
     var len = scripts.length
     for (var i = 0; i < len; i++) {
       var item = scripts[i]
@@ -150,8 +211,6 @@ var Bigview = function () {
         item.parentNode.replaceChild(node, item)
       }
     }
-    /* Since we just removed the old element from the DOM, return a reference
-    to the new element, which can be used to restore variable references. */
     return newEl
   }
 
@@ -163,16 +222,52 @@ var Bigview = function () {
   }
 
   this.insertScript = function (src) {
+    if (!src) {
+      return
+    }
     var node = document.createElement('SCRIPT')
     node.src = src
+    node.async = true
     document.body.appendChild(node)
+  }
+
+  // requert an signle pagelet via ajax
+  this._request = function (payload) {
+    var url = location.href
+    if (location.search) {
+      url += ('&_pagelet_id=' + payload.domid)
+    } else {
+      url += ('?_pagelet_id=' + payload.domid)
+    }
+    var xhr = new XMLHttpRequest()
+    // TODO jaso or html ?
+    xhr.onload = function (response) {
+      var data = xhr.response
+      var json = {}
+      try {
+        json = JSON.parse(data)
+      } catch (_e) {
+        if (xhr.status === 401) {
+          _bigviewDebug('access_denied', xhr.statusText)
+        }
+      }
+      json.error = false
+      self.view(json)
+    }
+    xhr.onerror = function (err) {
+      self.error(payload)
+      console.error(err)
+    }
+    xhr.open('GET', url, true)
+    xhr.setRequestHeader('bigview_error_time', Date.now())
+    xhr.send()
   }
 }
 
 BigEvent.extend(Bigview)
 
 var _bigview = new Bigview()
-
+_bigview.errorTemplate = _errorTemplate
 if (typeof define === 'function' && define.amd) {
   define('bigview', [], function () {
     return _bigview
