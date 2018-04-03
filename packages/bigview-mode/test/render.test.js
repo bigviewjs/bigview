@@ -30,7 +30,7 @@ test('MODE render', t => {
 
   p1.parse = function () {
 
-    t.is(bigview.cache.length, 0)
+    t.is(bigview.cache.length, 1)
 
     return Promise.reject(new Error('p1 reject'))
   }

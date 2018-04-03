@@ -27,6 +27,9 @@ class Pagelet {
     this.catchFn = function (err) {
       debug(err)
       console.warn('[BIGLET domid=' + this.domid + '] : ' + err.message)
+      this.error = true
+      this.html = ''
+      this.write()
       return Promise.resolve()
     }
 
@@ -92,7 +95,6 @@ class Pagelet {
 
   /**
    * Compile tpl + data to html
-   *
    * @private
    */
   compile (tpl, data) {

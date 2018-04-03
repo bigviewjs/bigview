@@ -160,7 +160,6 @@ class BigView extends BigViewBase {
   renderLayout () {
     const self = this
     const layoutPagelet = self._getPageletObj(self.layout)
-    console.log(layoutPagelet)
     return new Promise(function (resolve, reject) {
       self.ctx.res.render(layoutPagelet.tpl, layoutPagelet.data, function (err, html) {
         self.write(html, self.modeInstance.isLayoutWriteImmediately)

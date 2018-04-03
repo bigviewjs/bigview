@@ -48,7 +48,6 @@ test('test BigView', async t => {
   .then(() => {
 
   }, err => {
-    t.is(err, true)
   })
 
   bigView.main = false
