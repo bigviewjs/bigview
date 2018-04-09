@@ -58,7 +58,9 @@ class Pagelet {
   _exec (isWrite = true, type) {
     const self = this
     debug('Pagelet ' + this.domid + ' fetch')
-    self.type = type
+    if (type) {
+      self.type = type
+    }
     if (isWrite) {
       return self.before()
         .then(self.fetch.bind(self)).timeout(this.timeout)
@@ -176,7 +178,7 @@ class Pagelet {
   }
 
   get _payload () {
-    const attr = ['domid', 'js', 'css', 'html', 'error', 'attr', 'lifecycle']
+    const attr = ['domid', 'js', 'css', 'html', 'error', 'attr', 'lifecycle', 'json']
     attr.forEach((item) => {
       this.payload[item] = this[item]
     })
@@ -186,7 +188,8 @@ class Pagelet {
 
   get view () {
     if (this.type === 'json') {
-      return this._payload
+      // return this._payload
+      return `<script type="text/javascript">bigview.view(${this._payload})</script>\n`
     }
     return `<script type="text/javascript">bigview.beforePageletArrive("${this.domid}")</script>\n
 <script type="text/javascript">bigview.view(${this._payload})</script>\n`
