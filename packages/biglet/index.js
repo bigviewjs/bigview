@@ -58,7 +58,9 @@ class Pagelet {
   _exec (isWrite = true, type) {
     const self = this
     debug('Pagelet ' + this.domid + ' fetch')
-    self.type = type
+    if (type) {
+      self.type = type
+    }
     if (isWrite) {
       return self.before()
         .then(self.fetch.bind(self)).timeout(this.timeout)
@@ -119,17 +121,22 @@ class Pagelet {
       console.log('[BIGLET WARNING] bigview is alread done, there is no need to render biglet module!')
       return Promise.resolve()
     }
-    let tplPath = this.tpl
-    // 校验 tpl 路径是否为绝对路径
-    const isObs = path.isAbsolute(tplPath)
 
-    if (!isObs) {
-      tplPath = path.join(this.root || __dirname, tplPath)
+    if (this.type === 'json') {
+      this.write()
+    } else {
+      let tplPath = this.tpl
+      // 校验 tpl 路径是否为绝对路径
+      const isObs = path.isAbsolute(tplPath)
+
+      if (!isObs) {
+        tplPath = path.join(this.root || __dirname, tplPath)
+      }
+      return this.compile(tplPath, this.data).then((str) => {
+        this.html = str
+        this.write(str)
+      })
     }
-    return this.compile(tplPath, this.data).then((str) => {
-      this.html = str
-      this.write(str)
-    })
   }
 
   end () {
@@ -176,7 +183,7 @@ class Pagelet {
   }
 
   get _payload () {
-    const attr = ['domid', 'js', 'css', 'html', 'error', 'attr', 'lifecycle']
+    const attr = ['domid', 'js', 'css', 'html', 'error', 'attr', 'lifecycle', 'json']
     attr.forEach((item) => {
       this.payload[item] = this[item]
     })
@@ -186,7 +193,8 @@ class Pagelet {
 
   get view () {
     if (this.type === 'json') {
-      return this._payload
+      // return this._payload
+      return `<script type="text/javascript">bigview.view(${this._payload})</script>\n`
     }
     return `<script type="text/javascript">bigview.beforePageletArrive("${this.domid}")</script>\n
 <script type="text/javascript">bigview.view(${this._payload})</script>\n`
