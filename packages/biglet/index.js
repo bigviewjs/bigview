@@ -58,7 +58,9 @@ class Pagelet {
   _exec (isWrite = true, type) {
     const self = this
     debug('Pagelet ' + this.domid + ' fetch')
-    self.type = type
+    if (type) {
+      self.type = type
+    }
     if (isWrite) {
       return self.before()
         .then(self.fetch.bind(self)).timeout(this.timeout)
