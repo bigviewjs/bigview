@@ -121,17 +121,22 @@ class Pagelet {
       console.log('[BIGLET WARNING] bigview is alread done, there is no need to render biglet module!')
       return Promise.resolve()
     }
-    let tplPath = this.tpl
-    // 校验 tpl 路径是否为绝对路径
-    const isObs = path.isAbsolute(tplPath)
 
-    if (!isObs) {
-      tplPath = path.join(this.root || __dirname, tplPath)
+    if (this.type === 'json') {
+      this.write()
+    } else {
+      let tplPath = this.tpl
+      // 校验 tpl 路径是否为绝对路径
+      const isObs = path.isAbsolute(tplPath)
+
+      if (!isObs) {
+        tplPath = path.join(this.root || __dirname, tplPath)
+      }
+      return this.compile(tplPath, this.data).then((str) => {
+        this.html = str
+        this.write(str)
+      })
     }
-    return this.compile(tplPath, this.data).then((str) => {
-      this.html = str
-      this.write(str)
-    })
   }
 
   end () {
