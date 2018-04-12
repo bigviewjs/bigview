@@ -25,7 +25,7 @@ class Pagelet {
 
     // custom error function
     this.catchFn = function (err) {
-      debug(err)
+      console.log(err)
       console.warn('[BIGLET domid=' + this.domid + '] : ' + err.message)
       this.error = true
       this.html = ''
