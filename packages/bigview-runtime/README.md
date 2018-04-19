@@ -70,6 +70,10 @@ localStorage._bigview = true
 
 ## Updates Log
 
+### 1.1.1
+
++ 修复 IE8 Array polyfill
+
 ### 1.0.1
 
 + 添加错误处理机制

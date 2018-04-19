@@ -28,7 +28,12 @@ var _isIE8 = function () {
   }
   return false
 }
-
+// ie8 hack
+if (!Array.isArray) {
+  Array.isArray = function (arg) {
+    return Object.prototype.toString.call(arg) === '[object Array]'
+  }
+}
 var _errorTemplate = '<div class="bigview-error-template" style="position:relative;height:100%; text-align:center;padding-top:10px;">';
 _errorTemplate += '<img style="display:inline-block;height:50px;" src="https://gw.alicdn.com/tfs/TB1iNyybgmTBuNjy1XbXXaMrVXa-100-100.png" />';
 _errorTemplate += '<p>Some Errors ~</p>';
@@ -151,21 +156,22 @@ var Bigview = function () {
     // css -> html -> js
     if (payload.css) {
       var css = Array.isArray(payload.css) ? payload.css : [payload.css]
-      css.forEach(function (item) {
-        self.insertCss(item)
-      })
+      for (var j = 0; j < css.length; j++) {
+        self.insertCss(css[j])
+      }
     }
     if (payload.domid && payload.html && !payload.error) {
       self.replaceHtml(payload.domid, payload.html, payload.attr)
     }
     if (payload.js) {
       var js = Array.isArray(payload.js) ? payload.js : [payload.js]
-      js.forEach(function (item) {
+      for (var i = 0; i < js.length; i++) {
+        var item = js[i]
         if (_isIE8()) {
           return self.endScripts.push(item)
         }
         self.insertScript(item)
-      })
+      }
     }
   }
 
