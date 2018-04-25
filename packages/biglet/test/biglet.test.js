@@ -14,7 +14,7 @@ test('test Biglet', async t => {
 
   await biglet._exec()
   biglet.write('<div></div')
-
+  console.log(biglet.view)
   t.is(biglet.view, '<script type=\"text/javascript\">bigview.beforePageletArrive(\"a\")</script>\n\n<script type="text/javascript">bigview.view({\"domid\":\"a\",\"js\":\"./a.js\",\"css\":\"./a.css\",\"html\":""})</script>\n')
 
   biglet.addChild(Biglet, ctx)

@@ -1,6 +1,6 @@
 {
   "name": "bigview-runtime",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "a JS framework to render pagelet in web browser",
   "main": "bigview.runtmime.js",
   "scripts": {

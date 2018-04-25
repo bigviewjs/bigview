@@ -1,6 +1,6 @@
 {
   "name": "biglet",
-  "version": "1.3.27",
+  "version": "1.3.28",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -12,5 +12,8 @@
     "escape-html": "^1.0.3"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "memwatch-next": "^0.3.0"
+  }
 }

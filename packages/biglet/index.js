@@ -1,6 +1,7 @@
 const debug = require('debug')('biglet')
 const Promise = require('bluebird')
 const path = require('path')
+// const memwatch = require('memwatch-next');
 
 class Pagelet {
   constructor () {
@@ -19,7 +20,6 @@ class Pagelet {
     // 写入模式  script 形式 或者 json 形式
     this.type = 'script'
     this.error = undefined
-
     // timeout = 10s
     this.timeout = 10000
 
@@ -35,6 +35,7 @@ class Pagelet {
 
     // 为mode提供的
     this.isPageletWriteImmediately = true
+
   }
 
   addChild (SubPagelet) {
@@ -66,6 +67,8 @@ class Pagelet {
         .then(self.fetch.bind(self)).timeout(this.timeout)
         .then(self.parse.bind(self)).timeout(this.timeout)
         .then(self.render.bind(self)).timeout(this.timeout)
+        .then(self.renderMain.bind(self)).timeout(this.timeout)
+        .then(self.renderChildren.bind(self)).timeout(this.timeout)
         .then(self.end.bind(self)).timeout(this.timeout)
         .catch(self.catchFn.bind(self))
     } else {
@@ -112,9 +115,7 @@ class Pagelet {
   }
 
   /**
-   * Compile && Write html to bigview
-   *
-   * @private
+   * redner template
    */
   render () {
     if (this.owner && this.owner.done) {
@@ -137,13 +138,6 @@ class Pagelet {
         this.write(str)
       })
     }
-  }
-
-  end () {
-    return this.renderMain()
-      .then(() => {
-        return this.renderChildren()
-      })
   }
 
   renderMain () {
@@ -180,6 +174,10 @@ class Pagelet {
     const modeInstance = this.owner.getModeInstanceWith(this.mode || 'pipeline')
 
     return modeInstance.execute(subPagelets)
+  }
+
+  end () {
+    return Promise.resolve(true)
   }
 
   get _payload () {
