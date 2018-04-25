@@ -67,7 +67,6 @@ localStorage._bigview = true
 请查看自己的模板代码 script 标签内请移除掉注释。
 
 
-
 ## Updates Log
 
 ### 1.1.1

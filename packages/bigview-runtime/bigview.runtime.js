@@ -92,12 +92,12 @@ var Bigview = function () {
   this.endScripts = []
   this.errorRetry = false
   this.on('end', function () {
-    this.endPagelets.forEach(function (item) {
-      self.handlePayload(item)
-    })
-    this.endScripts.forEach(function (item) {
-      self.insertScript(item)
-    })
+    for(var i = 0; i<this.endPagelets.length; i++) {
+      self.handlePayload(this.endPagelets[i])
+    }
+    for(var j = 0; j<this.endScripts.length; j++) {
+      self.handlePayload(this.endScripts[j])
+    }
   })
 
   this.log = function (id, str) {
