@@ -69,6 +69,11 @@ localStorage._bigview = true
 
 ## Updates Log
 
+### 1.1.2
+
++ 修复 script escape 问题；
++ 支持 callback 的回调；
+
 ### 1.1.1
 
 + 修复 IE8 Array polyfill

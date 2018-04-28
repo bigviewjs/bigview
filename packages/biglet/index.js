@@ -186,7 +186,7 @@ class Pagelet {
       this.payload[item] = this[item]
     })
     // fixed html script parse error
-    return JSON.stringify(this.payload).replace(/\/script/g, '\\/script')
+    return JSON.stringify(this.payload)
   }
 
   get view () {

@@ -28,6 +28,13 @@ var _isIE8 = function () {
   }
   return false
 }
+function _unescapeHtml (html) {
+  var el = document.createElement('div')
+  return html.replace(/&[#0-9a-z]+;/gi, function (enc) {
+    el.innerHTML = enc
+    return el.innerText
+  })
+}
 // ie8 hack
 if (!Array.isArray) {
   Array.isArray = function (arg) {
@@ -92,10 +99,10 @@ var Bigview = function () {
   this.endScripts = []
   this.errorRetry = false
   this.on('end', function () {
-    for(var i = 0; i<this.endPagelets.length; i++) {
+    for (var i = 0; i<this.endPagelets.length; i++) {
       self.handlePayload(this.endPagelets[i])
     }
-    for(var j = 0; j<this.endScripts.length; j++) {
+    for (var j = 0; j<this.endScripts.length; j++) {
       self.handlePayload(this.endScripts[j])
     }
   })
@@ -103,7 +110,7 @@ var Bigview = function () {
   this.log = function (id, str) {
     _bigviewDebug(id, str)
   }
-    // payload={domid, html='',}
+  // payload={domid, html='',}
   this.view = function (payload) {
     self.trigger('pageletArrive', payload)
     if (payload.domid) {
@@ -112,12 +119,10 @@ var Bigview = function () {
   }
 
   this.ready = function (data) {
-    this.log('ready')
     self.trigger('ready', data)
   }
 
   this.end = function (data) {
-    this.log('end')
     this.trigger('end', data)
   }
 
@@ -177,10 +182,6 @@ var Bigview = function () {
 
   this.replaceHtml = function (el, html, attrs) {
     var oldEl = typeof el === 'string' ? document.getElementById(el) : el
-    /* @cc_on // Pure innerHTML is slightly faster in IE
-     * oldEl.innerHTML = html;
-     * return oldEl;
-     */
     if (!oldEl) {
       return
     }
@@ -190,6 +191,10 @@ var Bigview = function () {
         newEl.setAttribute(key, attrs[key])
       }
       newEl.setAttribute('modshow', 1)
+    }
+    // fixed script escape in html string best tips: https://github.com/bigviewjs/bigview/issues/7
+    if (/\/script/.test(html)) {
+      html = _unescapeHtml(html)
     }
     newEl.innerHTML = html
     oldEl.parentNode.replaceChild(newEl, oldEl)
