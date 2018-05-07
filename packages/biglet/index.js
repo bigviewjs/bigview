@@ -35,7 +35,6 @@ class Pagelet {
 
     // 为mode提供的
     this.isPageletWriteImmediately = true
-
   }
 
   addChild (SubPagelet) {
@@ -203,7 +202,7 @@ class Pagelet {
     // wrap html to script tag
     const view = this.view
     // bigpipe write
-    this.owner.emit('pageletWrite', view, this.isPageletWriteImmediately)
+    this.owner.emit('pageletWrite', this)
     // 不需要return，因为end无参数
     return view
   }
