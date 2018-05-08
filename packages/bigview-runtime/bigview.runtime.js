@@ -35,7 +35,8 @@ function _unescapeHtml (html) {
     return el.innerText
   })
 }
-// ie8 hack
+
+// ie8 polyfill
 if (!Array.isArray) {
   Array.isArray = function (arg) {
     return Object.prototype.toString.call(arg) === '[object Array]'
@@ -92,6 +93,30 @@ BigEvent.extend = function (obj) {
     }
   };
 }
+var _jsMap = {}
+
+// check js has finished load
+var _checkJSLoadReady = function (domid) {
+  if (!_jsMap[domid]) {
+    return false
+  }
+  var jsGroup = _jsMap[domid]
+  for (var i = 0; i < jsGroup.length; i++) {
+    if (jsGroup[i] && !jsGroup[i].ready) {
+      return false
+    }
+  }
+  return true
+}
+
+var _setJSLoadStatus = function (src, domid) {
+  var jsGroup = _jsMap[domid]
+  for (var i = 0; i < jsGroup.length; i++) {
+    if (jsGroup[i].src === src) {
+      jsGroup[i].ready = 1
+    }
+  }
+}
 
 var Bigview = function () {
   var self = this
@@ -99,10 +124,10 @@ var Bigview = function () {
   this.endScripts = []
   this.errorRetry = false
   this.on('end', function () {
-    for (var i = 0; i<this.endPagelets.length; i++) {
+    for (var i = 0; i < this.endPagelets.length; i++) {
       self.handlePayload(this.endPagelets[i])
     }
-    for (var j = 0; j<this.endScripts.length; j++) {
+    for (var j = 0; j < this.endScripts.length; j++) {
       self.handlePayload(this.endScripts[j])
     }
   })
@@ -170,13 +195,19 @@ var Bigview = function () {
     }
     if (payload.js) {
       var js = Array.isArray(payload.js) ? payload.js : [payload.js]
+      var jsGroup = []
       for (var i = 0; i < js.length; i++) {
         var item = js[i]
         if (_isIE8()) {
           return self.endScripts.push(item)
         }
-        self.insertScript(item)
+        jsGroup.push({
+          src: item,
+          ready: 0
+        })
+        self.insertScript(item, payload)
       }
+      _jsMap[payload.domid] = jsGroup
     }
   }
 
@@ -232,14 +263,29 @@ var Bigview = function () {
     document.getElementsByTagName('head')[0].appendChild(link)
   }
 
-  this.insertScript = function (src) {
+  this.insertScript = function (src, payload) {
     if (!src) {
       return
     }
     var node = document.createElement('SCRIPT')
     node.src = src
     node.async = true
+    node.onload = function () {
+      _setJSLoadStatus(src, payload.domid)
+      self.handleCallback(payload.callback, payload.domid)
+    }
     document.body.appendChild(node)
+  }
+
+  this.handleCallback = function (fn, domid) {
+    if (typeof fn === 'string') {
+      fn = (new Function(fn)).bind(this)
+    }
+    if (typeof fn === 'function') {
+      if (_checkJSLoadReady(domid)) {
+        fn()
+      }
+    }
   }
 
   // requert an signle pagelet via ajax

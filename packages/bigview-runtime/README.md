@@ -14,6 +14,7 @@ bigview.view({
     css: '', // 需要引入的样式地址
     js: '', // 需要引入 JS 脚本地址
     html: '' // 需要渲染的 html 内容
+    callback: function () {} // 执行完成 script 或者 html 添加完成后的回调
 })
 ```
 
@@ -68,6 +69,10 @@ localStorage._bigview = true
 
 
 ## Updates Log
+
+### 1.1.5
+
++ 支持payload 的带入 callback 属性，将会在脚本加载完成后执行该 callback。
 
 ### 1.1.2
 
