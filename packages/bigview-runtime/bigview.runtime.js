@@ -190,7 +190,7 @@ var Bigview = function () {
         self.insertCss(css[j])
       }
     }
-    if (payload.domid && payload.html && !payload.error) {
+    if (payload.domid && !payload.error && typeof document === 'object') {
       self.replaceHtml(payload.domid, payload.html, payload.attr)
     }
     if (payload.js) {
@@ -212,9 +212,14 @@ var Bigview = function () {
   }
 
   this.replaceHtml = function (el, html, attrs) {
-    var oldEl = typeof el === 'string' ? document.getElementById(el) : el
+    var oldEl = document.getElementById(el)
     if (!oldEl) {
       return
+    }
+    var code = document.getElementById(el + '-code')
+    if (code) {
+      html = code.innerHTML;
+      html = html.replace('<!--', '').replace('-->', '')
     }
     var newEl = oldEl.cloneNode(false)
     if (attrs && typeof attrs === 'object') {
