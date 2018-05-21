@@ -33,7 +33,7 @@ bigview.view({
 
 ## 事件
 
-### ready 
+### ready
 
 bigview 处于ready状态，即完成布局，开始执行页面 JS；
 
@@ -69,6 +69,13 @@ localStorage._bigview = true
 
 
 ## Updates Log
+
+### 1.4.0
+
++ 同步新版本的 biglet 修改；
++ 新的 comment node 解释；
++ 后面版本号将与 [biglet](https://github.com/bigviewjs/bigview/tree/master/packages/biglet) 同步；
+
 
 ### 1.1.5
 

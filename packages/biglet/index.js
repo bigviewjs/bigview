@@ -19,10 +19,10 @@ class Pagelet {
     this.html = ''
     // 写入模式  script 形式 或者 json 形式
     this.type = 'script'
+    this.callback = ''
     this.error = undefined
     // timeout = 10s
     this.timeout = 10000
-
     // custom error function
     this.catchFn = function (err) {
       console.log(err)
@@ -143,7 +143,8 @@ class Pagelet {
     let self = this
 
     if (self.main) {
-      let mainPagelet = new self.main()
+      const Main = self.main
+      let mainPagelet = new Main()
       mainPagelet.owner = self.owner
       if (!mainPagelet._exec) {
         return Promise.reject(new Error('you should use like this.trigger(new somePagelet()'))
@@ -180,9 +181,11 @@ class Pagelet {
   }
 
   get _payload () {
-    const attr = ['domid', 'js', 'css', 'html', 'error', 'attr', 'lifecycle', 'json']
+    const attr = ['domid', 'js', 'css', 'error', 'attr', 'lifecycle', 'json']
     attr.forEach((item) => {
-      this.payload[item] = this[item]
+      if (this[item]) {
+        this.payload[item] = this[item]
+      }
     })
     // fixed html script parse error
     return JSON.stringify(this.payload)
@@ -193,8 +196,16 @@ class Pagelet {
       // return this._payload
       return `<script type="text/javascript">bigview.view(${this._payload})</script>\n`
     }
-    return `<script type="text/javascript">bigview.beforePageletArrive("${this.domid}")</script>\n
-<script type="text/javascript">bigview.view(${this._payload})</script>\n`
+    let response = ''
+    response += `<script type="text/javascript">bigview.beforePageletArrive("${this.domid}")</script>\n`
+    if (this.html) {
+      response += `<div hidden><code id="${this.domid}-code"><!--${this.html}--!></code></div>\n`
+    }
+    if (this.callback) {
+      response += `<script type="text/javascript">${this.callback}</script>\n`
+    }
+    response += `<script type="text/javascript">bigview.view(${this._payload})</script>\n`
+    return response
   }
 
   // event wrapper
