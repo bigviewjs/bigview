@@ -218,8 +218,9 @@ var Bigview = function () {
     }
     var code = document.getElementById(el + '-code')
     if (code) {
-      html = code.innerHTML;
-      html = html.replace('<!--', '').replace('-->', '')
+      html = code.innerHTML
+      html = html.substring(4)
+      html = html.replace(/-->$/, '')
     }
     var newEl = oldEl.cloneNode(false)
     if (attrs && typeof attrs === 'object') {
