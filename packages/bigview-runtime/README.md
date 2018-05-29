@@ -70,6 +70,10 @@ localStorage._bigview = true
 
 ## Updates Log
 
+### 1.4.5
++ 默认去掉 code 注释；
++ 去掉默认的转义防止 XSS 攻击；
+
 ### 1.4.0
 
 + 同步新版本的 biglet 修改；

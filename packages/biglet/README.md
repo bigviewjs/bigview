@@ -11,6 +11,12 @@ $ npm install biglet --save
 
 ## Updates
 
+### 1.4.5
+
++ `html` and `callback` wll be rendered as a node
++ Support `json` mode
+
+
 ### 1.4.0
 
 + add code comment node for html
