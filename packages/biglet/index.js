@@ -180,18 +180,24 @@ class Pagelet {
     return Promise.resolve(true)
   }
 
-  get _payload () {
-    const attr = ['domid', 'js', 'css', 'error', 'attr', 'lifecycle', 'json']
+  _getPayloadObject () {
+    const attr = ['domid', 'html', 'js', 'css', 'error', 'attr', 'lifecycle', 'json', 'callback']
     attr.forEach((item) => {
       if (this[item]) {
         this.payload[item] = this[item]
       }
     })
+    return this.payload
+  }
+
+  get _payload () {
+    this._getPayloadObject()
     // fixed html script parse error
     return JSON.stringify(this.payload)
   }
 
   get view () {
+    const payload = this._getPayloadObject()
     if (this.type === 'json') {
       // return this._payload
       return `<script type="text/javascript">bigview.view(${this._payload})</script>\n`
@@ -199,12 +205,14 @@ class Pagelet {
     let response = ''
     response += `<script type="text/javascript">bigview.beforePageletArrive("${this.domid}")</script>\n`
     if (this.html) {
-      response += `<div hidden><code id="${this.domid}-code"><!--${this.html}--!></code></div>\n`
+      response += `<div hidden><code id="${this.domid}-code">${this.html}</code></div>\n`
+      payload.html = undefined
     }
     if (this.callback) {
       response += `<script type="text/javascript">${this.callback}</script>\n`
+      payload.callback = undefined
     }
-    response += `<script type="text/javascript">bigview.view(${this._payload})</script>\n`
+    response += `<script type="text/javascript">bigview.view(${JSON.stringify(payload)})</script>\n`
     return response
   }
 

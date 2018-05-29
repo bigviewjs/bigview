@@ -32,7 +32,7 @@ function _unescapeHtml (html) {
   var el = document.createElement('div')
   return html.replace(/&[#0-9a-z]+;/gi, function (enc) {
     el.innerHTML = enc
-    return el.innerText
+    return el.innerText 
   })
 }
 
@@ -217,10 +217,11 @@ var Bigview = function () {
       return
     }
     var code = document.getElementById(el + '-code')
+    if (html && /\/script/.test(html)) {
+      html = _unescapeHtml(html)
+    }
     if (code) {
       html = code.innerHTML
-      html = html.substring(4)
-      html = html.replace(/-->$/, '')
     }
     var newEl = oldEl.cloneNode(false)
     if (attrs && typeof attrs === 'object') {
@@ -229,9 +230,8 @@ var Bigview = function () {
       }
       newEl.setAttribute('modshow', 1)
     }
-    // fixed script escape in html string best tips: https://github.com/bigviewjs/bigview/issues/7
-    if (/\/script/.test(html)) {
-      html = _unescapeHtml(html)
+    if (!html) {
+      return
     }
     newEl.innerHTML = html
     oldEl.parentNode.replaceChild(newEl, oldEl)
@@ -245,6 +245,9 @@ var Bigview = function () {
         newEl.appendChild(scriptNode)
       }
       return newEl
+    }
+    if (code) {
+      return
     }
     var scripts = newEl.getElementsByTagName('script')
     var len = scripts.length
