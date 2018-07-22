@@ -13,7 +13,7 @@
 
 
 ``` bash
-$npm install bigkoa --save 
+$ npm install bigview --save 
 ```
 
 使用 bigview-cli 脚手架创建模块; 
@@ -57,15 +57,15 @@ const b = require('./b')
 const c = require('./c')
 
 module.exports = async (ctx, next) => {
-  const bigpipe = new BigView(ctx, {
+  const bigview = new BigView(ctx, {
     layout: a,
   })
   // bigpipe.mode = 'render'
-  bigpipe.timeout = 5000
-  bigpipe.add(b)
-  bigpipe.add(c)
+  bigview.timeout = 5000
+  bigview.add(b)
+  bigview.add(c)
 
-  await bigpipe.start()
+  await bigview.start()
 }
 
 ```
