@@ -131,14 +131,25 @@ app.router.get('/hello', bpHelloWorld)
 
 bigview的生命周期
 
-- before
-- .then(this.beforeRenderLayout.bind(this))
-- .then(this.renderLayout.bind(this))
-- .then(this.afterRenderLayout.bind(this))
-- .then(this.beforeRenderPagelets.bind(this))
-- .then(this.renderPagelets.bind(this))
-- .then(this.afterRenderPagelets.bind(this)
-- end
+```
+before
+.then(this.beforeRenderLayout.bind(this))
+.then(this.renderLayout.bind(this))
+.then(this.renderMain.bind(this))
+.then(this.afterRenderLayout.bind(this))
+.then(this.beforeRenderPagelets.bind(this))
+.then(this.renderPagelets.bind(this))
+.then(this.afterRenderPagelets.bind(this))
+end
+```
+
+精简一下，核心5个步骤。
+
+- before：渲染开始
+- renderLayout：渲染布局
+- renderMain：渲染主模块
+- renderPagelets：渲染其他模块
+- end：渲染模块结束，通知浏览器，写入完成
 
 bigview的生命周期精简
 
@@ -154,8 +165,6 @@ biglet的生命周期
 - .then(self.parse.bind(self))
 - .then(self.render.bind(self))
 - end
-
-
 
 ## Packages
 
