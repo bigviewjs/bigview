@@ -3,7 +3,9 @@ const debug = require('debug')('bigview')
 const Promise = require('bluebird')
 
 const BigViewBase = require('bigview-base')
-const Utils = require('bigview-utils')
+const Utils = require('./utils')
+
+const { lurMapCache } = Utils
 const PROMISE_RESOLVE = Promise.resolve(true)
 
 class BigView extends BigViewBase {
@@ -12,10 +14,10 @@ class BigView extends BigViewBase {
 
     this.debug = process.env.BIGVIEW_DEBUG || false
 
-    this._layout = options.layout
+    this.layout = options.layout
 
     // main pagelet
-    this._main = options.main
+    this.main = options.main
 
     // 存放add的pagelets，带有顺序和父子级别
     this.pagelets = []
@@ -27,14 +29,23 @@ class BigView extends BigViewBase {
 
     // 默认是pipeline并行模式，pagelets快的先渲染
     // 页面render的梳理里会有this.data.pagelets
+
+    // 限制缓存的个数
+    this.cacheLevel = options.cacheLevel
+    if (this.cacheLevel) {
+      lurMapCache.init(options.cacheLimits || 30, this.cacheLevel)
+    }
+    if (this.query._pagelet_id) {
+      this.pageletId = this.query._pagelet_id
+    }
   }
 
-  set layout (_layout) {
-    this._layout = _layout
+  set layout (layout) {
+    this._layout = layout
   }
 
-  set main (_main) {
-    this._main = _main
+  set main (main) {
+    this._main = main
   }
 
   get main () {
@@ -72,7 +83,6 @@ class BigView extends BigViewBase {
 
   /**
    * show error pagelet to Browser. only after bigview renderLayout
-   *
    * @api public;
    */
   showErrorPagelet (error) {
@@ -81,27 +91,67 @@ class BigView extends BigViewBase {
     this.pagelets = [this.errorPagelet]
 
     // start with render error pagelet
-    this.renderPagelets()
-            .then(this.end.bind(this))
-            .catch(this.processError.bind(this))
+    return PROMISE_RESOLVE
+  }
 
-    return Promise.reject(new Error('interrupt， no need to continue!'))
+  _checkPageletExist (domid) {
+    // check main pagelet
+    let result = this._checkPageletId(domid, this.mainPagelet)
+    if (result) {
+      return result
+    }
+    // check added pagelets
+    for (let i = 0; i < this.pagelets.length; i++) {
+      const pagelet = this.pagelets[i]
+      result = this._checkPageletId(domid, pagelet)
+      if (result) {
+        return result
+      }
+    }
+    return false
+  }
+
+  _checkPageletId (domid, pagelet) {
+    if (pagelet.domid === domid) {
+      return pagelet
+    }
+    if (pagelet.children.length > 0) {
+      for (let i = 0; i < pagelet.children.length; i++) {
+        const item = pagelet.children[i]
+        if (item.domid === domid) {
+          return item
+        }
+      }
+    }
+    return false
+  }
+
+  renderSinglePagelet () {
+    this._singlePagelet = this._checkPageletExist(this.pageletId)
+    if (this._singlePagelet && this._singlePagelet.payload) {
+      return this._modeInstance.execute([this._singlePagelet])
+    } else {
+      return Promise.reject(new Error('No pagelet Found!'))
+    }
   }
 
   start () {
     debug('BigView start')
-
-    // - before：渲染开始
-    // - renderLayout：渲染布局
-    // - renderMain：渲染主模块
-    // - renderPagelets：渲染其他模块
-    // - end：渲染模块结束，通知浏览器，写入完成
-
+    // 如果请求某个模块
+    if (this.pageletId) {
+      return this._startSinglePagelet()
+    }
+    // 1) this.before
+    // 2）renderLayout: 渲染布局
+    // 3）renderPagelets: Promise.all() 并行处理pagelets（策略是随机，fetch快的优先）
+    // 4）this.end 通知浏览器，写入完成
+    // 5) processError
     return this.before()
             .then(this.beforeRenderLayout.bind(this))
             .then(this.renderLayout.bind(this))
-            .then(this.renderMain.bind(this))
             .then(this.afterRenderLayout.bind(this))
+            .then(this.renderMain.bind(this))
+            .then(this.afterRenderMain.bind(this))
             .catch(this.showErrorPagelet.bind(this))
             .then(this.beforeRenderPagelets.bind(this))
             .then(this.renderPagelets.bind(this))
@@ -109,6 +159,21 @@ class BigView extends BigViewBase {
             .then(this.end.bind(this))
                 .timeout(this.timeout)
                 .catch(Promise.TimeoutError, this.renderPageletstimeoutFn.bind(this))
+            .catch(this.processError.bind(this))
+  }
+
+  _startSinglePagelet () {
+    this.mode = 'renderdata'
+    return this.before()
+            .then(() => {
+              return this.renderMain(false)
+            })
+            .then(this.renderSinglePagelet.bind(this))
+            .then(() => {
+              this.res.end('')
+            })
+            .timeout(this.timeout)
+            .catch(Promise.TimeoutError, this.renderPageletstimeoutFn.bind(this))
             .catch(this.processError.bind(this))
   }
 
@@ -123,36 +188,43 @@ class BigView extends BigViewBase {
    * @api public
    */
   compile (tpl, data) {
-    let self = this
+    const self = this
 
     // set data pagelets and errorPagelet
     data.pagelets = self.pagelets || []
     data.errorPagelet = self.errorPagelet
+    return self.render(tpl, data)
+  }
 
-    return new Promise(function (resolve, reject) {
-      debug('renderLayout')
-      self.ctx.render(tpl, data, function (err, str) {
-        if (err) {
-          debug('renderLayout ' + str)
-          Utils.log(err)
-          return reject(err)
-        }
-        debug(str)
-        let html = str + Utils.ready(self.debug)
-        // 在pipeline模式下会直接写layout到浏览器
-        self.write(html, self.modeInstance.isLayoutWriteImmediately)
-        // html没用到
-        resolve(html)
-      })
+  render (tpl, data, cb) {
+    const cacheLevel2 = lurMapCache.get(tpl, 2)
+    if (cacheLevel2) {
+      return cb && cb(null, cacheLevel2)
+    }
+    const cacheLevel1 = lurMapCache.get(tpl)
+    if (cacheLevel1) {
+      tpl = cacheLevel1
+    }
+    this.ctx.render(tpl, data, function (err, html) {
+      if (err) {
+        return Utils.log(err)
+      }
+      // let html = str + Utils.ready(this.debug)
+      // 在pipeline模式下会直接写layout到浏览器
+      cb && cb(err, html)
+      if (cacheLevel1 || cacheLevel2) {
+        return
+      }
+      lurMapCache.set(tpl, html)
     })
   }
 
-  renderMain () {
+  renderMain (isWrite = true) {
     debug('BigView renderLayoutAndMain')
-    let mainPagelet = null
     if (this.main) {
-      mainPagelet = this._getPageletObj(this.main)
-      return Promise.resolve(mainPagelet._exec())
+      this.mainPagelet = this._getPageletObj(this.main)
+      this.mainPagelet.data.pagelets = this.pagelets
+      return this.mainPagelet._exec(isWrite)
     } else {
       return Promise.resolve(true)
     }
@@ -160,14 +232,33 @@ class BigView extends BigViewBase {
 
   renderLayout () {
     const self = this
+    if (!this.layout) {
+      return Promise.resolve('')
+    }
     const layoutPagelet = this._getPageletObj(this.layout)
     return new Promise(function (resolve, reject) {
-      self.ctx.render(layoutPagelet.tpl, layoutPagelet.data, function (err, html) {
-        self.write(html, self.modeInstance.isLayoutWriteImmediately)
+      let tpl = layoutPagelet.tpl
+      const cacheLevel2 = lurMapCache.get(tpl, 2)
+      if (cacheLevel2) {
+        self.write(cacheLevel2, self.modeInstance.isLayoutWriteImmediately)
+        return resolve(cacheLevel2)
+      }
+      const cacheLevel1 = lurMapCache.get(tpl, 1)
+      if (cacheLevel1) {
+        debug('Use cache level 1')
+        tpl = cacheLevel1
+      }
+      self.ctx.render(tpl, layoutPagelet.data, function (err, html) {
         if (err) {
           reject(err)
+        } else {
+          self.write(html, self.modeInstance.isLayoutWriteImmediately)
+          resolve(html)
+          if (cacheLevel1 || cacheLevel2) {
+            return
+          }
+          lurMapCache.set(tpl, html)
         }
-        resolve(html)
       })
     })
   }
@@ -179,8 +270,7 @@ class BigView extends BigViewBase {
 
   end () {
     if (this.done) {
-      let err = new Error('bigview.done = true')
-      return Promise.reject(err)
+      return Promise.resolve()
     }
 
     if (this.cache.length > 0) {
@@ -196,12 +286,13 @@ class BigView extends BigViewBase {
     }
 
     debug('BigView end')
-
-    let self = this
+    const self = this
 
     // lifecycle self.after before res.end
-    return self.after().then(function () {
-      self.res.end(Utils.end())
+    return this.after().then(() => {
+      if (this.layout) {
+        this.res.end(Utils.end() + (this.endTagString || '\n</body>\n</html>'))
+      }
       self.done = true
       return true
     })
@@ -209,6 +300,13 @@ class BigView extends BigViewBase {
 
   after () {
     debug('default after')
+    // set level 1 cache
+    // this.pagelets.forEach((pagelet) => {
+    //   const tpl = pagelet.tpl
+    //   if (!lurMapCache.get(tpl)) {
+    //     lurMapCache.set(tpl)
+    //   }
+    // })
     return PROMISE_RESOLVE
   }
 
