@@ -2,8 +2,8 @@ const debug = require('debug')('bigview')
 
 const Promise = require('bluebird')
 
-const BigViewBase = require('../bigview-base')
-const Utils = require('../bigview-utils')
+const BigViewBase = require('bigview-base')
+const Utils = require('bigview-utils')
 const PROMISE_RESOLVE = Promise.resolve(true)
 
 class BigView extends BigViewBase {

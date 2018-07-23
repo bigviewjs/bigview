@@ -2,8 +2,8 @@ const debug = require('debug')('bigview')
 const Promise = require('bluebird')
 const EventEmitter = require('events')
 
-const ModeInstanceMappings = require('../bigview-mode')
-const Utils = require('../bigview-utils')
+const ModeInstanceMappings = require('bigview-mode')
+const Utils = require('bigview-utils')
 
 const PROMISE_RESOLVE = Promise.resolve(true)
 
