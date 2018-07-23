@@ -96,6 +96,7 @@ class BigView extends BigViewBase {
     // - renderMain：渲染主模块
     // - renderPagelets：渲染其他模块
     // - end：渲染模块结束，通知浏览器，写入完成
+
     return this.before()
             .then(this.beforeRenderLayout.bind(this))
             .then(this.renderLayout.bind(this))
