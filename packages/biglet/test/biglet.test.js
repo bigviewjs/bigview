@@ -19,5 +19,4 @@ test('test Biglet', async t => {
 
   biglet.addChild(Biglet, ctx)
   t.is(biglet.children.length, 1)
-
 })
