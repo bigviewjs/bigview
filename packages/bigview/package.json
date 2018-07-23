@@ -1,13 +1,13 @@
 {
   "name": "bigview",
-  "version": "1.3.19",
+  "version": "1.3.20",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "bigview-base": "^1.3.19",
+    "bigview-base": "^1.3.20",
     "bigview-mode": "^1.3.15",
     "bigview-utils": "^1.3.15",
     "bluebird": "^3.4.7",
