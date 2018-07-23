@@ -1,29 +1,45 @@
 const debug = require('debug')('bigview')
 const Promise = require('bluebird')
 const EventEmitter = require('events')
-
+const zlib = require('zlib')
 const ModeInstanceMappings = require('bigview-mode')
 const Utils = require('bigview-utils')
 
 const PROMISE_RESOLVE = Promise.resolve(true)
 
 module.exports = class BigViewBase extends EventEmitter {
-  constructor (ctx, layout, data) {
+  constructor (ctx, options) {
     super()
 
     this.mode = 'pipeline'
 
-    // 缓存express的req和res
     this.ctx = ctx
-    this.req = ctx.req
+    this.req = ctx.request || ctx.req
     this.res = ctx.res
-    this.render = ctx.render
 
     // 用于缓存res.write的内容
     this.cache = []
 
+    this.json = {}
+
+    // 设置 gzip 压缩
+    this.gzip = !!options.gzip
     this.on('bigviewWrite', this.writeDataToBrowser.bind(this))
     this.on('pageletWrite', this.writeDataToBrowser.bind(this))
+  }
+
+  set gzip (gzip) {
+    if (gzip) {
+      // set header
+      this.ctx.set('Content-Encoding', 'gzip')
+      this.output = zlib.createGzip()
+      this.output.pipe(this.res)
+      this._gzip = gzip
+    }
+  }
+
+  get gzip () {
+    return this._gzip
   }
 
   set dataStore (obj) {
@@ -73,10 +89,18 @@ module.exports = class BigViewBase extends EventEmitter {
   getModeInstanceWith (mode) {
     debug('biglet (children) mode = ' + mode)
     if (!ModeInstanceMappings[mode]) {
-      Utils.log('biglet (children) .mode only support [ pipeline | parallel | reduce | reducerender | render ]')
+      Utils.log('biglet (children) .mode only support [ pipeline | parallel | reduce | reducerender | render | renderdata]')
       return
     }
     return new ModeInstanceMappings[mode]()
+  }
+
+  /**
+   * render the template
+   * @api public
+   */
+  render (...args) {
+    return this.ctx.render(...args)
   }
 
   /**
@@ -84,25 +108,22 @@ module.exports = class BigViewBase extends EventEmitter {
    *
    * @api public;
    */
-  writeDataToBrowser (text, isWriteImmediately) {
-    if (!text) {
-      throw new Error('Write empty data to Browser.')
-    }
-
-    debug('Write data to Browser ' + text)
+  writeDataToBrowser (pagelet) {
+    const text = pagelet.view
+    if (!text) return
 
     // 是否立即写入，如果不立即写入，放到this.cache里
-    if (!isWriteImmediately || this.modeInstance.isLayoutWriteImmediately === false) {
+    if (!pagelet.isWriteImmediately || this.modeInstance.isLayoutWriteImmediately === false) {
+      if (pagelet.domid) {
+        this.json[pagelet.domid] = pagelet._payload
+      }
       return this.cache.push(text)
     }
 
     if (this.done) {
-      throw new Error(' Write data to Browser after bigview.dong = true.')
+      console.log(' Write data to Browser after bigview.dong = true.')
+      return
     }
-
-    debug('BigView final data = ' + text)
-    debug(text)
-
     if (text && text.length > 0) {
       // write to Browser;
       this.res.write(text)
@@ -111,7 +132,7 @@ module.exports = class BigViewBase extends EventEmitter {
 
   processError (err) {
     return new Promise(function (resolve, reject) {
-      debug(err)
+      console.log(err)
       resolve(true)
     })
   }
@@ -133,9 +154,13 @@ module.exports = class BigViewBase extends EventEmitter {
     return PROMISE_RESOLVE
   }
 
+  afterRenderMain () {
+    return PROMISE_RESOLVE
+  }
+
   // event wrapper
   write (html, isWriteImmediately) {
     // 不生效，某种模式下会有问题
-    this.emit('bigviewWrite', html, isWriteImmediately)
+    this.emit('bigviewWrite', { view: html, isWriteImmediately })
   }
 }
