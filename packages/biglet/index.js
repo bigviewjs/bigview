@@ -28,7 +28,7 @@ class Pagelet {
     }
 
     // 为mode提供的
-    this.isPageletWriteImmediately = true
+    this.isWriteImmediately = true
   }
 
   addChild (SubPagelet) {
