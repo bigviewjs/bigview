@@ -3,7 +3,7 @@
   "packages": [
     "packages/*"
   ],
-  "version": "1.3.17",
+  "version": "1.3.18",
   "commands": {
     "publishConfig": {
       "ignore": [
