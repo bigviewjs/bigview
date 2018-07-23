@@ -91,12 +91,11 @@ class BigView extends BigViewBase {
   start () {
     debug('BigView start')
 
-    // 1) this.before
-    // 2）renderLayout: 渲染布局
-    // 3）renderPagelets: Promise.all() 并行处理pagelets（策略是随机，fetch快的优先）
-    // 4）this.end 通知浏览器，写入完成
-    // 5) processError
-
+    // - before：渲染开始
+    // - renderLayout：渲染布局
+    // - renderMain：渲染主模块
+    // - renderPagelets：渲染其他模块
+    // - end：渲染模块结束，通知浏览器，写入完成
     return this.before()
             .then(this.beforeRenderLayout.bind(this))
             .then(this.renderLayout.bind(this))
