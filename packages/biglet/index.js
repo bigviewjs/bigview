@@ -203,7 +203,7 @@ class Pagelet {
       return `<script type="text/javascript">bigview.view(${this._payload})</script>\n`
     }
     let response = ''
-    response += `<script type="text/javascript">bigview.beforePageletArrive("${this.domid}")</script>\n`
+    // response += `<script type="text/javascript">bigview.beforePageletArrive("${this.domid}")</script>\n`
     if (this.html) {
       response += `<div hidden><code id="${this.domid}-code">${this.html}</code></div>\n`
       payload.html = undefined
