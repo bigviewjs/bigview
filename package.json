@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "bluebird": "^3.4.7",
+    "bluebird": "^3.5.1",
     "circular-json": "^0.3.1",
     "debug": "^2.3.3"
   },
@@ -13,7 +13,7 @@
     "co-exec": "^1.0",
     "codecov": "^1.0.1",
     "cookie-parser": "^1.4.3",
-    "ejs": "^2.3.4",
+    "ejs": "^2.6.1",
     "express": "^4.13.3",
     "husky": "^0.14.3",
     "lerna": "2.0.0-beta.31",
