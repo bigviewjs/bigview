@@ -1,5 +1,5 @@
 const debug = require('debug')('bigview')
-
+const redux = require('redux')
 const Promise = require('bluebird')
 
 const BigViewBase = require('bigview-base')
@@ -20,7 +20,11 @@ class BigView extends BigViewBase {
     this.main = options.main
 
     // 存放add的pagelets，带有顺序和父子级别
+    this.beforePageLets = []
     this.pagelets = []
+
+    // redux reducer
+    this.reducerArr = []
 
     this.done = false
 
@@ -54,20 +58,6 @@ class BigView extends BigViewBase {
 
   get layout () {
     return this._layout
-  }
-
-  _getPageletObj (Pagelet) {
-    let pagelet
-
-    if (Pagelet.domid && Pagelet.tpl) {
-      pagelet = Pagelet
-    } else {
-      pagelet = new Pagelet(this)
-    }
-    pagelet.owner = this
-    pagelet.dataStore = this.dataStore
-
-    return pagelet
   }
 
   add (Pagelet) {
@@ -138,6 +128,7 @@ class BigView extends BigViewBase {
   start () {
     debug('BigView start')
     // 如果请求某个模块
+
     if (this.pageletId) {
       return this._startSinglePagelet()
     }
@@ -146,6 +137,9 @@ class BigView extends BigViewBase {
     // 3）renderPagelets: Promise.all() 并行处理pagelets（策略是随机，fetch快的优先）
     // 4）this.end 通知浏览器，写入完成
     // 5) processError
+
+    this.combindReducer()
+
     return this.before()
             .then(this.beforeRenderLayout.bind(this))
             .then(this.renderLayout.bind(this))
@@ -160,6 +154,69 @@ class BigView extends BigViewBase {
                 .timeout(this.timeout)
                 .catch(Promise.TimeoutError, this.renderPageletstimeoutFn.bind(this))
             .catch(this.processError.bind(this))
+  }
+
+  combindReducer () {
+    const MainPagelet = this.main
+    console.log(MainPagelet.toString())
+    const LayoutPagelet = this.layout
+
+    const MainPageletObj = new MainPagelet()
+
+    const LayoutPageletObj = new LayoutPagelet()
+    if (MainPageletObj.reducer) {
+      this.reducerArr.push({
+        name: MainPageletObj.name,
+        reducer: MainPageletObj.reducer
+      })
+    }
+
+    if (LayoutPageletObj.reducer) {
+      this.reducerArr.push({
+        name: LayoutPageletObj.name,
+        reducer: LayoutPageletObj.reducer
+      })
+    }
+
+    this.pagelets.map(item => {
+      if (item.reducer) {
+        this.reducerArr.push({
+          name: item.name,
+          reducer: item.reducer
+        })
+      }
+    })
+    const combineReducers = redux.combineReducers
+    let reducerObj = {}
+
+    this.reducerArr.map((item, index) => {
+      reducerObj[item.name] = item.reducer
+    })
+
+    const AppReducer = combineReducers(
+      reducerObj
+    )
+
+    const store = redux.createStore(AppReducer)
+    Object.assign(this, store)
+    console.log('绑定store成功')
+
+    this.pagelets.map(item => {
+      item.init()
+    })
+  }
+
+  _getPageletObj (Pagelet) {
+    let pagelet
+    if (Pagelet.domid && Pagelet.tpl) {
+      pagelet = Pagelet
+    } else {
+      pagelet = new Pagelet(this)
+    }
+    pagelet.owner = this
+    pagelet.dataStore = this.dataStore
+
+    return pagelet
   }
 
   _startSinglePagelet () {
@@ -221,12 +278,17 @@ class BigView extends BigViewBase {
 
   renderMain (isWrite = true) {
     debug('BigView renderLayoutAndMain')
-    if (this.main) {
-      this.mainPagelet = this._getPageletObj(this.main)
-      this.mainPagelet.data.pagelets = this.pagelets
-      return this.mainPagelet._exec(isWrite)
-    } else {
-      return Promise.resolve(true)
+    try {
+      if (this.main) {
+        this.mainPagelet = this._getPageletObj(this.main)
+        this.mainPagelet.init()
+        this.mainPagelet.data.pagelets = this.pagelets
+        return this.mainPagelet._exec(isWrite)
+      } else {
+        return Promise.resolve(true)
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -235,7 +297,7 @@ class BigView extends BigViewBase {
     if (!this.layout) {
       return Promise.resolve('')
     }
-    const layoutPagelet = this._getPageletObj(this.layout)
+    const layoutPagelet = this.layoutPagelet = this._getPageletObj(this.layout)
     return new Promise(function (resolve, reject) {
       let tpl = layoutPagelet.tpl
       const cacheLevel2 = lurMapCache.get(tpl, 2)
@@ -265,6 +327,7 @@ class BigView extends BigViewBase {
 
   renderPagelets () {
     debug('BigView  renderPagelets start')
+
     return this.modeInstance.execute(this.pagelets)
   }
 
