@@ -36,6 +36,14 @@ class Pagelet {
     // 为mode提供的
     this.isWriteImmediately = true
   }
+  
+  sub (event) {
+    this.unsubscribe = this.owner.subscribe(event.bind(this))
+  }
+
+  unSub () {
+    this.unsubscribe()
+  }
 
   addChild (SubPagelet) {
     if (Object.prototype.toString.call(SubPagelet) === '[object Object]') {

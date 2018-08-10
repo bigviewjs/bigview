@@ -25,7 +25,7 @@ class BigView extends BigViewBase {
     this.pagelets = []
 
     // redux reducer
-    this.reducerArr = []
+    this.reducerObj = {}
 
     this.done = false
 
@@ -168,25 +168,19 @@ class BigView extends BigViewBase {
 
     this.pagelets.map(item => {
       if (item.reducer) {
-        this.reducerArr.push({
-          name: item.name,
-          reducer: item.reducer
-        })
+        this.reducerObj[item.name] = item.reducer
       }
     })
     const combineReducers = redux.combineReducers
-    let reducerObj = {}
 
-    this.reducerArr.map(item => {
-      reducerObj[item.name] = item.reducer
-    })
+    if (Object.keys(this.reducerObj).length !== 0) {
+      const AppReducer = combineReducers(
+        this.reducerObj
+      )
 
-    const AppReducer = combineReducers(
-      reducerObj
-    )
-
-    this.store.replaceReducer(AppReducer)
-    console.log('store更新成功')
+      this.store.replaceReducer(AppReducer)
+      console.log('store更新成功')
+    }
 
     return this.modeInstance.execute(this.pagelets)
   }
@@ -260,31 +254,24 @@ class BigView extends BigViewBase {
     })
   }
 
+  afterRenderLayout () {
+    if (this.main) {
+      this.mainPagelet = this._getPageletObj(this.main)
+      this.mainPagelet.data.pagelets = this.pagelets
+      if (this.mainPagelet.reducer) {
+        this.reducerObj[this.mainPagelet.name] = this.mainPagelet.reducer
+        const AppReducer = combineReducers(
+          this.reducerObj
+        )
+        this.store.replaceReducer(AppReducer)
+      }
+    }
+  }
+
   renderMain (isWrite = true) {
     debug('BigView renderLayoutAndMain')
     try {
       if (this.main) {
-        this.mainPagelet = this._getPageletObj(this.main)
-        this.mainPagelet.data.pagelets = this.pagelets
-        if (this.mainPagelet.reducer) {
-          this.reducerArr.push({
-            name: this.mainPagelet.name,
-            reducer: this.mainPagelet.reducer
-          })
-        }
-        let reducerObj = {}
-        if (this.reducerArr.length !== 0) {
-          this.reducerArr.map(item => {
-            reducerObj[item.name] = item.reducer
-          })
-
-          const AppReducer = combineReducers(
-            reducerObj
-          )
-
-          this.store.replaceReducer(AppReducer)
-        }
-
         return this.mainPagelet._exec(isWrite)
       } else {
         return Promise.resolve(true)
