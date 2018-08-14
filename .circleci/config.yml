@@ -19,7 +19,9 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: lerna bootstrap
+      - run: 
+          name: lerna bootstrap
+          command: ./node_modules/lerna/bin/lerna
 
       - save_cache:
           paths:
