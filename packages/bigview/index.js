@@ -51,7 +51,7 @@ class BigView extends BigViewBase {
   initRedux () {
     const store = this.store = redux.createStore(() => {})
     Object.assign(this, store)
-    console.log('store初始化成功')
+    // console.log('store初始化成功')
   }
   set layout (layout) {
     this._layout = layout
