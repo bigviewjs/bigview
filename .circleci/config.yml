@@ -21,7 +21,7 @@ jobs:
 
       - run: 
           name: lerna bootstrap
-          command: /home/circleci/repo/node_modules/lerna/bin/lerna
+          command: /home/circleci/repo/node_modules/lerna/bin/lerna.js bootstrap
 
       - save_cache:
           paths:
