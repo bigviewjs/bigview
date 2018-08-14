@@ -163,9 +163,7 @@ class BigView extends BigViewBase {
       .catch(this.processError.bind(this))
   }
 
-  renderPagelets () {
-    debug('BigView  renderPagelets start')
-
+  beforeRenderPagelets () {
     this.pagelets.map(item => {
       if (item.reducer) {
         this.reducerObj[item.name] = item.reducer
@@ -179,8 +177,11 @@ class BigView extends BigViewBase {
       )
 
       this.store.replaceReducer(AppReducer)
-      console.log('store更新成功')
+      // console.log('store更新成功')
     }
+  }
+  renderPagelets () {
+    debug('BigView  renderPagelets start')
 
     return this.modeInstance.execute(this.pagelets)
   }
