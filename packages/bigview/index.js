@@ -1,12 +1,9 @@
 const debug = require('debug')('bigview')
-const redux = require('redux')
-const combineReducers = redux.combineReducers
 const Promise = require('bluebird')
-
 const BigViewBase = require('bigview-base')
 const Utils = require('./utils')
 
-const { lurMapCache } = Utils
+const { lurMapCache, toArray } = Utils
 const PROMISE_RESOLVE = Promise.resolve(true)
 
 class BigView extends BigViewBase {
@@ -24,9 +21,6 @@ class BigView extends BigViewBase {
     this.beforePageLets = []
     this.pagelets = []
 
-    // redux reducer
-    this.reducerObj = {}
-
     this.done = false
 
     // timeout = 30s
@@ -43,16 +37,28 @@ class BigView extends BigViewBase {
     if (this.query._pagelet_id) {
       this.pageletId = this.query._pagelet_id
     }
-
-    // 首先用空的reducer创建store
-    this.initRedux()
   }
 
-  initRedux () {
-    const store = this.store = redux.createStore(() => {})
-    Object.assign(this, store)
-    // console.log('store初始化成功')
+  install (Plugin) {
+    /* istanbul ignore if */
+    if (Plugin.installed) {
+      console.warn(`${Plugin} has been installed`)
+      return
+    }
+    // additional parameters
+    const args = toArray(arguments, 1)
+
+    if (typeof Plugin === 'function') {
+      const pluginObj = new Plugin(this, args)
+      pluginObj.install()
+    } else {
+      console.error('plugin must be an class or function')
+    }
+
+    Plugin.installed = true
+    return this
   }
+
   set layout (layout) {
     this._layout = layout
   }
@@ -151,6 +157,7 @@ class BigView extends BigViewBase {
       .then(this.beforeRenderLayout.bind(this))
       .then(this.renderLayout.bind(this))
       .then(this.afterRenderLayout.bind(this))
+      .then(this.beforeRenderMain.bind(this))
       .then(this.renderMain.bind(this))
       .then(this.afterRenderMain.bind(this))
       .catch(this.showErrorPagelet.bind(this))
@@ -163,28 +170,6 @@ class BigView extends BigViewBase {
       .catch(this.processError.bind(this))
   }
 
-  beforeRenderPagelets () {
-    this.pagelets.map(item => {
-      if (item.reducer) {
-        this.reducerObj[item.name] = item.reducer
-      }
-    })
-    const combineReducers = redux.combineReducers
-
-    if (Object.keys(this.reducerObj).length !== 0) {
-      const AppReducer = combineReducers(
-        this.reducerObj
-      )
-
-      this.store.replaceReducer(AppReducer)
-      // console.log('store更新成功')
-    }
-  }
-  renderPagelets () {
-    debug('BigView  renderPagelets start')
-
-    return this.modeInstance.execute(this.pagelets)
-  }
   _getPageletObj (Pagelet) {
     let pagelet
     if (Pagelet.domid && Pagelet.tpl) {
@@ -255,31 +240,8 @@ class BigView extends BigViewBase {
     })
   }
 
-  afterRenderLayout () {
-    if (this.main) {
-      this.mainPagelet = this._getPageletObj(this.main)
-      this.mainPagelet.data.pagelets = this.pagelets
-      if (this.mainPagelet.reducer) {
-        this.reducerObj[this.mainPagelet.name] = this.mainPagelet.reducer
-        const AppReducer = combineReducers(
-          this.reducerObj
-        )
-        this.store.replaceReducer(AppReducer)
-      }
-    }
-  }
-
-  renderMain (isWrite = true) {
-    debug('BigView renderLayoutAndMain')
-    try {
-      if (this.main) {
-        return this.mainPagelet._exec(isWrite)
-      } else {
-        return Promise.resolve(true)
-      }
-    } catch (error) {
-      console.log(error)
-    }
+  beforeRenderLayout () {
+    this.emit('beforeRenderLayout')
   }
 
   renderLayout () {
@@ -313,6 +275,41 @@ class BigView extends BigViewBase {
         }
       })
     })
+  }
+
+  afterRenderLayout () {
+    this.emit('afterRenderLayout')
+  }
+
+  beforeRenderMain () {
+    this.emit('beforeRenderMain')
+  }
+
+  renderMain (isWrite = true) {
+    debug('BigView renderLayoutAndMain')
+    try {
+      if (this.main) {
+        this.mainPagelet = this._getPageletObj(this.main)
+        this.mainPagelet.data.pagelets = this.pagelets
+        return this.mainPagelet._exec(isWrite)
+      } else {
+        return Promise.resolve(true)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  beforeRenderPagelets () {
+    this.emit('beforeRenderPagelets')
+  }
+  renderPagelets () {
+    debug('BigView  renderPagelets start')
+    return this.modeInstance.execute(this.pagelets)
+  }
+
+  afterRenderPagelets () {
+    this.emit('afterRenderPagelets')
   }
 
   end () {

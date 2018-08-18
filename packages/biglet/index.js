@@ -36,7 +36,7 @@ class Pagelet {
     // 为mode提供的
     this.isWriteImmediately = true
   }
-  
+
   sub (event) {
     this.unsubscribe = this.owner.subscribe(event.bind(this))
   }
@@ -149,7 +149,6 @@ class Pagelet {
 
   renderMain () {
     let self = this
-
     if (self.main) {
       const Main = self.main
       let mainPagelet = new Main()
@@ -158,6 +157,7 @@ class Pagelet {
         return Promise.reject(new Error('you should use like this.trigger(new somePagelet()'))
       }
       let modeInstance = self.owner.getModeInstanceWith('pipeline')
+
       return modeInstance.execute([mainPagelet])
     } else {
       return Promise.resolve(true)

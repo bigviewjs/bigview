@@ -3,6 +3,16 @@ const fs = require('fs')
 const { LRUMap } = require('lru_map')
 const MODULE_ID = 'BIGVIEW'
 
+exports.toArray = function (list, start) {
+  start = start || 0
+  var i = list.length - start
+  var ret = new Array(i)
+  while (i--) {
+    ret[i] = list[i + start]
+  }
+  return ret
+}
+
 exports.log = function (str) {
   console.log(' [' + MODULE_ID + ' LOG]: ' + str)
 }
