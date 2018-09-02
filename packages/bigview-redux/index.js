@@ -24,6 +24,7 @@ class BigViewRedux {
         }
       }
     }
+
     this.owner.pagelets.map(item => {
       if (item.reducer) {
         // 如果有reducer方法则pagelet必须要有name属性
@@ -35,6 +36,7 @@ class BigViewRedux {
         }
       }
     })
+
     if (Object.keys(reducerObj).length !== 0) {
       const AppReducer = combineReducers(
         reducerObj
