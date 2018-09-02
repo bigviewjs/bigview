@@ -3,7 +3,7 @@ const Promise = require('bluebird')
 const BigViewBase = require('bigview-base')
 const Utils = require('./utils')
 
-const { lurMapCache, toArray } = Utils
+const { lurMapCache, toArray, log, error } = Utils
 const PROMISE_RESOLVE = Promise.resolve(true)
 
 class BigView extends BigViewBase {
@@ -49,7 +49,7 @@ class BigView extends BigViewBase {
       const pluginObj = new Plugin(this, args)
       this.pluginArr.push(pluginObj)
     } else {
-      console.error('plugin must be an class or function')
+      error('plugin must be an class or function')
     }
   }
 
@@ -170,7 +170,7 @@ class BigView extends BigViewBase {
       if (item.install) {
         item.install()
       } else {
-        console.log(`${item} must have a install method`)
+        log(`${item} must have a install method`)
       }
     })
     return PROMISE_RESOLVE
