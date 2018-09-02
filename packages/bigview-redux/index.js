@@ -4,46 +4,44 @@ const combineReducers = redux.combineReducers
 class BigViewRedux {
   constructor (owner, options) {
     this.owner = owner
+    this.reducerObj = {}
   }
 
   install () {
     this.installRedux()
   }
 
+  checkReducer (obj) {
+    if (obj.reducer) {
+      if (obj.name) {
+        this.reducerObj[obj.name] = obj.reducer
+      } else {
+        // 如果有reducer方法则pagelet必须要有name属性
+        console.error(`${JSON.stringify(obj)} use reducer must have a name`)
+        return
+      }
+    }
+  }
+
   installRedux () {
-    const reducerObj = {}
     if (this.owner.main) {
       const mainPagelet = this.owner._getPageletObj(this.owner.main)
-      if (mainPagelet.reducer) {
-         // 如果有reducer方法则pagelet必须要有name属性
-        if (mainPagelet.name) {
-          reducerObj[mainPagelet.name] = mainPagelet.reducer
-        } else {
-          console.error(`mainPagelet must have a name`)
-          return
-        }
-      }
+      this.checkReducer(mainPagelet)
     }
 
     this.owner.pagelets.map(item => {
-      if (item.reducer) {
-        // 如果有reducer方法则pagelet必须要有name属性
-        if (item.name) {
-          reducerObj[item.name] = item.reducer
-        } else {
-          console.error(`${item} must have a name`)
-          return
-        }
-      }
+      this.checkReducer(item)
     })
 
-    if (Object.keys(reducerObj).length !== 0) {
+    if (Object.keys(this.reducerObj).length !== 0) {
       const AppReducer = combineReducers(
-        reducerObj
+        this.reducerObj
       )
       const store = redux.createStore(AppReducer)
       this.owner.store = store
       Object.assign(this.owner, store)
+    } else {
+      console.log('no pagelet has reducer')
     }
   }
 
