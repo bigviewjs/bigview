@@ -37,26 +37,20 @@ class BigView extends BigViewBase {
     if (this.query._pagelet_id) {
       this.pageletId = this.query._pagelet_id
     }
+    // 存放插件实例的数组
+    this.pluginArr = []
   }
 
   install (Plugin) {
-    /* istanbul ignore if */
-    if (Plugin.installed) {
-      console.warn(`${Plugin} has been installed`)
-      return
-    }
-    // additional parameters
+    // 可以在安装的时候添加额外的参数，因为class只能使用new的方式来调用所以手动把参数转为数组形式
     const args = toArray(arguments, 1)
 
     if (typeof Plugin === 'function') {
       const pluginObj = new Plugin(this, args)
-      pluginObj.install()
+      this.pluginArr.push(pluginObj)
     } else {
       console.error('plugin must be an class or function')
     }
-
-    Plugin.installed = true
-    return this
   }
 
   set layout (layout) {
@@ -153,7 +147,8 @@ class BigView extends BigViewBase {
     // 4）this.end 通知浏览器，写入完成
     // 5) processError
 
-    return this.before()
+    return this.installPlugin()
+      .then(this.before.bind(this))
       .then(this.beforeRenderLayout.bind(this))
       .then(this.renderLayout.bind(this))
       .then(this.afterRenderLayout.bind(this))
@@ -170,6 +165,16 @@ class BigView extends BigViewBase {
       .catch(this.processError.bind(this))
   }
 
+  installPlugin () {
+    this.pluginArr.forEach(item => {
+      if (item.install) {
+        item.install()
+      } else {
+        console.log(`${item} must have a install method`)
+      }
+    })
+    return PROMISE_RESOLVE
+  }
   _getPageletObj (Pagelet) {
     let pagelet
     if (Pagelet.domid && Pagelet.tpl) {
@@ -299,7 +304,9 @@ class BigView extends BigViewBase {
       console.log(error)
     }
   }
-
+  afterRenderMain () {
+    this.emit('afterRenderMain')
+  }
   beforeRenderPagelets () {
     this.emit('beforeRenderPagelets')
   }

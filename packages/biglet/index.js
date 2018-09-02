@@ -38,11 +38,20 @@ class Pagelet {
   }
 
   sub (event) {
-    this.unsubscribe = this.owner.subscribe(event.bind(this))
+    if (this.owner.subscribe) {
+      this.unSubscribe = this.owner.subscribe(event.bind(this))
+    } else {
+      // 如果没有this.owner.subscribe方法说明当前bigview没有安装redux插件或者安装失败
+      console.warning('bigview is not install redux or install failed')
+    }
   }
 
   unSub () {
-    this.unsubscribe()
+    if (this.unSubscribe) {
+      this.unSubscribe()
+    } else {
+      console.warning('bigview is not install redux or install failed')
+    }
   }
 
   addChild (SubPagelet) {

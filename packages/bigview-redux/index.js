@@ -15,12 +15,24 @@ class BigViewRedux {
     if (this.owner.main) {
       const mainPagelet = this.owner._getPageletObj(this.owner.main)
       if (mainPagelet.reducer) {
-        reducerObj[mainPagelet.name] = mainPagelet.reducer
+         // 如果有reducer方法则pagelet必须要有name属性
+        if (mainPagelet.name) {
+          reducerObj[mainPagelet.name] = mainPagelet.reducer
+        } else {
+          console.error(`mainPagelet must have a name`)
+          return
+        }
       }
     }
     this.owner.pagelets.map(item => {
       if (item.reducer) {
-        reducerObj[item.name] = item.reducer
+        // 如果有reducer方法则pagelet必须要有name属性
+        if (item.name) {
+          reducerObj[item.name] = item.reducer
+        } else {
+          console.error(`${item} must have a name`)
+          return
+        }
       }
     })
     if (Object.keys(reducerObj).length !== 0) {
