@@ -1,0 +1,13 @@
+{
+  "name": "bigview-redux",
+  "version": "1.0.0",
+  "description": "bigview add redux",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "yuang.zya",
+  "license": "ISC",
+  "dependencies": {
+    "redux": "^4.0.0"
+  }
+}

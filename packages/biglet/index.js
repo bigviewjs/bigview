@@ -37,6 +37,23 @@ class Pagelet {
     this.isWriteImmediately = true
   }
 
+  sub (event) {
+    if (this.owner.subscribe) {
+      this.unSubscribe = this.owner.subscribe(event.bind(this))
+    } else {
+      // 如果没有this.owner.subscribe方法说明当前bigview没有安装redux插件或者安装失败
+      console.warning('bigview is not install redux or install failed')
+    }
+  }
+
+  unSub () {
+    if (this.unSubscribe) {
+      this.unSubscribe()
+    } else {
+      console.warning('bigview is not install redux or install failed')
+    }
+  }
+
   addChild (SubPagelet) {
     if (Object.prototype.toString.call(SubPagelet) === '[object Object]') {
       SubPagelet.owner = this.owner
@@ -141,7 +158,6 @@ class Pagelet {
 
   renderMain () {
     let self = this
-
     if (self.main) {
       const Main = self.main
       let mainPagelet = new Main()
@@ -150,6 +166,7 @@ class Pagelet {
         return Promise.reject(new Error('you should use like this.trigger(new somePagelet()'))
       }
       let modeInstance = self.owner.getModeInstanceWith('pipeline')
+
       return modeInstance.execute([mainPagelet])
     } else {
       return Promise.resolve(true)
