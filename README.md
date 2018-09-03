@@ -1,6 +1,6 @@
 # BigView （Node.js 4.x +）
 
-<a href="https://circleci.com/gh/bigviewjs/bigview/tree/dev"><img src="https://img.shields.io/circleci/project/bigviewjs/bigview/dev.svg" alt="Build Status"></a>
+[![CircleCI](https://circleci.com/gh/bigviewjs/bigview/tree/dev.svg?style=svg)](https://circleci.com/gh/bigviewjs/bigview/tree/dev)
 [![codecov.io](https://codecov.io/github/bigviewjs/bigview/coverage.svg?branch=dev)](https://codecov.io/github/bigviewjs/bigview?branch=dev)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com/)
 
