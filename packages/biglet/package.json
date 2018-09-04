@@ -12,5 +12,8 @@
     "escape-html": "^1.0.3"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "memwatch-next": "^0.3.0"
+  }
 }

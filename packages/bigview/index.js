@@ -87,7 +87,7 @@ class BigView extends BigViewBase {
   showErrorPagelet (error) {
     debug(error)
     // reset this.pagelets
-    this.pagelets = [this.errorPagelet]
+    this.pagelets = this.errorPagelet ? [this.errorPagelet] : []
 
     // start with render error pagelet
     return PROMISE_RESOLVE
@@ -251,6 +251,7 @@ class BigView extends BigViewBase {
 
   renderLayout () {
     const self = this
+
     if (!this.layout) {
       return Promise.resolve('')
     }

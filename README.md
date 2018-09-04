@@ -77,19 +77,249 @@ const nunjucks = require('nunjucks')
 
 ...
 
-render (tpl, data, cb) {
-  const env = nunjucks.configure({
-    // your template config
-  })
-  if (/\.nj$/.test(tpl) || /\.html$/.test(tpl)) {
-    env.render(tpl, data, (err, html) => {
-      err && debug(err)
-      cb(err, html)
+  render (tpl, data, cb) {
+    const env = nunjucks.configure({
+      // your template config
     })
-  } else {
-    env.renderString(tpl, data, (err, html) => {
-      err && debug(err)
-      cb(err, html)
+    if (/\.nj$/.test(tpl) || /\.html$/.test(tpl)) {
+      env.render(tpl, data, (err, html) => {
+        err && debug(err)
+        cb(err, html)
+      })
+    } else {
+      env.renderString(tpl, data, (err, html) => {
+        err && debug(err)
+        cb(err, html)
+      })
+    }
+  }
+
+  afterRenderLayout () {
+    let self = this
+
+    if (self.showPagelet === '1') {
+      self.run('pagelet1')
+    } else {
+      self.run('pagelet2')
+    }
+
+    // console.log('afterRenderLayout')
+    return Promise.resolve(true)
+  } 
+```
+
+在bigview
+
+```
+'use strict'
+
+const debug = require('debug')('bigview')
+const fs = require('fs')
+const MyBigView = require('./MyBigView')
+
+module.exports = function (req, res) {
+  var bigpipe = new MyBigView(req, res, 'if/index', { title: "条件选择pagelet" })
+
+  bigpipe.add(require('./p1'))
+  bigpipe.add(require('./p2'))
+
+  bigpipe.start()
+}
+```
+
+- http://127.0.0.1:4005/if?a=1
+- http://127.0.0.1:4005/if?a=2
+
+## 出错模块
+
+- bigview出错，即在所有pagelets渲染之前，显示错误模块，中断其他模块渲染
+- 如果是pagelets里的某一个出错，可以自己根据模板去，模块内的错误就模块自己处理就好了
+
+```js
+    var bigpipe = new MyBigView(req, res, 'error/index', { title: "测试" })
+    // bigpipe.mode = 'render'
+    bigpipe.add(require('./p1'))
+    bigpipe.addErrorPagelet(require('./error'))
+```
+
+显示ErrorPagelet，可以在bigview的生命周期，执行子Pagelets之前。reject一个error即可。
+
+比如在afterRenderLayout里，reject
+
+```
+	afterRenderLayout() {
+		let self = this
+		// console.log('afterRenderLayout')
+		return new Promise(function(resolve, reject) {
+			setTimeout(function() {
+				reject(new Error('xxxxxx'))
+				// resolve()
+			}, 0)
+		})
+	}
+```
+
+通过`addErrorPagelet`设置Error时要显示的模块，如果要包含多个，请使用pagelet子模块。
+
+另外，如果设置了ErrorPagelet，布局的时候可以使用errorPagelet来控制错误显示
+
+```
+<!doctype html>
+<html class="no-js">
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <div id="<%= errorPagelet.location %>" class="<%= errorPagelet.selector %>">
+        <ul>
+        <% pagelets.forEach(function(p){ %>
+            <li><%= p.name %> | <%= p.selector %>
+        <% }) %>
+        </ul>
+
+        <% pagelets.forEach(function(p){ %>
+        <div id="<%= p.location %>" class="<%= p.selector %>">loading...<%= p.name %>...</div>
+        <% }) %>
+    </div>
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bigpipe.js"></script>
+    <script>
+        var bigpipe=new Bigpipe();
+
+        <% pagelets.forEach(function(p){ %>
+        
+        bigpipe.ready('<%= p.name %>',function(data){
+            $("#<%= p.location %>").html(data);
+        })
+        <% }) %>
+        
+        bigpipe.ready('<%= errorPagelet.name %>',function(data){
+            $("#<%= errorPagelet.location %>").html(data);
+        })
+    </script>
+    <script src="/bigconsole.min.js"></script> 
+</body>
+</html>
+```
+
+## Pagelet里触发其他模块
+
+提供trigger方法，可以触发1个多个多个其他模块，无序并行。结果返回的是Promise
+
+```
+'use strict'
+
+const Pagelet = require('../../../../packages/biglet')
+const somePagelet1 = require('./somePagelet1')
+const somePagelet2 = require('./somePagelet2')
+const somePagelet = require('./somePagelet')
+
+module.exports = class MyPagelet extends Pagelet {
+	constructor () {
+		super()
+
+		this.root = __dirname
+		this.name = 'pagelet1'
+	}
+
+	fetch () {
+    // 触发一个模块
+    this.trigger(new somePagelet())
+    // 触发一个模块
+    this.trigger([new somePagelet1(), new somePagelet2()])
+	}
+}
+
+```
+
+不允许，直接
+
+```
+return this.trigger([require('./somePagelet1'), require('./somePagelet2')])
+```
+
+这样会有缓存，不会根据业务请求来进行不同处理。
+
+也可以强制的fetch里完成
+
+```
+'use strict'
+
+const Pagelet = require('../../../../packages/biglet')
+const somePagelet1 = require('./somePagelet1')
+const somePagelet2 = require('./somePagelet2')
+const somePagelet = require('./somePagelet')
+
+module.exports = class MyPagelet extends Pagelet {
+	constructor () {
+		super()
+
+		this.root = __dirname
+		this.name = 'pagelet1'
+	}
+
+	fetch () {
+    // 触发多个模块
+    return this.trigger([new somePagelet1, new somePagelet2()])
+	}
+}
+
+```
+
+## 生成预览数据
+
+```
+app.get('/', function (req, res) {
+  var bigpipe = new MyBigView(req, res, 'basic/index', { title: "测试" })
+
+  var Pagelet1 = require('./bpmodules/basic/p1')
+  var pagelet1 = new Pagelet1()
+
+  var Pagelet2 = require('./bpmodules/basic/p2')
+  var pagelet2 = new Pagelet2()
+
+  bigpipe.add(pagelet1)
+  bigpipe.add(pagelet2)
+
+  // bigpipe.preview('aaaa.html')
+  bigpipe.previewFile = 'aaaa.html'
+  bigpipe.start()
+});
+```
+
+方法
+
+- 设置previewFile
+- bigpipe.preview('aaaa.html')
+
+## 获取数据
+
+```js
+'use strict'
+
+const Pagelet = require('../../../../packages/biglet')
+
+module.exports = class MyPagelet extends Pagelet {
+	constructor () {
+		super()
+
+		this.root = __dirname
+		this.name = 'pagelet1'
+		this.data = { is: "pagelet1测试" }
+		this.location = 'pagelet1'
+		this.tpl = 'p1.html'
+		this.selector = 'pagelet1'
+		this.delay = 2000
+	}
+
+  fetch () {        
+    return new Promise(function(resolve, reject){
+      setTimeout(function() {
+        // self.owner.end()
+        resolve(self.data)
+      }, 4000);
     })
   }
 }

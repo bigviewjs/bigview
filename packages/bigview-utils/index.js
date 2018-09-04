@@ -12,7 +12,6 @@ exports.error = function (str) {
 // ready
 // 当布局输出完成的时候，触发
 exports.ready = function (isDebug) {
-
   if (isDebug === true) {
     return `<script charset=\"utf-8\">bigview.debug=true;bigview.ready();</script>`
   }
