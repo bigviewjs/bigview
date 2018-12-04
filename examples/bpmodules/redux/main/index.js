@@ -24,6 +24,7 @@ class MainPagelet extends Biglet {
     this._data = state[this.name]
     console.log('在main中获取redux state', state)
   }
+  
   async fetch () {
     this.sub(this.mainGetData)
     // 网络请求获取数据
