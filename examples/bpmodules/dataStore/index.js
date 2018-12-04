@@ -1,9 +1,13 @@
 'use strict'
 
+const BigViewRedux = require('../../../packages/bigview-redux')
 const MyBigView = require('./MyBigView')
 const DataStore = require('./DataStore')
 const P1 = require('./p1')
 const P2 = require('./p2')
+const Main = require('./main')
+const Layout = require('../layout')
+const TodoListPagelet = require('./todoList')
 
 module.exports = function (req, res) {
   const ctx = {
@@ -25,12 +29,18 @@ module.exports = function (req, res) {
     }
   }
   var bigpipe = new MyBigView(ctx)
+  bigpipe.install(BigViewRedux)
 
   // main and layout setter
   bigpipe.dataStore = new DataStore()
 
-  bigpipe.add(P1)
-  bigpipe.add(P2)
+  bigpipe.main = Main
+  bigpipe.layout = Layout
+
+  // bigpipe.add(P1)
+  // bigpipe.add(P2)
+  // set todolist
+  bigpipe.add(TodoListPagelet)
 
   if (req.query && req.query.bigview_mode) {
     bigpipe.mode = req.query.bigview_mode

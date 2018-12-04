@@ -2,7 +2,7 @@
 
 const MyBigView = require('./MyBigView')
 const Main = require('./main')
-const Layout = require('./layout')
+const Layout = require('../layout')
 const P1 = require('./p1')
 const P2 = require('./p2')
 

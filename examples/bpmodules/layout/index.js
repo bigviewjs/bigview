@@ -1,5 +1,5 @@
 const path = require('path')
-const Biglet = require('../../../../packages/biglet')
+const Biglet = require('../../../packages/biglet')
 
 module.exports = class LayoutPagelet extends Biglet {
   constructor () {

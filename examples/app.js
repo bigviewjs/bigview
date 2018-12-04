@@ -20,8 +20,6 @@ app.get('/payload', require('./bpmodules/payload'))
 
 app.get('/data', require('./bpmodules/dataStore'))
 
-app.get('/if', require('./bpmodules/if'))
-
 app.get('/error', require('./bpmodules/error'))
 
 app.get('/nest', require('./bpmodules/nest'))

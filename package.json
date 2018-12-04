@@ -21,6 +21,7 @@
     "nyc": "^10.0.0",
     "open": "0.0.5",
     "redux": "^4.0.1",
+    "request-promise": "^4.2.2",
     "sinon": "^1.17.7",
     "standard": "^8.4.0",
     "testchunks": "^1.0.1"
