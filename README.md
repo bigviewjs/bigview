@@ -403,3 +403,45 @@ biglet的生命周期
 - bigview-cli [![NPM version](https://img.shields.io/npm/v/bigview-cli.svg?style=flat-square)](https://www.npmjs.com/package/bigview-cli)
 - bigconsole [![NPM version](https://img.shields.io/npm/v/bigconsole.svg?style=flat-square)](https://www.npmjs.com/package/bigconsole)
 - bigview-runtime [![NPM version](https://img.shields.io/npm/v/bigview-runtime.svg?style=flat-square)](https://www.npmjs.com/package/bigview-runtime)
+
+## 使用redux做数据管理
+
+```
+// index.js
+const BigViewRedux = require('bigview-redux')
+const bigView = new BigView(ctx)
+bigView.install(BigViewRedux)
+
+// pagelet
+'use strict'
+
+const Biglet = require('biglet')
+const actions = require('./lib/actions')
+const reducer = require('./lib/reducer')
+
+class TodoListPagelet extends Biglet {
+  constructor (owner) {
+    super(owner)
+    this.reducer = reducer
+
+    this.root = __dirname
+    this.tpl = './index.nj'
+    this.name = 'todolist'
+    this.domid = 'todolist'
+  }
+
+  changeTodoList () {
+    const state = this.owner.getState() // 获取store中的state
+    this.data = {
+      todoList: state[this.name]
+    }
+  }
+
+  async fetch () {
+    this.sub(this.changeTodoList) // store改变后的订阅者函数
+    const text = '测试数据'
+    this.owner.dispatch(actions.addTodo(text)) // 触发action
+  }
+}
+
+```
