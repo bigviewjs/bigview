@@ -14,6 +14,7 @@ bigview.view({
     css: '', // 需要引入的样式地址
     js: '', // 需要引入 JS 脚本地址
     html: '' // 需要渲染的 html 内容
+    callback: function () {} // 执行完成 script 或者 html 添加完成后的回调
 })
 ```
 
@@ -32,7 +33,7 @@ bigview.view({
 
 ## 事件
 
-### ready 
+### ready
 
 bigview 处于ready状态，即完成布局，开始执行页面 JS；
 
@@ -48,6 +49,7 @@ bigview 处于ready状态，即完成布局，开始执行页面 JS；
 
 页面所有 pagelet 渲染完成后触发；
 
+
 ## debug
 
 你可以在浏览器控制台输入：
@@ -59,3 +61,51 @@ localStorage._bigview = true
 开启调试模式, 在浏览器控制台查看每个 pagelet 的渲染信息；
 
 
+## 常见问题
+
+### Q1 IE 不触发 script 标签内容?
+
+请查看自己的模板代码 script 标签内请移除掉注释。
+
+
+## Updates Log
+
+### 1.4.5
++ 默认去掉 code 注释；
++ 去掉默认的转义防止 XSS 攻击；
+
+### 1.4.0
+
++ 同步新版本的 biglet 修改；
++ 新的 comment node 解释；
++ 后面版本号将与 [biglet](https://github.com/bigviewjs/bigview/tree/master/packages/biglet) 同步；
+
+
+### 1.1.5
+
++ 支持payload 的带入 callback 属性，将会在脚本加载完成后执行该 callback。
+
+### 1.1.2
+
++ 修复 script escape 问题；
++ 支持 callback 的回调；
+
+### 1.1.1
+
++ 修复 IE8 Array polyfill
+
+### 1.0.1
+
++ 添加错误处理机制
++ 自定义错误模板
++ 增加对 ie8 的兼容性处理
++ 设置 script [async](https://eager.io/blog/everything-I-know-about-the-script-tag/)
++ fix ie8 兼容性问题
+
+### 0.1.3
+
+支持 lifecycle 的判断，决定什么时候触发渲染；
+
+### 0.1.2
+
+支持 pagelet 的 attr 属性，对当前 domID 的元素进行 attr 的绑定；

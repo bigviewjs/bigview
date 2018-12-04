@@ -1,11 +1,9 @@
 const debug = require('debug')('bigview')
-
 const Promise = require('bluebird')
-
 const BigViewBase = require('bigview-base')
 const Utils = require('./utils')
 
-const { lurMapCache } = Utils
+const { lurMapCache, toArray } = Utils
 const PROMISE_RESOLVE = Promise.resolve(true)
 
 class BigView extends BigViewBase {
@@ -20,6 +18,7 @@ class BigView extends BigViewBase {
     this.main = options.main
 
     // 存放add的pagelets，带有顺序和父子级别
+    this.beforePageLets = []
     this.pagelets = []
 
     this.done = false
@@ -38,6 +37,20 @@ class BigView extends BigViewBase {
     if (this.query._pagelet_id) {
       this.pageletId = this.query._pagelet_id
     }
+    // 存放插件实例的数组
+    this.pluginArr = []
+  }
+
+  install (Plugin) {
+    // 可以在安装的时候添加额外的参数，因为class只能使用new的方式来调用所以手动把参数转为数组形式
+    const args = toArray(arguments, 1)
+
+    if (typeof Plugin === 'function') {
+      const pluginObj = new Plugin(this, args)
+      this.pluginArr.push(pluginObj)
+    } else {
+      Utils.error('plugin must be an class or function')
+    }
   }
 
   set layout (layout) {
@@ -54,20 +67,6 @@ class BigView extends BigViewBase {
 
   get layout () {
     return this._layout
-  }
-
-  _getPageletObj (Pagelet) {
-    let pagelet
-
-    if (Pagelet.domid && Pagelet.tpl) {
-      pagelet = Pagelet
-    } else {
-      pagelet = new Pagelet(this)
-    }
-    pagelet.owner = this
-    pagelet.dataStore = this.dataStore
-
-    return pagelet
   }
 
   add (Pagelet) {
@@ -88,7 +87,7 @@ class BigView extends BigViewBase {
   showErrorPagelet (error) {
     debug(error)
     // reset this.pagelets
-    this.pagelets = [this.errorPagelet]
+    this.pagelets = this.errorPagelet ? [this.errorPagelet] : []
 
     // start with render error pagelet
     return PROMISE_RESOLVE
@@ -138,6 +137,7 @@ class BigView extends BigViewBase {
   start () {
     debug('BigView start')
     // 如果请求某个模块
+
     if (this.pageletId) {
       return this._startSinglePagelet()
     }
@@ -146,35 +146,61 @@ class BigView extends BigViewBase {
     // 3）renderPagelets: Promise.all() 并行处理pagelets（策略是随机，fetch快的优先）
     // 4）this.end 通知浏览器，写入完成
     // 5) processError
-    return this.before()
-            .then(this.beforeRenderLayout.bind(this))
-            .then(this.renderLayout.bind(this))
-            .then(this.afterRenderLayout.bind(this))
-            .then(this.renderMain.bind(this))
-            .then(this.afterRenderMain.bind(this))
-            .catch(this.showErrorPagelet.bind(this))
-            .then(this.beforeRenderPagelets.bind(this))
-            .then(this.renderPagelets.bind(this))
-            .then(this.afterRenderPagelets.bind(this))
-            .then(this.end.bind(this))
-                .timeout(this.timeout)
-                .catch(Promise.TimeoutError, this.renderPageletstimeoutFn.bind(this))
-            .catch(this.processError.bind(this))
+
+    return this.installPlugin()
+      .then(this.before.bind(this))
+      .then(this.beforeRenderLayout.bind(this))
+      .then(this.renderLayout.bind(this))
+      .then(this.afterRenderLayout.bind(this))
+      .then(this.beforeRenderMain.bind(this))
+      .then(this.renderMain.bind(this))
+      .then(this.afterRenderMain.bind(this))
+      .catch(this.showErrorPagelet.bind(this))
+      .then(this.beforeRenderPagelets.bind(this))
+      .then(this.renderPagelets.bind(this))
+      .then(this.afterRenderPagelets.bind(this))
+      .then(this.end.bind(this))
+      .timeout(this.timeout)
+      .catch(Promise.TimeoutError, this.renderPageletstimeoutFn.bind(this))
+      .catch(this.processError.bind(this))
+  }
+
+  installPlugin () {
+    this.pluginArr.forEach(item => {
+      if (item.install) {
+        item.install()
+      } else {
+        Utils.log(`${item} must have a install method`)
+      }
+    })
+    return PROMISE_RESOLVE
+  }
+  _getPageletObj (Pagelet) {
+    let pagelet
+    if (Pagelet.domid && Pagelet.tpl) {
+      pagelet = Pagelet
+    } else {
+      pagelet = new Pagelet(this)
+    }
+    pagelet.owner = this
+    pagelet.dataStore = this.dataStore
+
+    return pagelet
   }
 
   _startSinglePagelet () {
     this.mode = 'renderdata'
     return this.before()
-            .then(() => {
-              return this.renderMain(false)
-            })
-            .then(this.renderSinglePagelet.bind(this))
-            .then(() => {
-              this.res.end('')
-            })
-            .timeout(this.timeout)
-            .catch(Promise.TimeoutError, this.renderPageletstimeoutFn.bind(this))
-            .catch(this.processError.bind(this))
+      .then(() => {
+        return this.renderMain(false)
+      })
+      .then(this.renderSinglePagelet.bind(this))
+      .then(() => {
+        this.res.end('')
+      })
+      .timeout(this.timeout)
+      .catch(Promise.TimeoutError, this.renderPageletstimeoutFn.bind(this))
+      .catch(this.processError.bind(this))
   }
 
   before () {
@@ -219,23 +245,17 @@ class BigView extends BigViewBase {
     })
   }
 
-  renderMain (isWrite = true) {
-    debug('BigView renderLayoutAndMain')
-    if (this.main) {
-      this.mainPagelet = this._getPageletObj(this.main)
-      this.mainPagelet.data.pagelets = this.pagelets
-      return this.mainPagelet._exec(isWrite)
-    } else {
-      return Promise.resolve(true)
-    }
+  beforeRenderLayout () {
+    this.emit('beforeRenderLayout')
   }
 
   renderLayout () {
     const self = this
+
     if (!this.layout) {
       return Promise.resolve('')
     }
-    const layoutPagelet = this._getPageletObj(this.layout)
+    const layoutPagelet = this.layoutPagelet = this._getPageletObj(this.layout)
     return new Promise(function (resolve, reject) {
       let tpl = layoutPagelet.tpl
       const cacheLevel2 = lurMapCache.get(tpl, 2)
@@ -263,9 +283,41 @@ class BigView extends BigViewBase {
     })
   }
 
+  afterRenderLayout () {
+    this.emit('afterRenderLayout')
+  }
+
+  beforeRenderMain () {
+    this.emit('beforeRenderMain')
+  }
+
+  renderMain (isWrite = true) {
+    debug('BigView renderLayoutAndMain')
+    try {
+      if (this.main) {
+        this.mainPagelet = this._getPageletObj(this.main)
+        this.mainPagelet.data.pagelets = this.pagelets
+        return this.mainPagelet._exec(isWrite)
+      } else {
+        return Promise.resolve(true)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  afterRenderMain () {
+    this.emit('afterRenderMain')
+  }
+  beforeRenderPagelets () {
+    this.emit('beforeRenderPagelets')
+  }
   renderPagelets () {
     debug('BigView  renderPagelets start')
     return this.modeInstance.execute(this.pagelets)
+  }
+
+  afterRenderPagelets () {
+    this.emit('afterRenderPagelets')
   }
 
   end () {

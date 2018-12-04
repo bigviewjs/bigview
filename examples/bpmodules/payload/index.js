@@ -3,8 +3,26 @@
 const MyBigView = require('./MyBigView')
 
 module.exports = function (req, res) {
+
+    const ctx = {
+        req: req,
+        res: res,
+        render: function (tpl, data, cb) {
+          if (/\.nj$/.test(tpl) || /\.html$/.test(tpl)) {
+            res.render(tpl, data, (err, html) => {
+              // ...
+              cb(err, html)
+            });
     
-    var bigpipe = new MyBigView(req, res, 'payload/index', { title: "payload测试" })
+          } else {
+            res.render(tpl, data, (err, html) => {
+              // ...
+              cb(err, html)
+            });
+          }
+        }
+      }
+      var bigpipe = new MyBigView(ctx)
     
     // bigpipe.mode = 'render'
     bigpipe.add(require('./p1'))

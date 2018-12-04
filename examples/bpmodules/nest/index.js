@@ -6,7 +6,25 @@ const MyBigView = require('./MyBigView')
 const Biglet = require('../../../packages/biglet')
 
 module.exports = function (req, res) {
-  var bigpipe = new MyBigView(req, res, 'nest/index', { title: "测试" })
+  const ctx = {
+    req: req,
+    res: res,
+    render: function (tpl, data, cb) {
+      if (/\.nj$/.test(tpl) || /\.html$/.test(tpl)) {
+        res.render(tpl, data, (err, html) => {
+          // ...
+          cb(err, html)
+        });
+
+      } else {
+        res.render(tpl, data, (err, html) => {
+          // ...
+          cb(err, html)
+        });
+      }
+    }
+  }
+  var bigpipe = new MyBigView(ctx)
   // bigpipe.mode = 'render'
   var Pagelet1 = require('./p1')
   var pagelet1 = new Pagelet1()
