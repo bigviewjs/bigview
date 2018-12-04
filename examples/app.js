@@ -15,16 +15,15 @@ app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'html')
 
 app.get('/', require('./bpmodules/basic'))
+app.get('/redux', require('./bpmodules/redux'))
 
-app.get('/payload', require('./bpmodules/payload'))
+// app.get('/payload', require('./bpmodules/payload'))
 
-app.get('/data', require('./bpmodules/dataStore'))
+// app.get('/error', require('./bpmodules/error'))
 
-app.get('/error', require('./bpmodules/error'))
+// app.get('/nest', require('./bpmodules/nest'))
 
-app.get('/nest', require('./bpmodules/nest'))
-
-app.get('/nest2', require('./bpmodules/nest2'))
+// app.get('/nest2', require('./bpmodules/nest2'))
 
 app.get('/default', function (req, res) {
   var pagelets = []
