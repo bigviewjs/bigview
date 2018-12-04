@@ -6,7 +6,7 @@ const DataStore = require('./DataStore')
 const P1 = require('./p1')
 const P2 = require('./p2')
 const Main = require('./main')
-const Layout = require('../layout')
+const Layout = require('./layout')
 const TodoListPagelet = require('./todoList')
 
 module.exports = function (req, res) {

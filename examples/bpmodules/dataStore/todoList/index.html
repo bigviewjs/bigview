@@ -1,7 +1,7 @@
 <div class='todo-container'>
   <ul>
-  <% for(var i=0; i<todoList.length; i++) {%>
-    <li><%= todoList[i].toString() %></li>
-  <% } %>
+  <% todoList.forEach(function(todo){ %>
+    <li><%= todo.text+"" %></li>
+  <% }); %>
   </ul>
 </div>
