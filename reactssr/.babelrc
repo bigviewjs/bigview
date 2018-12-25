@@ -1,6 +1,7 @@
 {
     "plugins": [
-        "syntax-dynamic-import"
+        "syntax-dynamic-import",
+        "transform-es2015-classes"
     ],
     "presets": [
         [
@@ -19,7 +20,7 @@
                 "react"
             ],
             "plugins": [
-                "transform-es2015-modules-commonjs",
+                
                 "syntax-dynamic-import"
             ]
         }

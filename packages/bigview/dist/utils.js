@@ -1,0 +1,70 @@
+'use strict';
+
+var _require = require('lru_map'),
+    LRUMap = _require.LRUMap;
+
+var MODULE_ID = 'BIGVIEW';
+
+exports.toArray = function (list, start) {
+  start = start || 0;
+  var i = list.length - start;
+  var ret = new Array(i);
+  while (i--) {
+    ret[i] = list[i + start];
+  }
+  return ret;
+};
+
+exports.log = function (str) {
+  console.log(' [' + MODULE_ID + ' LOG]: ' + str);
+};
+
+exports.error = function (str) {
+  console.error(' [' + MODULE_ID + ' LOG]: ' + str);
+};
+
+// ready
+// 当布局输出完成的时候，触发
+exports.ready = function (isDebug) {
+  if (isDebug === true) {
+    return '<script charset="utf-8">bigview.debug=true;bigview.ready();</script>';
+  }
+
+  return '<script charset="utf-8">bigview.ready();</script>';
+};
+
+// end
+// 当所有模块都是输出完成的时候触发
+exports.end = function (data) {
+  if (!data) {
+    return '<script charset="utf-8">bigview.end()</script>';
+  }
+
+  return '<script charset="utf-8">bigview.end(' + JSON.stringify(data) + ')</script>';
+};
+
+exports.lurMapCache = {
+  init: function init(limits, level) {
+    if (limits && !this._lruMap) {
+      this._lruMap = new LRUMap(limits);
+    }
+    this._level = level;
+  },
+  set: function set(key, val) {
+    if (this._level === 1) {
+      // const fs = require('fs')
+      // val = fs.readFileSync(key, 'utf8')
+    }
+    this._lruMap && this._lruMap.set(key + '_' + this._level, val);
+  },
+  get: function get(key, level) {
+    return this._lruMap && this._lruMap.get(key + '_' + level);
+  },
+  delete: function _delete(key) {
+    return this._lruMap.delete(key + '_' + this._level);
+  },
+  clear: function clear() {
+    this._lruMap.clear();
+    this._lruMap = null;
+  }
+};

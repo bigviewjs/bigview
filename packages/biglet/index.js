@@ -1,8 +1,8 @@
 const debug = require('debug')('biglet')
 const Promise = require('bluebird')
 const path = require('path')
-const React = require( 'react')
-const renderToNodeStream = require('react-dom/server').renderToNodeStream;
+import React from 'react'
+import {renderToNodeStream} from 'react-dom/server'
 
 module.exports = class Pagelet extends React.Component {
   constructor(props) {
