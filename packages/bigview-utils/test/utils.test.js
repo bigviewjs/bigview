@@ -2,7 +2,6 @@ import test from 'ava'
 import * as utils from '../index'
 
 test('test utils.ready()', t => {
-
   const str = utils.ready()
   t.is(str, '<script charset=\"utf-8\">bigview.ready();</script>')
 
