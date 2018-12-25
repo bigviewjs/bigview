@@ -81,23 +81,7 @@
 "use strict";
 /* WEBPACK VAR INJECTION */(function(__dirname) {
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _wrapToStream = __webpack_require__(/*! wrap-to-stream */ "../../packages/biglet/node_modules/wrap-to-stream/index.js");
-
-var _wrapToStream2 = _interopRequireDefault(_wrapToStream);
-
-var _react = __webpack_require__(/*! react */ "../../packages/biglet/node_modules/react/index.js");
-
-var _react2 = _interopRequireDefault(_react);
-
-var _server = __webpack_require__(/*! react-dom/server */ "../../packages/biglet/node_modules/react-dom/server.browser.js");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -108,8 +92,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var debug = __webpack_require__(/*! debug */ "../../packages/biglet/node_modules/debug/src/browser.js")('biglet');
 var Promise = __webpack_require__(/*! bluebird */ "../../packages/biglet/node_modules/bluebird/js/browser/bluebird.js");
 var path = __webpack_require__(/*! path */ "../node_modules/path-browserify/index.js");
+var wrapToStream = __webpack_require__(/*! wrap-to-stream */ "../../packages/biglet/node_modules/wrap-to-stream/index.js");
+var React = __webpack_require__(/*! react */ "../../packages/biglet/node_modules/react/index.js");
+var renderToNodeStream = __webpack_require__(/*! react-dom/server */ "../../packages/biglet/node_modules/react-dom/server.browser.js").renderToNodeStream;
 
-var Pagelet = function (_React$Component) {
+module.exports = function (_React$Component) {
   _inherits(Pagelet, _React$Component);
 
   function Pagelet(props) {
@@ -296,7 +283,7 @@ var Pagelet = function (_React$Component) {
         mainPagelet.dataStore = self.owner.dataStore;
         // this.mainPagelet.data.pagelets = this.pagelets
 
-        mainPagelet.stream = (0, _server.renderToNodeStream)(this.main);
+        mainPagelet.stream = renderToNodeStream(this.main);
 
         mainPagelet.owner = self.owner;
         if (!mainPagelet._exec) {
@@ -404,7 +391,7 @@ var Pagelet = function (_React$Component) {
       var strToStream = __webpack_require__(/*! string-to-stream */ "../../packages/biglet/node_modules/string-to-stream/index.js");
       console.log(response);
 
-      var a = (0, _wrapToStream2.default)('<div hidden><code id="' + this.domid + '-code">', this.html, '</code></div>\n');
+      var a = wrapToStream('<div hidden><code id="' + this.domid + '-code">', this.html, '</code></div>\n');
       this.owner.res.write(a);
 
       // this.write(str)
@@ -418,9 +405,7 @@ var Pagelet = function (_React$Component) {
   }]);
 
   return Pagelet;
-}(_react2.default.Component);
-
-exports.default = Pagelet;
+}(React.Component);
 /* WEBPACK VAR INJECTION */}.call(this, "/"))
 
 /***/ }),

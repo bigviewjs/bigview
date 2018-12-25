@@ -19,5 +19,6 @@
   "license": "ISC",
   "devDependencies": {
     "memwatch-next": "^0.3.0"
-  }
+  },
+  "gitHead": "3bf19d58c3f407dc078d6fed11b992dc57e95c70"
 }

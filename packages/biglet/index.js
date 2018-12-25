@@ -1,11 +1,11 @@
 const debug = require('debug')('biglet')
 const Promise = require('bluebird')
 const path = require('path')
-import wrapToStream from 'wrap-to-stream'
-import React from 'react'
-import { renderToNodeStream } from 'react-dom/server';
+const wrapToStream = require('wrap-to-stream')
+const React = require( 'react')
+const renderToNodeStream = require('react-dom/server').renderToNodeStream;
 
-export default class Pagelet extends React.Component {
+module.exports = class Pagelet extends React.Component {
   constructor(props) {
     super(props)
 

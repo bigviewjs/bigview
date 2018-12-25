@@ -17,5 +17,6 @@
     "fs-extra": "^2.0.0",
     "mkdirp": "^0.5.1",
     "tpl_apply": "^1.0.5"
-  }
+  },
+  "gitHead": "3bf19d58c3f407dc078d6fed11b992dc57e95c70"
 }

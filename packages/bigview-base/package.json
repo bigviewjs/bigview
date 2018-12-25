@@ -14,5 +14,6 @@
     "bluebird": "^3.5.1",
     "debug": "^3.1.0",
     "events": "^1.1.1"
-  }
+  },
+  "gitHead": "3bf19d58c3f407dc078d6fed11b992dc57e95c70"
 }

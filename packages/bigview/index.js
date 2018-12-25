@@ -2,10 +2,12 @@ const debug = require('debug')('bigview')
 const Promise = require('bluebird')
 const BigViewBase = require('bigview-base')
 const Utils = require('./utils')
-import { renderToNodeStream, renderToStaticNodeStream } from 'react-dom/server';
+
+const renderToNodeStream = require('react-dom/server').renderToNodeStream;
+const renderToStaticNodeStream = require('react-dom/server').renderToStaticNodeStream;
 const { lurMapCache, toArray } = Utils
 const PROMISE_RESOLVE = Promise.resolve(true)
-import React from "react";
+const React = require( 'react')
 
 class BigView extends BigViewBase {
   constructor(ctx, options = {}) {
