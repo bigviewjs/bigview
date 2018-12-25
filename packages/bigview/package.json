@@ -1,7 +1,7 @@
 {
   "name": "bigview",
   "version": "3.0.2",
-  "description": "",
+  "description": "bigview",
   "main": "dist/index.js",
   "scripts": {
     "build": "babel index.js utils.js -d dist",
