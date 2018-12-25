@@ -1,18 +1,22 @@
 {
-  "lerna": "2.11.0",
   "packages": [
     "packages/*"
   ],
-  "version": "2.0.2",
-  "commands": {
+  "version": "3.0.0",
+  "command": {
     "publishConfig": {
       "ignore": [
         "example/**",
         "public/**",
         "bpmodules/**",
         "views/**",
-        "test/**"
+        "test/**",
+        "reactssr/**"
       ]
     }
-  }
+  },
+  "npmClient": "npm",
+  "npmClientArgs": [
+    "--no-lockfile"
+  ]
 }
