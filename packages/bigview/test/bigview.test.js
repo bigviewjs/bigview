@@ -8,22 +8,29 @@ test('test BigView', async t => {
 
   t.is(bigView.debug, false)
 
-  const mainBiglet = new Biglet(bigView)
+  const mainBiglet = Biglet
   mainBiglet.domid = 'main'
   bigView.main = mainBiglet
 
-  const layoutBiglet = new Biglet(bigView)
+  const layoutBiglet = Biglet
   layoutBiglet.domid = 'layout'
   layoutBiglet.root = __dirname
-  layoutBiglet.tpl = './fixures/index.tpl.html'
+  // layoutBiglet.tpl = './fixures/index.tpl.html'
+  layoutBiglet.render= function(){
+    return (
+      <div>
+        <h1>Main header</h1>
+      </div>
+    );
+  }
   bigView.layout = layoutBiglet
 
-  const childBiglet = new Biglet(bigView)
+  const childBiglet = Biglet
   childBiglet.domid = 'child'
 
   bigView.add(childBiglet)
 
-  const errorBiglet = new Biglet(bigView)
+  const errorBiglet = Biglet
   errorBiglet.domid = 'error'
 
   bigView.addErrorPagelet(errorBiglet)
@@ -41,9 +48,7 @@ test('test BigView', async t => {
   bigView.done = false
   bigView.renderPageletstimeoutFn()
 
-  bigView.ctx.render = function (tpl, data, fn) {
-    fn(true, tpl)
-  }
+
   bigView.renderLayout()
     .then(() => {
 

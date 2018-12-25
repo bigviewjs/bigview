@@ -1,23 +1,41 @@
 {
   "name": "bigview-all",
-  "version": "1.5.0",
+  "version": "3.0.0",
   "description": "",
   "main": "index.js",
+  "ava": {
+    "babel": "inherit",
+    "require": [
+      "./setup-test-env.js"
+    ]
+  },
   "dependencies": {
-    "bluebird": "^3.5.1",
+    "bluebird": "^3.5.3",
     "circular-json": "^0.3.1",
-    "debug": "^2.3.3"
+    "debug": "^2.3.3",
+    "http-extra": "^1.0.2"
   },
   "devDependencies": {
     "ava": "^0.16.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.2",
+    "babel-jest": "^21.2.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.3.13",
+    "babel-register": "^6.26.0",
     "co-exec": "^1.0",
     "codecov": "^1.0.1",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.6.1",
-    "express": "^4.13.3",
+    "express": "^4.16.4",
     "husky": "^0.14.3",
+    "jsdom": "^13.1.0",
     "lerna": "^2.11.0",
-    "lru-cache": "^4.0.2",
+    "lru-cache": "^4.1.5",
     "nyc": "^10.0.0",
     "open": "0.0.5",
     "redux": "^4.0.1",

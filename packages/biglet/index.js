@@ -1,10 +1,14 @@
 const debug = require('debug')('biglet')
 const Promise = require('bluebird')
 const path = require('path')
-// const memwatch = require('memwatch-next');
+import wrapToStream from 'wrap-to-stream'
+import React from 'react'
+import { renderToNodeStream } from 'react-dom/server';
 
-class Pagelet {
-  constructor () {
+export default class Pagelet extends React.Component {
+  constructor(props) {
+    super(props)
+
     this.root = ''
     this.main = null
     this.data = {}
@@ -37,7 +41,7 @@ class Pagelet {
     this.isWriteImmediately = true
   }
 
-  sub (event) {
+  sub(event) {
     if (this.owner.subscribe) {
       this.unSubscribe = this.owner.subscribe(event.bind(this))
     } else {
@@ -46,7 +50,7 @@ class Pagelet {
     }
   }
 
-  unSub () {
+  unSub() {
     if (this.unSubscribe) {
       this.unSubscribe()
     } else {
@@ -54,7 +58,7 @@ class Pagelet {
     }
   }
 
-  addChild (SubPagelet) {
+  addChild(SubPagelet) {
     if (Object.prototype.toString.call(SubPagelet) === '[object Object]') {
       SubPagelet.owner = this.owner
       this.children.push(SubPagelet)
@@ -72,7 +76,7 @@ class Pagelet {
    * main flow: before -> fetch data -> parse data -> render template
    *  -> render children
    */
-  _exec (isWrite = true, type) {
+  _exec(isWrite = true, type) {
     const self = this
     debug('Pagelet ' + this.domid + ' fetch')
     if (type) {
@@ -82,7 +86,7 @@ class Pagelet {
       return self.before()
         .then(self.fetch.bind(self)).timeout(this.timeout)
         .then(self.parse.bind(self)).timeout(this.timeout)
-        .then(self.render.bind(self)).timeout(this.timeout)
+        .then(self.render1.bind(self)).timeout(this.timeout)
         .then(self.renderMain.bind(self)).timeout(this.timeout)
         .then(self.renderChildren.bind(self)).timeout(this.timeout)
         .then(self.end.bind(self)).timeout(this.timeout)
@@ -95,14 +99,14 @@ class Pagelet {
     }
   }
 
-  before () {
+  before() {
     return Promise.resolve(true)
   }
 
   /**
    * 用于发起网络请求获取数据
    */
-  fetch () {
+  fetch() {
     return Promise.resolve(this.data)
   }
 
@@ -110,7 +114,7 @@ class Pagelet {
    * 用于对fetch获取的数据进行处理
    * 约定 return Promise.resolve(this.data = xxx)
    */
-  parse () {
+  parse() {
     return Promise.resolve(this.data)
   }
 
@@ -118,22 +122,24 @@ class Pagelet {
    * Compile tpl + data to html
    * @private
    */
-  compile (tpl, data) {
+  compile(tpl, data) {
+    var that = this
     return new Promise((resolve, reject) => {
-      this.owner.render(tpl, data, function (err, str) {
-        // str => Rendered HTML string
-        if (err) {
-          return reject(err)
-        }
-        resolve(str)
-      })
+      // that.owner.render(tpl, data, function (err, str) {
+      //   // str => Rendered HTML string
+      //   if (err) {
+      //     return reject(err)
+      //   }
+      //   resolve(str)
+      // })
+      resolve(that.stream)
     })
   }
 
   /**
    * redner template
    */
-  render () {
+  render1() {
     if (this.owner && this.owner.done) {
       console.log('[BIGLET WARNING] bigview is alread done, there is no need to render biglet module!')
       return Promise.resolve()
@@ -156,11 +162,17 @@ class Pagelet {
     }
   }
 
-  renderMain () {
+  renderMain() {
     let self = this
     if (self.main) {
       const Main = self.main
       let mainPagelet = new Main()
+      mainPagelet.owner = self.owner;
+      mainPagelet.dataStore = self.owner.dataStore;
+      // this.mainPagelet.data.pagelets = this.pagelets
+
+      mainPagelet.stream = renderToNodeStream(this.main)
+
       mainPagelet.owner = self.owner
       if (!mainPagelet._exec) {
         return Promise.reject(new Error('you should use like this.trigger(new somePagelet()'))
@@ -173,7 +185,7 @@ class Pagelet {
     }
   }
 
-  renderChildren () {
+  renderChildren() {
     let subPagelets = this.children
     let self = this
 
@@ -193,11 +205,11 @@ class Pagelet {
     return modeInstance.execute(subPagelets)
   }
 
-  end () {
+  end() {
     return Promise.resolve(true)
   }
 
-  _getPayloadObject () {
+  _getPayloadObject() {
     const attr = ['domid', 'html', 'js', 'css', 'error', 'attr', 'lifecycle', 'json', 'callback']
     attr.forEach((item) => {
       if (this[item]) {
@@ -207,14 +219,18 @@ class Pagelet {
     return this.payload
   }
 
-  get _payload () {
+  get _payload() {
     this._getPayloadObject()
     // fixed html script parse error
     return JSON.stringify(this.payload)
   }
 
-  get view () {
+  get view() {
     const payload = this._getPayloadObject()
+    // const fs = require("fs")
+    // this.owner.res.write(fs.createReadStream('./package.json'))
+    // this.owner.res.write(this.stream)
+
     if (this.type === 'json') {
       // return this._payload
       return `<script type="text/javascript">bigview.view(${this._payload})</script>\n`
@@ -222,7 +238,10 @@ class Pagelet {
     let response = ''
     // response += `<script type="text/javascript">bigview.beforePageletArrive("${this.domid}")</script>\n`
     if (this.html) {
-      response += `<div hidden><code id="${this.domid}-code">${this.html}</code></div>\n`
+      // this.owner.res.write(`<div hidden><code id="${this.domid}-code">`)
+      // this.owner.res.write(this.html)
+      // this.owner.res.write(`</code></div>\n`)
+      // response += `<div hidden><code id="${this.domid}-code">${this.html}</code></div>\n`
       payload.html = undefined
     }
     if (this.callback) {
@@ -230,18 +249,32 @@ class Pagelet {
       payload.callback = undefined
     }
     response += `<script type="text/javascript">bigview.view(${JSON.stringify(payload)})</script>\n`
+    const strToStream = require('string-to-stream')
+    console.log(response)
+
+    var a = wrapToStream(`<div hidden><code id="${this.domid}-code">`,this.html, `</code></div>\n`)
+    this.owner.res.write(a)
+
+    // this.write(str)
+
+
+    a.on('end', ()=>{
+      this.owner.res.write(response)
+    })
     return response
   }
 
   // event wrapper
-  write (html) {
+  write(html) {
     // wrap html to script tag
     const view = this.view
     // bigpipe write
-    this.owner.emit('pageletWrite', this)
+    // this.owner.emit('pageletWrite', this)
     // 不需要return，因为end无参数
     return view
   }
-}
 
-module.exports = Pagelet
+  render() {
+    return
+  }
+}

@@ -1,0 +1,22 @@
+<!doctype html>
+<html class="no-js">
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+    <ul>
+    <% pagelets.forEach(function(p){ %>
+        <li><%= p.domid %> | <%= p.selector %>
+    <% }) %>
+    </ul>
+
+    <% pagelets.forEach(function(p){ %>
+       <div id="<%= p.domid %>" class="<%= p.selector %>">loading...<%= p.domid %>...</div>
+    <% }) %>
+
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bigview.js"></script>
+    <script src="/bigconsole.min.js"></script> 
+</body>
+</html>

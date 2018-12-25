@@ -8,34 +8,63 @@ test('test redux', async t => {
   const bigView = new BigView(ctx)
   bigView.install(BigViewRedux)
 
-  const mainBiglet = new Biglet()
-  mainBiglet.name = 'mainPagelet'
-  mainBiglet.domid = 'main'
-  mainBiglet.reducer = (state = {}, action) => {
-    switch (action.type) {
-      case 'INITIAL':
-        return Object.assign({}, state, action.data)
-      default:
-        return state
+  class Main extends Biglet{
+    constructor(props) {
+      super(props)
+      this.root = __dirname
+      this.name = 'main biglet'
+      this.data = {
+        is: 'main biglet',
+        po: {
+          name: this.name
+        }
+      }
+      this.domid = 'main'
+      this.tpl = './tpl/index'
+      this.delay = 100
+
+    }
+
+    sleep(time) {
+      return new Promise((resolve) => setTimeout(resolve, time))
+    }
+  
+    render() {
+      return (
+        <div>
+          <h1>Main header</h1>
+        </div>
+      );
+    }
+
+    reducer (state = {}, action) {
+      switch (action.type) {
+        case 'INITIAL':
+          return Object.assign({}, state, action.data)
+        default:
+          return state
+      }
+    }
+
+    mainGetData ()  {
+      const state = bigView.getState()
+      this._data = state[this.name]
+    }
+
+    fetch () {
+      this.sub(this.mainGetData)
+      bigView.dispatch({
+        type: 'INITIAL',
+        data: {
+          text: '测试数据'
+        }
+      })
     }
   }
-  mainBiglet.mainGetData = () => {
-    const state = bigView.getState()
-    mainBiglet._data = state[mainBiglet.name]
-  }
-  mainBiglet.fetch = async () => {
-    mainBiglet.sub(mainBiglet.mainGetData)
-    bigView.dispatch({
-      type: 'INITIAL',
-      data: {
-        text: '测试数据'
-      }
-    })
-  }
 
-  bigView.main = mainBiglet
+  // bigView.main = Main
 
-  await bigView.start()
-
-  t.is(mainBiglet._data.text, '测试数据')
+  // await bigView.start()
+  // console.log(bigView._main._data.text)
+  // t.is(bigView._main._data.text, '测试数据')
 })

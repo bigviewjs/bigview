@@ -1,5 +1,5 @@
 'use strict'
-const fs = require('fs')
+
 const { LRUMap } = require('lru_map')
 const MODULE_ID = 'BIGVIEW'
 
@@ -51,7 +51,8 @@ exports.lurMapCache = {
 
   set (key, val) {
     if (this._level === 1) {
-      val = fs.readFileSync(key, 'utf8')
+      // const fs = require('fs')
+      // val = fs.readFileSync(key, 'utf8')
     }
     this._lruMap && this._lruMap.set(key + '_' + this._level, val)
   },

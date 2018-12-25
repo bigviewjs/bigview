@@ -14,8 +14,38 @@ app.engine('.html', ejs.__express)
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'html')
 
+app.use(function(req, res, next){
+  res.stream = function(readableStream){
+    console.log('stream')
+    var that = this
+    
+    var s = readableStream//.pipe(that, { end: false });
+
+    return s
+  }
+
+  next()
+})
+
+app.get('/stream', function (req, res) {
+  console.log("/////")
+  const fs = require("fs")
+  res.stream(fs.createReadStream('./package.json'));
+
+  setTimeout(function(){
+    res.stream(fs.createReadStream('./lerna.json')).pipe(res, {end:true});
+    // res.end()
+  },1000)
+  // res.stream(fs.createReadStream('./lerna.json'))//.pipe(res);
+
+  // res.stream(fs.createReadStream('../lerna.json'))
+  
+})
+
 app.get('/', require('./bpmodules/basic'))
-app.get('/redux', require('./bpmodules/redux'))
+// app.get('/redux', require('./bpmodules/redux'))
+
+
 
 // app.get('/payload', require('./bpmodules/payload'))
 

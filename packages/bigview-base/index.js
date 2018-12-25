@@ -6,7 +6,10 @@ const ModeInstanceMappings = require('bigview-mode')
 const Utils = require('bigview-utils')
 
 const PROMISE_RESOLVE = Promise.resolve(true)
-
+const isStream = stream =>
+	stream !== null &&
+	typeof stream === 'object' &&
+	typeof stream.pipe === 'function';
 module.exports = class BigViewBase extends EventEmitter {
   constructor (ctx, options) {
     super()
@@ -100,7 +103,7 @@ module.exports = class BigViewBase extends EventEmitter {
    * @api public
    */
   render (...args) {
-    return this.ctx.render(...args)
+    //return this.ctx.render(...args)
   }
 
   /**
@@ -126,6 +129,9 @@ module.exports = class BigViewBase extends EventEmitter {
     }
     if (text && text.length > 0) {
       // write to Browser;
+      this.res.write(text)
+    }
+    if (isStream(text)){
       this.res.write(text)
     }
   }

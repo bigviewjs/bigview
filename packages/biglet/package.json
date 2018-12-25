@@ -1,6 +1,6 @@
 {
   "name": "biglet",
-  "version": "2.0.2",
+  "version": "3.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,11 @@
   "dependencies": {
     "bluebird": "^3.4.7",
     "debug": "^2.3.3",
-    "escape-html": "^1.0.3"
+    "escape-html": "^1.0.3",
+    "react": "^16.6.3",
+    "react-dom": "^16.6.3",
+    "string-to-stream": "^1.1.1",
+    "wrap-to-stream": "^1.0.0"
   },
   "author": "",
   "license": "ISC",
