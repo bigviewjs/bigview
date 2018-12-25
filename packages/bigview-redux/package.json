@@ -1,6 +1,6 @@
 {
   "name": "bigview-redux",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "bigview add redux",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
