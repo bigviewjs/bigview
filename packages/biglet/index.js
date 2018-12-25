@@ -1,7 +1,6 @@
 const debug = require('debug')('biglet')
 const Promise = require('bluebird')
 const path = require('path')
-const wrapToStream = require('wrap-to-stream')
 const React = require( 'react')
 const renderToNodeStream = require('react-dom/server').renderToNodeStream;
 
@@ -250,15 +249,12 @@ module.exports = class Pagelet extends React.Component {
     }
     response += `<script type="text/javascript">bigview.view(${JSON.stringify(payload)})</script>\n`
     const strToStream = require('string-to-stream')
-    console.log(response)
+    debug(response)
+    const wrapToStream = require('wrap-to-stream')
+    var stream = wrapToStream(`<div hidden><code id="${this.domid}-code">`,this.html, `</code></div>\n`)
+    this.owner.res.write(stream)
 
-    var a = wrapToStream(`<div hidden><code id="${this.domid}-code">`,this.html, `</code></div>\n`)
-    this.owner.res.write(a)
-
-    // this.write(str)
-
-
-    a.on('end', ()=>{
+    stream.on('end', ()=>{
       this.owner.res.write(response)
     })
     return response

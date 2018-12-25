@@ -92,7 +92,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var debug = __webpack_require__(/*! debug */ "../../packages/biglet/node_modules/debug/src/browser.js")('biglet');
 var Promise = __webpack_require__(/*! bluebird */ "../../packages/biglet/node_modules/bluebird/js/browser/bluebird.js");
 var path = __webpack_require__(/*! path */ "../node_modules/path-browserify/index.js");
-var wrapToStream = __webpack_require__(/*! wrap-to-stream */ "../../packages/biglet/node_modules/wrap-to-stream/index.js");
 var React = __webpack_require__(/*! react */ "../../packages/biglet/node_modules/react/index.js");
 var renderToNodeStream = __webpack_require__(/*! react-dom/server */ "../../packages/biglet/node_modules/react-dom/server.browser.js").renderToNodeStream;
 
@@ -389,15 +388,12 @@ module.exports = function (_React$Component) {
       }
       response += '<script type="text/javascript">bigview.view(' + JSON.stringify(payload) + ')</script>\n';
       var strToStream = __webpack_require__(/*! string-to-stream */ "../../packages/biglet/node_modules/string-to-stream/index.js");
-      console.log(response);
+      debug(response);
+      var wrapToStream = __webpack_require__(/*! wrap-to-stream */ "../../packages/biglet/node_modules/wrap-to-stream/index.js");
+      var stream = wrapToStream('<div hidden><code id="' + this.domid + '-code">', this.html, '</code></div>\n');
+      this.owner.res.write(stream);
 
-      var a = wrapToStream('<div hidden><code id="' + this.domid + '-code">', this.html, '</code></div>\n');
-      this.owner.res.write(a);
-
-      // this.write(str)
-
-
-      a.on('end', function () {
+      stream.on('end', function () {
         _this4.owner.res.write(response);
       });
       return response;
