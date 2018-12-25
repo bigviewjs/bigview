@@ -1,6 +1,6 @@
 {
   "name": "bigview",
-  "version": "3.0.2",
+  "version": "3.0.4",
   "description": "bigview",
   "main": "dist/index.js",
   "scripts": {
