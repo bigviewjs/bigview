@@ -1,8 +1,9 @@
 const debug = require('debug')('biglet')
 const Promise = require('bluebird')
 const path = require('path')
-import React from 'react'
-import {renderToNodeStream} from 'react-dom/server'
+const React = require('react')
+const renderToNodeStream = require('react-dom/server').renderToNodeStream
+
 
 module.exports = class Pagelet extends React.Component {
   constructor(props) {
@@ -154,10 +155,7 @@ module.exports = class Pagelet extends React.Component {
       if (!isObs) {
         tplPath = path.join(this.root || __dirname, tplPath)
       }
-      return this.compile(tplPath, this.data).then((str) => {
-        this.html = str
-        this.write(str)
-      })
+      return this.write(this.stream)
     }
   }
 
@@ -225,49 +223,58 @@ module.exports = class Pagelet extends React.Component {
   }
 
   get view() {
-    const payload = this._getPayloadObject()
-    // const fs = require("fs")
-    // this.owner.res.write(fs.createReadStream('./package.json'))
-    // this.owner.res.write(this.stream)
-
-    if (this.type === 'json') {
-      // return this._payload
-      return `<script type="text/javascript">bigview.view(${this._payload})</script>\n`
-    }
-    let response = ''
-    // response += `<script type="text/javascript">bigview.beforePageletArrive("${this.domid}")</script>\n`
-    if (this.html) {
-      // this.owner.res.write(`<div hidden><code id="${this.domid}-code">`)
-      // this.owner.res.write(this.html)
-      // this.owner.res.write(`</code></div>\n`)
-      // response += `<div hidden><code id="${this.domid}-code">${this.html}</code></div>\n`
-      payload.html = undefined
-    }
-    if (this.callback) {
-      response += `<script type="text/javascript">${this.callback}</script>\n`
-      payload.callback = undefined
-    }
-    response += `<script type="text/javascript">bigview.view(${JSON.stringify(payload)})</script>\n`
-    const strToStream = require('string-to-stream')
-    debug(response)
-    const wrapToStream = require('wrap-to-stream')
-    var stream = wrapToStream(`<div hidden><code id="${this.domid}-code">`,this.html, `</code></div>\n`)
-    this.owner.res.write(stream)
-
-    stream.on('end', ()=>{
-      this.owner.res.write(response)
-    })
-    return response
+    
   }
 
   // event wrapper
   write(html) {
-    // wrap html to script tag
-    const view = this.view
-    // bigpipe write
-    // this.owner.emit('pageletWrite', this)
-    // 不需要return，因为end无参数
-    return view
+    
+
+    const self = this;
+    return new Promise(function(resolve, reject){
+      // wrap html to script tag
+      // const view = this.view
+      // bigpipe write
+      // this.owner.emit('pageletWrite', this)
+      // 不需要return，因为end无参数
+      const payload = self._getPayloadObject()
+      // const fs = require("fs")
+      // this.owner.res.write(fs.createReadStream('./package.json'))
+      // this.owner.res.write(this.stream)
+
+      if (self.type === 'json') {
+        // return this._payload
+        return `<script type="text/javascript">bigview.view(${self._payload})</script>\n`
+      }
+      let response = ''
+      // response += `<script type="text/javascript">bigview.beforePageletArrive("${this.domid}")</script>\n`
+      if (self.html) {
+        // this.owner.res.write(`<div hidden><code id="${this.domid}-code">`)
+        // this.owner.res.write(this.html)
+        // this.owner.res.write(`</code></div>\n`)
+        // response += `<div hidden><code id="${this.domid}-code">${this.html}</code></div>\n`
+        payload.html = undefined
+      }
+      if (self.callback) {
+        response += `<script type="text/javascript">${self.callback}</script>\n`
+        payload.callback = undefined
+      }
+      response += `<script type="text/javascript">bigview.view(${JSON.stringify(payload)})</script>\n`
+      const strToStream = require('string-to-stream')
+      debug(response)
+      const wrapToStream = require('wrap-to-stream')
+      var stream = wrapToStream(`<div hidden><code id="${self.domid}-code">`,self.stream, `</code></div>\n`)
+      self.owner.res.write(stream)
+
+      self.stream.on('end', ()=>{
+        self.owner.res.write(response)
+        return resolve(response)
+      })
+    })
+  }
+
+  writeStream () {
+    return this.owner.res.write(this.stream)
   }
 
   render() {

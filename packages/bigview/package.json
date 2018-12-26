@@ -2,7 +2,7 @@
   "name": "bigview",
   "version": "3.0.4",
   "description": "bigview",
-  "main": "dist/index.js",
+  "main": "index.js",
   "scripts": {
     "build": "babel index.js utils.js -d dist",
     "test": "echo \"Error: no test specified\" && exit 1"

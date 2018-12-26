@@ -4,8 +4,10 @@ const BigViewBase = require('bigview-base')
 const Utils = require('./utils')
 const { lurMapCache, toArray } = Utils
 const PROMISE_RESOLVE = Promise.resolve(true)
-import React from 'react'
-import {renderToNodeStream, renderToStaticNodeStream} from 'react-dom/server'
+
+const React = require('react')
+const renderToNodeStream = require('react-dom/server').renderToNodeStream
+const renderToStaticNodeStream = require('react-dom/server').renderToStaticNodeStream
 
 class BigView extends BigViewBase {
   constructor(ctx, options = {}) {
@@ -256,9 +258,7 @@ class BigView extends BigViewBase {
     //   self.res.write(`<script>window.data = '${pageletsIDs.join(',')}'</script>`)
     // })
 
-    this.res.write(this.layoutPagelet.stream)
-
-    return Promise.resolve()
+    return this.layoutPagelet.writeStream()  
   }
 
   afterRenderLayout() {
