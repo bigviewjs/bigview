@@ -34,12 +34,13 @@ class BigView extends BigViewBase {
 
     // 限制缓存的个数
     this.cacheLevel = options.cacheLevel
-    if (this.cacheLevel) {
-      lurMapCache.init(options.cacheLimits || 30, this.cacheLevel)
-    }
-    if (this.query._pagelet_id) {
-      this.pageletId = this.query._pagelet_id
-    }
+    // 先注释掉，后面再改
+    // if (this.cacheLevel) {
+    //   lurMapCache.init(options.cacheLimits || 30, this.cacheLevel)
+    // }
+    // if (this.query._pagelet_id) {
+    //   this.pageletId = this.query._pagelet_id
+    // }
     // 存放插件实例的数组
     this.pluginArr = []
   }
