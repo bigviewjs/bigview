@@ -326,7 +326,7 @@ class BigView extends BigViewBase {
     // lifecycle self.after before res.end
     return this.after().then(() => {
       self.done = true
-      self.res._end()
+      self.res.end()
       return true
     })
   }
