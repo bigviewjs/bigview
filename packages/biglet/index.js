@@ -1,12 +1,15 @@
+'use strict'
+
 const debug = require('debug')('biglet')
 const Promise = require('bluebird')
 const path = require('path')
 const React = require('react')
 const renderToNodeStream = require('react-dom/server').renderToNodeStream
 
+const PROMISE_RESOLVE = Promise.resolve(true)
 
 module.exports = class Pagelet extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
 
     this.root = ''
@@ -29,36 +32,35 @@ module.exports = class Pagelet extends React.Component {
     this.timeout = 10000
     // custom error function
     this.catchFn = function (err) {
-      console.log(err)
       console.warn('[BIGLET domid=' + this.domid + '] : ' + err.message)
       this.error = true
       this.html = ''
       this.write()
-      return Promise.resolve()
+      return PROMISE_RESOLVE
     }
 
     // 为mode提供的
     this.isWriteImmediately = true
   }
 
-  sub(event) {
+  sub (event) {
     if (this.owner.subscribe) {
       this.unSubscribe = this.owner.subscribe(event.bind(this))
     } else {
       // 如果没有this.owner.subscribe方法说明当前bigview没有安装redux插件或者安装失败
-      console.warning('bigview is not install redux or install failed')
+      console.warn('bigview is not install redux or install failed')
     }
   }
 
-  unSub() {
+  unSub () {
     if (this.unSubscribe) {
       this.unSubscribe()
     } else {
-      console.warning('bigview is not install redux or install failed')
+      console.warn('bigview is not install redux or install failed')
     }
   }
 
-  addChild(SubPagelet) {
+  addChild (SubPagelet) {
     if (Object.prototype.toString.call(SubPagelet) === '[object Object]') {
       SubPagelet.owner = this.owner
       this.children.push(SubPagelet)
@@ -76,12 +78,11 @@ module.exports = class Pagelet extends React.Component {
    * main flow: before -> fetch data -> parse data -> render template
    *  -> render children
    */
-  _exec(isWrite = true, type) {
+  _exec (isWrite = true, type) {
     const self = this
     debug('Pagelet ' + this.domid + ' fetch')
-    if (type) {
-      self.type = type
-    }
+    if (type) self.type = type
+
     if (isWrite) {
       return self.before()
         .then(self.fetch.bind(self)).timeout(this.timeout)
@@ -99,14 +100,14 @@ module.exports = class Pagelet extends React.Component {
     }
   }
 
-  before() {
-    return Promise.resolve(true)
+  before () {
+    return PROMISE_RESOLVE
   }
 
   /**
    * 用于发起网络请求获取数据
    */
-  fetch() {
+  fetch () {
     return Promise.resolve(this.data)
   }
 
@@ -114,7 +115,7 @@ module.exports = class Pagelet extends React.Component {
    * 用于对fetch获取的数据进行处理
    * 约定 return Promise.resolve(this.data = xxx)
    */
-  parse() {
+  parse () {
     return Promise.resolve(this.data)
   }
 
@@ -122,31 +123,33 @@ module.exports = class Pagelet extends React.Component {
    * Compile tpl + data to html
    * @private
    */
-  compile(tpl, data) {
-    var that = this
+  compile (tpl, data) {
+    const self = this
     return new Promise((resolve, reject) => {
-      // that.owner.render(tpl, data, function (err, str) {
-      //   // str => Rendered HTML string
-      //   if (err) {
-      //     return reject(err)
-      //   }
-      //   resolve(str)
-      // })
-      resolve(that.stream)
+      // 判断是否为模板渲染，以及 owner.render 方法是否存在
+      if (tpl && data && this.owner.render) {
+        self.owner.render(tpl, data, (err, str) => {
+          // str => Rendered HTML string
+          if (err) return reject(err)
+          return resolve(str)
+        })
+      } else {
+        return resolve(self.stream)
+      }
     })
   }
 
   /**
    * redner template
    */
-  render1() {
+  render1 () {
     if (this.owner && this.owner.done) {
-      console.log('[BIGLET WARNING] bigview is alread done, there is no need to render biglet module!')
-      return Promise.resolve()
+      console.warn('[BIGLET WARNING] bigview is already done, there is no need to render biglet module!')
+      return PROMISE_RESOLVE
     }
 
     if (this.type === 'json') {
-      this.write()
+      return this.write()
     } else {
       let tplPath = this.tpl
       // 校验 tpl 路径是否为绝对路径
@@ -159,33 +162,32 @@ module.exports = class Pagelet extends React.Component {
     }
   }
 
-  renderMain() {
-    let self = this
+  renderMain () {
+    const self = this
     if (self.main) {
       const Main = self.main
-      let mainPagelet = new Main()
-      mainPagelet.owner = self.owner;
-      mainPagelet.dataStore = self.owner.dataStore;
+      const mainPagelet = new Main()
+      mainPagelet.owner = self.owner
+      mainPagelet.dataStore = self.owner.dataStore
       // this.mainPagelet.data.pagelets = this.pagelets
 
       mainPagelet.stream = renderToNodeStream(this.main)
 
       mainPagelet.owner = self.owner
       if (!mainPagelet._exec) {
-        return Promise.reject(new Error('you should use like this.trigger(new somePagelet()'))
+        throw new Error('you should use like this.trigger(new somePagelet()')
       }
-      let modeInstance = self.owner.getModeInstanceWith('pipeline')
-
+      const modeInstance = self.owner.getModeInstanceWith('pipeline')
       return modeInstance.execute([mainPagelet])
     } else {
-      return Promise.resolve(true)
+      return PROMISE_RESOLVE
     }
   }
 
-  renderChildren() {
-    let subPagelets = this.children
-    let self = this
+  renderChildren () {
+    const self = this
 
+    const subPagelets = this.children
     subPagelets.forEach(function (subPagelet) {
       subPagelet.owner = self.owner
       if (!subPagelet._exec) {
@@ -194,7 +196,7 @@ module.exports = class Pagelet extends React.Component {
     })
 
     if (subPagelets.length === 0) {
-      return Promise.resolve(true)
+      return PROMISE_RESOLVE
     }
 
     const modeInstance = this.owner.getModeInstanceWith(this.mode || 'pipeline')
@@ -202,36 +204,30 @@ module.exports = class Pagelet extends React.Component {
     return modeInstance.execute(subPagelets)
   }
 
-  end() {
-    return Promise.resolve(true)
+  end () {
+    return PROMISE_RESOLVE
   }
 
-  _getPayloadObject() {
+  _getPayloadObject () {
     const attr = ['domid', 'html', 'js', 'css', 'error', 'attr', 'lifecycle', 'json', 'callback']
-    attr.forEach((item) => {
-      if (this[item]) {
-        this.payload[item] = this[item]
-      }
-    })
+    for (let item of attr) {
+      if (this[item]) this.payload[item] = this[item]
+    }
     return this.payload
   }
 
-  get _payload() {
+  get _payload () {
     this._getPayloadObject()
     // fixed html script parse error
     return JSON.stringify(this.payload)
   }
 
-  get view() {
-    
-  }
+  get view () {}
 
   // event wrapper
-  write(html) {
-    
-
-    const self = this;
-    return new Promise(function(resolve, reject){
+  write (html) {
+    const self = this
+    return new Promise((resolve, reject) => {
       // wrap html to script tag
       // const view = this.view
       // bigpipe write
@@ -260,15 +256,19 @@ module.exports = class Pagelet extends React.Component {
         payload.callback = undefined
       }
       response += `<script type="text/javascript">bigview.view(${JSON.stringify(payload)})</script>\n`
-      const strToStream = require('string-to-stream')
       debug(response)
+
       const wrapToStream = require('wrap-to-stream')
-      var stream = wrapToStream(`<div hidden><code id="${self.domid}-code">`,self.stream, `</code></div>\n`)
+      const stream = wrapToStream(`<div hidden><code id="${self.domid}-code">`, self.stream, `</code></div>\n`)
       self.owner.res.write(stream)
 
-      self.stream.on('end', ()=>{
+      self.stream.on('end', () => {
         self.owner.res.write(response)
         return resolve(response)
+      })
+
+      self.stream.on('error', err => {
+        return reject(err)
       })
     })
   }
@@ -277,7 +277,5 @@ module.exports = class Pagelet extends React.Component {
     return this.owner.res.write(this.stream)
   }
 
-  render() {
-    return
-  }
+  render () {}
 }
